@@ -1,6 +1,6 @@
 import csv
 
-from code.code_main import get_vdj_lengths
+from code_main import get_vdj_lengths
 
 
 def get_fractions(filename, reference_file, delim, threshold):
