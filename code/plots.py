@@ -62,7 +62,7 @@ def plot_sequence_length_read_count(x_points, y_points, label):
     plt.xlabel('Junction sequence length')
     plt.ylabel('Read count')
     plt.legend()
-    plt.savefig(f'Read_count_per_sequence_length_{label}.png')
+    plt.savefig(f'C:\\Users\\gabev\\PycharmProjects\\MRP_TdTKO_mice\\img\\Read_count_per_sequence_length_{label}.png')
     plt.close()
 
 

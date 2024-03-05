@@ -257,14 +257,15 @@ if __name__ == "__main__":
         # "C:\\Users\\gabev\\PycharmProjects\\MRP_TdTKO_mice\\data_files\\B6\\GSM6893365_RP-Mandl-05-M69&M70.tsv",
         # "C:\\Users\\gabev\\PycharmProjects\\MRP_TdTKO_mice\\data_files\\B6\\GSM6893366_RP-Mandl-06-M71&M72.tsv",
         # "C:\\Users\\gabev\\PycharmProjects\\MRP_TdTKO_mice\\data_files\\B6\\GSM6893367_RP-Mandl-07-M73&M74.tsv"
-        "C:\\Users\\gabev\\PycharmProjects\\MRP_TdTKO_mice\\data_files\\TdTKo\\filtered_data\\filtered_data_TdTKO.tsv"
+        # "C:\\Users\\gabev\\PycharmProjects\\MRP_TdTKO_mice\\data_files\\TdTKo\\filtered_data\\filtered_data_TdTKO.tsv"
+        "C:\\Users\\gabev\\PycharmProjects\\MRP_TdTKO_mice\\data_files\\B6\\filtered_data\\filtered_data_Normal.tsv"
     ]
 
     for filename in file_list:
         sequence_lengths, read_counts = get_junction_length(filename, sequence_lengths, read_counts, delim='\t')
 
-    # from plots import plot_sequence_length_read_count
-    # plot_sequence_length_read_count(sequence_lengths, read_counts, label='TdTKO')
+    from plots import plot_sequence_length_read_count
+    plot_sequence_length_read_count(sequence_lengths, read_counts, label='Normal')
 
     average = sum(sequence_lengths) / len(sequence_lengths)
     print(f'The average is: {average}')
