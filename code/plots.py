@@ -26,22 +26,31 @@ def plot_supporting_reads():
 def plot_fractions_ins():
     plt.figure()
 
-    x_points = [0, 5, 10, 15, 20, 25, 50]
-
-    y_points = [47.94, 21.18, 13.18, 8.90, 6.40, 4.84, 1.89]
-    plt.plot(x_points, y_points, label='TdTKO')
+    # old ----------------------------------------------------------------------------------
+    # x_points = [0, 5, 10, 15, 20, 25, 50]
+    # y_points = [47.94, 21.18, 13.18, 8.90, 6.40, 4.84, 1.89]
+    # plt.plot(x_points, y_points, label='TdTKO')
 
     # y_points = [94.29, 39.41, 20.10, 11.39, 6.71, 4.09, 0.54]
     # plt.plot(x_points, y_points, label='mandl-07')
 
-    y_points = [94.11, 36.93, 18.45, 10.68, 6.61, 4.28, 0.78]
+    # y_points = [94.11, 36.93, 18.45, 10.68, 6.61, 4.28, 0.78]
+    # plt.plot(x_points, y_points, label='Normal')
+    # -------------------------------------------------------------------------------------
+    x_points = [0, 1, 2, 5, 10, 15, 20, 25, 50]
+
+    y_points = [47.94, 36.92, 35.54, 32.07, 27.96, 25.08, 22.90, 21.25, 16.33]
+    plt.plot(x_points, y_points, label='TdTKO')
+
+    y_points = [94.11, 92.65, 91.87, 90.33, 88.60, 86.98, 85.33, 83.66, 74.89]
     plt.plot(x_points, y_points, label='Normal')
 
     plt.title('Fraction of sequences with insertions per threshold of supporting reads')
     plt.xlabel('Supporting reads')
     plt.ylabel('Fraction of seq with insertions')
+    plt.xticks([0, 1, 2, 5, 10, 15, 20, 25, 50])
     plt.legend()
-    plt.savefig('Normal_TdTKO_fraction_insertions_per_reads.png')
+    plt.savefig('C:\\Users\\gabev\\PycharmProjects\\MRP_TdTKO_mice\\img\\Normal_TdTKO_fraction_insertions_per_reads.png')
     plt.close()
 
 
