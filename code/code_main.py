@@ -28,7 +28,7 @@ def read_rtcr_refs():
     # read RTCR refs
     # RTCR_ref_filename = "./immune_receptor_reference.tsv"
     # replace with the gunzipped download of https://github.com/uubram/RTCR/tree/master/rtcr
-    RTCR_ref_filename = "C:\\Users\\gabev\\PycharmProjects\\MRP\\immune_receptor_reference.tsv"
+    RTCR_ref_filename = "C:\\Users\\gabev\\PycharmProjects\\MRP_TdTKO_mice\\data_files\\immune_receptor_reference.tsv"
 
     RTCR_ref = {}
     with open(RTCR_ref_filename, "r") as csvfile:
@@ -99,18 +99,22 @@ def read_tcrb_data(rtcr_ref: dict, tcrb_data_filename, data_suffix, threshold, d
     #     for i in sorted(supporting_read_count.keys()):
     #         file.write(f'{i}: {supporting_read_count[i]}\n')
 
-    # new_filename = f'data_files\\B6\\no_insertions_above_threshold\\{data_suffix}_results_above_{threshold}.tsv'
-    new_filename = f'data_files\\TdTKo\\no_insertions_above_threshold\\{data_suffix}_results_above_{threshold}.tsv'
+    # # new_filename = f'data_files\\B6\\no_insertions_above_threshold\\{data_suffix}_results_above_{threshold}.tsv'
+    # new_filename = f'data_files\\TdTKo\\no_insertions_above_threshold\\{data_suffix}_results_above_{threshold}.tsv'
+    # with open(new_filename, 'w') as file:
+    #     file.writelines(outfile)
+    # # new_insertion_filename = f'data_files\\B6\\insertions_above_threshold\\{data_suffix}_insertions_above_{threshold}.tsv'
+    # new_insertion_filename = f'data_files\\TdTKo\\insertions_above_threshold\\{data_suffix}_insertions_above_{threshold}.tsv'
+    # with open(new_insertion_filename, 'w') as file:
+    #     file.writelines(outfile_ins)
+    # # below_threshold_filename = f'data_files\\B6\\below_threshold\\{data_suffix}_below_{threshold}.tsv'
+    # below_threshold_filename = f'data_files\\TdTKo\\below_threshold\\{data_suffix}_below_{threshold}.tsv'
+    # with open(below_threshold_filename, 'w') as file:
+    #     file.writelines(outfile_below_threshold)
+
+    new_filename = f'data_files\\B6\\filtered_data\\filtered_data_normal.tsv'
     with open(new_filename, 'w') as file:
-        file.writelines(outfile)
-    # new_insertion_filename = f'data_files\\B6\\insertions_above_threshold\\{data_suffix}_insertions_above_{threshold}.tsv'
-    new_insertion_filename = f'data_files\\TdTKo\\insertions_above_threshold\\{data_suffix}_insertions_above_{threshold}.tsv'
-    with open(new_insertion_filename, 'w') as file:
-        file.writelines(outfile_ins)
-    # below_threshold_filename = f'data_files\\B6\\below_threshold\\{data_suffix}_below_{threshold}.tsv'
-    below_threshold_filename = f'data_files\\TdTKo\\below_threshold\\{data_suffix}_below_{threshold}.tsv'
-    with open(below_threshold_filename, 'w') as file:
-        file.writelines(outfile_below_threshold)
+        file.writelines()
     return
 
 
@@ -238,8 +242,7 @@ def get_junction_length(fn, lengths: list, reads: list, delim: str):
         reader = csv.reader(file, delimiter=delim)
         header = next(reader)
         for row in reader:
-            length = len(row[header.index('Junction.nucleotide.sequence')])
-            lengths.append(length)
+            lengths.append(len(row[header.index('Junction.nucleotide.sequence')]))
             reads.append(int(row[header.index('Number.of.reads')]))
     return lengths, reads
 
@@ -248,43 +251,46 @@ if __name__ == "__main__":
     sequence_lengths = []
     read_counts = []
     file_list = [
-        "C:\\Users\\gabev\\PycharmProjects\\MRP\\data_files\\tdt.csv"
-        # "C:\\Users\\gabev\\PycharmProjects\\MRP\\data_files\\GSM6893369_RP-Mandl-28-M65&M66.tsv",
-        # "C:\\Users\\gabev\\PycharmProjects\\MRP\\data_files\\GSM6893370_RP-Mandl-30-M67&M68.tsv",
-        # "C:\\Users\\gabev\\PycharmProjects\\MRP\\data_files\\GSM6893365_RP-Mandl-05-M69&M70.tsv",
-        # "C:\\Users\\gabev\\PycharmProjects\\MRP\\data_files\\GSM6893366_RP-Mandl-06-M71&M72.tsv",
-        # "C:\\Users\\gabev\\PycharmProjects\\MRP\\data_files\\GSM6893367_RP-Mandl-07-M73&M74.tsv"
+        # "C:\\Users\\gabev\\PycharmProjects\\MRP_TdTKO_mice\\data_files\\tdt.csv"
+        # "C:\\Users\\gabev\\PycharmProjects\\MRP_TdTKO_mice\\data_files\\B6\\GSM6893369_RP-Mandl-28-M65&M66.tsv",
+        # "C:\\Users\\gabev\\PycharmProjects\\MRP_TdTKO_mice\\data_files\\B6\\GSM6893370_RP-Mandl-30-M67&M68.tsv",
+        # "C:\\Users\\gabev\\PycharmProjects\\MRP_TdTKO_mice\\data_files\\B6\\GSM6893365_RP-Mandl-05-M69&M70.tsv",
+        # "C:\\Users\\gabev\\PycharmProjects\\MRP_TdTKO_mice\\data_files\\B6\\GSM6893366_RP-Mandl-06-M71&M72.tsv",
+        # "C:\\Users\\gabev\\PycharmProjects\\MRP_TdTKO_mice\\data_files\\B6\\GSM6893367_RP-Mandl-07-M73&M74.tsv"
+        "C:\\Users\\gabev\\PycharmProjects\\MRP_TdTKO_mice\\data_files\\TdTKo\\filtered_data\\filtered_data_TdTKO.tsv"
     ]
 
-    # for filename in file_list:
-    #     sequence_lengths, read_counts = get_junction_length(filename, sequence_lengths, read_counts, delim=',')
+    for filename in file_list:
+        sequence_lengths, read_counts = get_junction_length(filename, sequence_lengths, read_counts, delim='\t')
 
     # from plots import plot_sequence_length_read_count
     # plot_sequence_length_read_count(sequence_lengths, read_counts, label='TdTKO')
 
-    # average = sum(sequence_lengths) / len(sequence_lengths)
-    # print(f'The average is: {average}')
+    average = sum(sequence_lengths) / len(sequence_lengths)
+    print(f'The average is: {average}')
 
     # filename = "C:\\Users\\gabev\\PycharmProjects\\MRP\\data_files\\GSM6893370_RP-Mandl-30-M67&M68.tsv"
     # file_suffix = 'mandl-30'
-    threshold_list = [0, 5, 10, 15, 20, 25, 50]
-    refs = read_rtcr_refs()
-    for threshold in threshold_list:
-        files1 = [
-            f"C:\\Users\\gabev\\PycharmProjects\\MRP\\data_files\\B6\\insertions_above_threshold\\mandl-28_insertions_above_{threshold}.tsv",
-            f"C:\\Users\\gabev\\PycharmProjects\\MRP\\data_files\\B6\\insertions_above_threshold\\mandl-30_insertions_above_{threshold}.tsv",
-            f"C:\\Users\\gabev\\PycharmProjects\\MRP\\data_files\\B6\\insertions_above_threshold\\mandl-05_insertions_above_{threshold}.tsv",
-            f"C:\\Users\\gabev\\PycharmProjects\\MRP\\data_files\\B6\\insertions_above_threshold\\mandl-06_insertions_above_{threshold}.tsv",
-            f"C:\\Users\\gabev\\PycharmProjects\\MRP\\data_files\\B6\\insertions_above_threshold\\mandl-07_insertions_above_{threshold}.tsv"
-        ]
+    # threshold_list = [0, 5, 10, 15, 20, 25, 50]
+    # refs = read_rtcr_refs()
+    # for threshold in threshold_list:
+    #     files1 = [
+    #         f"C:\\Users\\gabev\\PycharmProjects\\MRP\\data_files\\B6\\insertions_above_threshold\\mandl-28_insertions_above_{threshold}.tsv",
+    #         f"C:\\Users\\gabev\\PycharmProjects\\MRP\\data_files\\B6\\insertions_above_threshold\\mandl-30_insertions_above_{threshold}.tsv",
+    #         f"C:\\Users\\gabev\\PycharmProjects\\MRP\\data_files\\B6\\insertions_above_threshold\\mandl-05_insertions_above_{threshold}.tsv",
+    #         f"C:\\Users\\gabev\\PycharmProjects\\MRP\\data_files\\B6\\insertions_above_threshold\\mandl-06_insertions_above_{threshold}.tsv",
+    #         f"C:\\Users\\gabev\\PycharmProjects\\MRP\\data_files\\B6\\insertions_above_threshold\\mandl-07_insertions_above_{threshold}.tsv"
+    #     ]
+
         # read_tcrb_data(refs, filename, file_suffix, threshold)
         # fraction_insertions(filename, file_suffix, threshold)
-        fraction_insertions(file_list, files1)
 
-    for filename in file_list:
-        # suffix = '-'.join([filename.split('-')[1], filename.split('-')[2]])
-        suffix = 'TdTKO'
-        for threshold in threshold_list:
-            read_tcrb_data(refs, filename, suffix, threshold, delim=',')
+        # fraction_insertions(file_list, files1)
+    #
+    # for filename in file_list:
+    #     # suffix = '-'.join([filename.split('-')[1], filename.split('-')[2]])
+    #     suffix = 'TdTKO'
+    #     for threshold in threshold_list:
+    #         read_tcrb_data(refs, filename, suffix, threshold, delim=',')
     # filename = 'C:\\Users\\gabev\\PycharmProjects\\MRP\\data_files\\GSM6893362_Mandl-AF-human-07082016.tsv'
     # reconfigure_header_tdt_normal_data(filename)
