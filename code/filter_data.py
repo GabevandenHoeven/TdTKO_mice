@@ -16,8 +16,9 @@ def filter_tcrb_data(rtcr_ref: dict, tcrb_data_filenames, threshold, max_sequenc
     :return:
     """
     outlines = [
-        "Column1\tMouse_ID\tNo_reads\tV_used\tD_used\tD_length\tJ_used\tV_deleted\tJ_deleted\t"
-        "insertion_length\t""V_gene\tJ_gene\tV_end\tJ_start\tmin_phred\tcdr3\tphenotype\tstrain\n"]
+        "Column1\tmouse\tNumber.of.reads\tV.length.used\tD.used\tD.length.used\tJ.length.used\tV.length.deleted\t"
+        "J.length.deleted\tinsertion.length\t""V.gene\tJ.gene\tV.gene.end.position\tJ.gene.start.position\tMin.Phred\t"
+        "Junction.nucleotide.sequence\tphenotype\tstrain\n"]
     column = 0
     for file in tcrb_data_filenames:
         with open(file, 'r') as csvfile:

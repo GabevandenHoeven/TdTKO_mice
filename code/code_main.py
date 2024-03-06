@@ -56,9 +56,12 @@ def read_tcrb_data(rtcr_ref: dict, tcrb_data_filename, data_suffix, threshold, d
     with open(tcrb_data_filename, 'r') as csvfile:
         reader = csv.reader(csvfile, delimiter=delim)
         header = next(reader)
-        outfile = ["Column1\tMouse_ID\tNo_reads\tV_used\tD_used\tD_length\tJ_used\tV_deleted\tJ_deleted\tinsertion_length\tV_gene\tJ_gene\tV_end\tJ_start\tmin_phred\tcdr3\tphenotype\tstrain\tseq_id\n"]
-        outfile_ins = ["Column1\tMouse_ID\tNo_reads\tV_used\tD_used\tD_length\tJ_used\tV_deleted\tJ_deleted\tinsertion_length\tV_gene\tJ_gene\tV_end\tJ_start\tmin_phred\tcdr3\tphenotype\tstrain\tseq_id\n"]
-        outfile_below_threshold = ["Column1\tMouse_ID\tNo_reads\tV_used\tD_used\tD_length\tJ_used\tV_deleted\tJ_deleted\tinsertion_length\tV_gene\tJ_gene\tV_end\tJ_start\tmin_phred\tcdr3\tphenotype\tstrain\tseq_id\n"]
+        outfile = [
+            "Column1\tMouse_ID\tNo_reads\tV_used\tD_used\tD_length\tJ_used\tV_deleted\tJ_deleted\tinsertion_length\tV_gene\tJ_gene\tV_end\tJ_start\tmin_phred\tcdr3\tphenotype\tstrain\tseq_id\n"]
+        outfile_ins = [
+            "Column1\tMouse_ID\tNo_reads\tV_used\tD_used\tD_length\tJ_used\tV_deleted\tJ_deleted\tinsertion_length\tV_gene\tJ_gene\tV_end\tJ_start\tmin_phred\tcdr3\tphenotype\tstrain\tseq_id\n"]
+        outfile_below_threshold = [
+            "Column1\tMouse_ID\tNo_reads\tV_used\tD_used\tD_length\tJ_used\tV_deleted\tJ_deleted\tinsertion_length\tV_gene\tJ_gene\tV_end\tJ_start\tmin_phred\tcdr3\tphenotype\tstrain\tseq_id\n"]
         supporting_read_count = {
             # number of reads: count of sequences
         }
@@ -112,9 +115,6 @@ def read_tcrb_data(rtcr_ref: dict, tcrb_data_filename, data_suffix, threshold, d
     # with open(below_threshold_filename, 'w') as file:
     #     file.writelines(outfile_below_threshold)
 
-    new_filename = f'data_files\\B6\\filtered_data\\filtered_data_normal.tsv'
-    with open(new_filename, 'w') as file:
-        file.writelines()
     return
 
 
@@ -182,7 +182,7 @@ def get_vdj_lengths(input_list: list, RTCR_ref: dict):
     d = difflib.SequenceMatcher(None, noVJ_CDR3, D_seq_string)
     matchingDlen = max(d.get_matching_blocks(), key=lambda x: x[2])[2]
     d_match = d.find_longest_match()
-    Dused = noVJ_CDR3[d_match.a:d_match.a+matchingDlen]
+    Dused = noVJ_CDR3[d_match.a:d_match.a + matchingDlen]
     inslen = len(noVJ_CDR3) - matchingDlen
     # line_result = [len(Vused), matchingDlen, len(Jused), Vdel, Jdel, inslen]
     line_result = [str(len(Vused)), Dused, str(matchingDlen), str(len(Jused)), str(Vdel), str(Jdel), str(inslen)]
@@ -233,7 +233,7 @@ def fraction_insertions(all_sequences_filenames: list, insertions_filenames: lis
     print(f'fraction = {total_lines_ins} * 100 / {total_lines_all} = {fraction}')
 
 
-def get_junction_length(fn, lengths: list, reads: list, delim: str):
+def get_junction_length(fn, lengths: list, reads: list, seq_counts: dict, delim: str):
     """
 
     :return:
@@ -244,54 +244,46 @@ def get_junction_length(fn, lengths: list, reads: list, delim: str):
         for row in reader:
             lengths.append(len(row[header.index('Junction.nucleotide.sequence')]))
             reads.append(int(row[header.index('Number.of.reads')]))
-    return lengths, reads
+            try:
+                seq_counts[len(row[header.index('Junction.nucleotide.sequence')])] += 1
+            except KeyError:
+                seq_counts.update({len(row[header.index('Junction.nucleotide.sequence')]): 1})
+    return lengths, reads, seq_counts
 
 
 if __name__ == "__main__":
     sequence_lengths = []
     read_counts = []
+
+    x_points = []
+    y_points = []
+    labels = []
     file_list = [
-        # "C:\\Users\\gabev\\PycharmProjects\\MRP_TdTKO_mice\\data_files\\tdt.csv"
-        # "C:\\Users\\gabev\\PycharmProjects\\MRP_TdTKO_mice\\data_files\\B6\\GSM6893369_RP-Mandl-28-M65&M66.tsv",
-        # "C:\\Users\\gabev\\PycharmProjects\\MRP_TdTKO_mice\\data_files\\B6\\GSM6893370_RP-Mandl-30-M67&M68.tsv",
-        # "C:\\Users\\gabev\\PycharmProjects\\MRP_TdTKO_mice\\data_files\\B6\\GSM6893365_RP-Mandl-05-M69&M70.tsv",
-        # "C:\\Users\\gabev\\PycharmProjects\\MRP_TdTKO_mice\\data_files\\B6\\GSM6893366_RP-Mandl-06-M71&M72.tsv",
-        # "C:\\Users\\gabev\\PycharmProjects\\MRP_TdTKO_mice\\data_files\\B6\\GSM6893367_RP-Mandl-07-M73&M74.tsv"
-        # "C:\\Users\\gabev\\PycharmProjects\\MRP_TdTKO_mice\\data_files\\TdTKo\\filtered_data\\filtered_data_TdTKO.tsv"
+        "C:\\Users\\gabev\\PycharmProjects\\MRP_TdTKO_mice\\data_files\\TdTKo\\filtered_data\\filtered_data_TdTKO.tsv",
         "C:\\Users\\gabev\\PycharmProjects\\MRP_TdTKO_mice\\data_files\\B6\\filtered_data\\filtered_data_Normal.tsv"
     ]
 
     for filename in file_list:
-        sequence_lengths, read_counts = get_junction_length(filename, sequence_lengths, read_counts, delim='\t')
+        sequence_counts = {}
+        sequence_lengths, read_counts, sequence_counts = get_junction_length(filename, sequence_lengths, read_counts,
+                                                                             sequence_counts, delim='\t')
+        labels.append(filename.split('_')[-1].rstrip('.tsv'))
+        x = sorted(sequence_counts.keys())
+        x_points.append(x)
+        y_points.append([sequence_counts[point] for point in x])
 
-    from plots import plot_sequence_length_read_count
-    plot_sequence_length_read_count(sequence_lengths, read_counts, label='Normal')
+    from plots import plot_sequence_length_read_count, plot_dist_junction_sequence_length
+    # plot_sequence_length_read_count(sequence_lengths, read_counts, label='Normal')
+    plot_dist_junction_sequence_length(x_points, y_points, labels)
 
     average = sum(sequence_lengths) / len(sequence_lengths)
     print(f'The average is: {average}')
 
-    # filename = "C:\\Users\\gabev\\PycharmProjects\\MRP\\data_files\\GSM6893370_RP-Mandl-30-M67&M68.tsv"
-    # file_suffix = 'mandl-30'
     # threshold_list = [0, 5, 10, 15, 20, 25, 50]
     # refs = read_rtcr_refs()
     # for threshold in threshold_list:
-    #     files1 = [
-    #         f"C:\\Users\\gabev\\PycharmProjects\\MRP\\data_files\\B6\\insertions_above_threshold\\mandl-28_insertions_above_{threshold}.tsv",
-    #         f"C:\\Users\\gabev\\PycharmProjects\\MRP\\data_files\\B6\\insertions_above_threshold\\mandl-30_insertions_above_{threshold}.tsv",
-    #         f"C:\\Users\\gabev\\PycharmProjects\\MRP\\data_files\\B6\\insertions_above_threshold\\mandl-05_insertions_above_{threshold}.tsv",
-    #         f"C:\\Users\\gabev\\PycharmProjects\\MRP\\data_files\\B6\\insertions_above_threshold\\mandl-06_insertions_above_{threshold}.tsv",
-    #         f"C:\\Users\\gabev\\PycharmProjects\\MRP\\data_files\\B6\\insertions_above_threshold\\mandl-07_insertions_above_{threshold}.tsv"
-    #     ]
+    #     read_tcrb_data(refs, filename, file_suffix, threshold)
+    #     fraction_insertions(filename, file_suffix, threshold)
+    #     fraction_insertions(file_list, files1)
 
-        # read_tcrb_data(refs, filename, file_suffix, threshold)
-        # fraction_insertions(filename, file_suffix, threshold)
-
-        # fraction_insertions(file_list, files1)
-    #
-    # for filename in file_list:
-    #     # suffix = '-'.join([filename.split('-')[1], filename.split('-')[2]])
-    #     suffix = 'TdTKO'
-    #     for threshold in threshold_list:
-    #         read_tcrb_data(refs, filename, suffix, threshold, delim=',')
-    # filename = 'C:\\Users\\gabev\\PycharmProjects\\MRP\\data_files\\GSM6893362_Mandl-AF-human-07082016.tsv'
     # reconfigure_header_tdt_normal_data(filename)

@@ -66,6 +66,20 @@ def plot_sequence_length_read_count(x_points, y_points, label):
     plt.close()
 
 
+def plot_dist_junction_sequence_length(x_points_lists, y_points_lists, labels):
+    plt.figure()
+    for e in range(len(x_points_lists)):
+        x_points, y_points, label = x_points_lists[e], y_points_lists[e], labels[e]
+        plt.plot(x_points, y_points, label=label)
+    plt.title('Distribution of junction sequence lengths')
+    plt.xlabel('Junction sequence length')
+    plt.ylabel('Number of sequences')
+    plt.legend()
+    plt.savefig(
+        f'C:\\Users\\gabev\\PycharmProjects\\MRP_TdTKO_mice\\img\\Junction_length_distribution_{"-".join(labels)}')
+    plt.close()
+
+
 if __name__ == '__main__':
     # plot_supporting_reads()
     plot_fractions_ins()
