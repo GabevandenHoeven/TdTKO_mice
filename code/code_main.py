@@ -202,6 +202,7 @@ def reconfigure_header_tdt_normal_data(fn):
         header.insert(0, 'Column1')
         header = "\t".join(header)
         out = []
+        # readlines?
         for row in file:
             out.append(row)
     print('Reconfigured header.\nWriting to file...')
@@ -222,7 +223,6 @@ def fraction_insertions(all_sequences_filenames: list, insertions_filenames: lis
         with open(all_sequences_filename, 'r') as f:
             reader = csv.reader(f)
             header = next(reader)
-
 
     for insertions_filename in insertions_filenames:
         with open(insertions_filename, 'r') as f:
