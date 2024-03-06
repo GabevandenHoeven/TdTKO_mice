@@ -80,6 +80,20 @@ def plot_dist_junction_sequence_length(x_points_lists, y_points_lists, labels):
     plt.close()
 
 
+def plot_dist_insertion_length(x_points_lists, y_points_lists, labels):
+    plt.figure()
+    for e in range(len(x_points_lists)):
+        x_points, y_points, label = x_points_lists[e], y_points_lists[e], labels[e]
+        plt.plot(x_points, y_points, label=label)
+    plt.title('Distribution of insertion lengths')
+    plt.xlabel('Insertion length')
+    plt.ylabel('Number of sequences')
+    plt.legend()
+    plt.savefig(
+        f'C:\\Users\\gabev\\PycharmProjects\\MRP_TdTKO_mice\\img\\Insertion_length_distribution_{"-".join(labels)}')
+    plt.close()
+
+
 if __name__ == '__main__':
     # plot_supporting_reads()
     plot_fractions_ins()

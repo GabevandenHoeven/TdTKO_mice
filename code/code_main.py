@@ -251,6 +251,25 @@ def get_junction_length(fn, lengths: list, reads: list, seq_counts: dict, delim:
     return lengths, reads, seq_counts
 
 
+def get_insertion_counts(fn, counts: dict, delim: str):
+    """
+
+    :param fn:
+    :param counts:
+    :param delim:
+    :return:
+    """
+    with open(fn, 'r') as file:
+        reader = csv.reader(file, delimiter=delim)
+        header = next(reader)
+        for row in reader:
+            try:
+                counts[int(row[header.index('insertion.length')])] += 1
+            except KeyError:
+                counts.update({int(row[header.index('insertion.length')]): 1})
+    return counts
+
+
 if __name__ == "__main__":
     sequence_lengths = []
     read_counts = []
@@ -263,21 +282,30 @@ if __name__ == "__main__":
         "C:\\Users\\gabev\\PycharmProjects\\MRP_TdTKO_mice\\data_files\\B6\\filtered_data\\filtered_data_Normal.tsv"
     ]
 
+    # for filename in file_list:
+    #     sequence_counts = {}
+    #     sequence_lengths, read_counts, sequence_counts = get_junction_length(filename, sequence_lengths, read_counts,
+    #                                                                          sequence_counts, delim='\t')
+    #     labels.append(filename.split('_')[-1].rstrip('.tsv'))
+    #     x = sorted(sequence_counts.keys())
+    #     x_points.append(x)
+    #     y_points.append([sequence_counts[point] for point in x])
+
     for filename in file_list:
-        sequence_counts = {}
-        sequence_lengths, read_counts, sequence_counts = get_junction_length(filename, sequence_lengths, read_counts,
-                                                                             sequence_counts, delim='\t')
+        insertion_counts = {}
+        insertion_counts = get_insertion_counts(filename, insertion_counts, '\t')
         labels.append(filename.split('_')[-1].rstrip('.tsv'))
-        x = sorted(sequence_counts.keys())
+        x = sorted(insertion_counts.keys())
         x_points.append(x)
-        y_points.append([sequence_counts[point] for point in x])
+        y_points.append([insertion_counts[point] for point in x])
 
-    from plots import plot_sequence_length_read_count, plot_dist_junction_sequence_length
+    from plots import plot_sequence_length_read_count, plot_dist_junction_sequence_length, plot_dist_insertion_length
     # plot_sequence_length_read_count(sequence_lengths, read_counts, label='Normal')
-    plot_dist_junction_sequence_length(x_points, y_points, labels)
+    # plot_dist_junction_sequence_length(x_points, y_points, labels)
+    plot_dist_insertion_length(x_points, y_points, labels)
 
-    average = sum(sequence_lengths) / len(sequence_lengths)
-    print(f'The average is: {average}')
+    # average = sum(sequence_lengths) / len(sequence_lengths)
+    # print(f'The average is: {average}')
 
     # threshold_list = [0, 5, 10, 15, 20, 25, 50]
     # refs = read_rtcr_refs()
