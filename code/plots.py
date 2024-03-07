@@ -59,21 +59,22 @@ def plot_sequence_length_read_count(x_points, y_points, label):
 
     plt.scatter(x_points, y_points, label=label, s=3)
     plt.title('Read count per Junction sequence length')
-    plt.xlabel('Junction sequence length')
+    plt.xlabel('Junction sequence length (nuc)')
     plt.ylabel('Read count')
     plt.legend()
     plt.savefig(f'C:\\Users\\gabev\\PycharmProjects\\MRP_TdTKO_mice\\img\\Read_count_per_sequence_length_{label}.png')
     plt.close()
 
 
-def plot_dist_junction_sequence_length(x_points_lists, y_points_lists, labels):
+def plot_dist_junction_sequence_length(x_points_lists, y_points_lists, labels, averages):
     plt.figure()
     for e in range(len(x_points_lists)):
-        x_points, y_points, label = x_points_lists[e], y_points_lists[e], labels[e]
+        x_points, y_points, label, avg = x_points_lists[e], y_points_lists[e], labels[e], averages[e]
         plt.plot(x_points, y_points, label=label)
+        plt.axvline(avg, color='black', linestyle='dashed')
     plt.title('Distribution of junction sequence lengths')
-    plt.xlabel('Junction sequence length')
-    plt.ylabel('Number of sequences')
+    plt.xlabel('Junction sequence length (nuc)')
+    plt.ylabel('Fraction of sequences (%)')
     plt.legend()
     plt.savefig(
         f'C:\\Users\\gabev\\PycharmProjects\\MRP_TdTKO_mice\\img\\Junction_length_distribution_{"-".join(labels)}')
@@ -86,7 +87,8 @@ def plot_dist_insertion_length(x_points_lists, y_points_lists, labels):
         x_points, y_points, label = x_points_lists[e], y_points_lists[e], labels[e]
         plt.plot(x_points, y_points, label=label)
     plt.title('Distribution of insertion lengths')
-    plt.xlabel('Insertion length')
+    plt.ticklabel_format(style='sci', axis='y', scilimits=(0, 0))
+    plt.xlabel('Insertion length (nuc)')
     plt.ylabel('Number of sequences')
     plt.legend()
     plt.savefig(

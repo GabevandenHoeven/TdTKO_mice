@@ -17,8 +17,8 @@ def filter_tcrb_data(rtcr_ref: dict, tcrb_data_filenames, threshold, max_sequenc
     """
     outlines = [
         "Column1\tmouse\tNumber.of.reads\tV.length.used\tD.used\tD.length.used\tJ.length.used\tV.length.deleted\t"
-        "J.length.deleted\tinsertion.length\t""V.gene\tJ.gene\tV.gene.end.position\tJ.gene.start.position\tMin.Phred\t"
-        "Junction.nucleotide.sequence\tphenotype\tstrain\n"]
+        "J.length.deleted\tinsertion.length\tV.J.distance\tV.gene\tJ.gene\tV.gene.end.position\t"
+        "J.gene.start.position\tMin.Phred\tJunction.nucleotide.sequence\tphenotype\tstrain\n"]
     column = 0
     for file in tcrb_data_filenames:
         with open(file, 'r') as csvfile:
@@ -35,10 +35,11 @@ def filter_tcrb_data(rtcr_ref: dict, tcrb_data_filenames, threshold, max_sequenc
                         row[header.index('J.gene.start.position')], row[header.index('Minimum.Phred')], \
                         row[header.index('phenotype')]
                     mouse_id = row[header.index('mouse')]
-
+                    v_j_distance = str(int(line[2]) + int(line[6]))
                     out_line = [str(column), mouse_id, reads]
                     out_line.extend(line)
-                    out_line.extend([v_gene, j_gene, v_end, j_start, phred, cdr3nt_seq, phenotype, strain])
+                    out_line.extend([v_j_distance, v_gene, j_gene, v_end, j_start, phred,
+                                     cdr3nt_seq, phenotype, strain])
                     out_line = "\t".join(e for e in out_line) + "\n"
                     outlines.append(out_line)
     with open(out_filename, 'w') as outfile:
@@ -50,21 +51,21 @@ if __name__ == '__main__':
     files = [
         # "C:\\Users\\gabev\\PycharmProjects\\MRP_TdTKO_mice\\data_files\\tdt.csv"
 
-        "C:\\Users\\gabev\\PycharmProjects\\MRP_TdTKO_mice\\data_files\\TdTKo\\GSM6893351_Mandl-01-122016.tsv",
-        "C:\\Users\\gabev\\PycharmProjects\\MRP_TdTKO_mice\\data_files\\TdTKo\\GSM6893356_Mandl-20-042016.tsv",
-        "C:\\Users\\gabev\\PycharmProjects\\MRP_TdTKO_mice\\data_files\\TdTKo\\GSM6893359_Mandl-25-112016.tsv",
-        "C:\\Users\\gabev\\PycharmProjects\\MRP_TdTKO_mice\\data_files\\TdTKo\\GSM6893360_Mandl-4-052016.tsv",
-        "C:\\Users\\gabev\\PycharmProjects\\MRP_TdTKO_mice\\data_files\\TdTKo\\GSM6893362_Mandl-AF-human-07082016.tsv"
+        # "C:\\Users\\gabev\\PycharmProjects\\MRP_TdTKO_mice\\data_files\\TdTKo\\GSM6893351_Mandl-01-122016.tsv",
+        # "C:\\Users\\gabev\\PycharmProjects\\MRP_TdTKO_mice\\data_files\\TdTKo\\GSM6893356_Mandl-20-042016.tsv",
+        # "C:\\Users\\gabev\\PycharmProjects\\MRP_TdTKO_mice\\data_files\\TdTKo\\GSM6893359_Mandl-25-112016.tsv",
+        # "C:\\Users\\gabev\\PycharmProjects\\MRP_TdTKO_mice\\data_files\\TdTKo\\GSM6893360_Mandl-4-052016.tsv",
+        # "C:\\Users\\gabev\\PycharmProjects\\MRP_TdTKO_mice\\data_files\\TdTKo\\GSM6893362_Mandl-AF-human-07082016.tsv"
 
-        # "C:\\Users\\gabev\\PycharmProjects\\MRP_TdTKO_mice\\data_files\\B6\\GSM6893369_RP-Mandl-28-M65&M66.tsv",
-        # "C:\\Users\\gabev\\PycharmProjects\\MRP_TdTKO_mice\\data_files\\B6\\GSM6893370_RP-Mandl-30-M67&M68.tsv",
-        # "C:\\Users\\gabev\\PycharmProjects\\MRP_TdTKO_mice\\data_files\\B6\\GSM6893365_RP-Mandl-05-M69&M70.tsv",
-        # "C:\\Users\\gabev\\PycharmProjects\\MRP_TdTKO_mice\\data_files\\B6\\GSM6893366_RP-Mandl-06-M71&M72.tsv",
-        # "C:\\Users\\gabev\\PycharmProjects\\MRP_TdTKO_mice\\data_files\\B6\\GSM6893367_RP-Mandl-07-M73&M74.tsv"
+        "C:\\Users\\gabev\\PycharmProjects\\MRP_TdTKO_mice\\data_files\\B6\\GSM6893369_RP-Mandl-28-M65&M66.tsv",
+        "C:\\Users\\gabev\\PycharmProjects\\MRP_TdTKO_mice\\data_files\\B6\\GSM6893370_RP-Mandl-30-M67&M68.tsv",
+        "C:\\Users\\gabev\\PycharmProjects\\MRP_TdTKO_mice\\data_files\\B6\\GSM6893365_RP-Mandl-05-M69&M70.tsv",
+        "C:\\Users\\gabev\\PycharmProjects\\MRP_TdTKO_mice\\data_files\\B6\\GSM6893366_RP-Mandl-06-M71&M72.tsv",
+        "C:\\Users\\gabev\\PycharmProjects\\MRP_TdTKO_mice\\data_files\\B6\\GSM6893367_RP-Mandl-07-M73&M74.tsv"
     ]
     refs = read_rtcr_refs()
-    # new_filename = f'..\\data_files\\B6\\filtered_data\\filtered_data_Normal.tsv'
-    new_filename = f'..\\data_files\\TdTKo\\filtered_data\\filtered_data_TdTKO.tsv'
+    new_filename = f'..\\data_files\\B6\\filtered_data\\filtered_data_Normal.tsv'
+    # new_filename = f'..\\data_files\\TdTKo\\filtered_data\\filtered_data_TdTKO.tsv'
     b6 = 'C57BL/6Â '
     tdt = 'TdT-/-'
-    filter_tcrb_data(refs, files, 1, 64, tdt, '\t', new_filename)
+    filter_tcrb_data(refs, files, 1, 64, b6, '\t', new_filename)
