@@ -15,8 +15,8 @@ def get_d_length_and_fraction_with_d(filename):
         header = next(reader)
         for line in reader:
             n_lines += 1
-            avg_d_length.append(int(line[header.index('D.length')]))
-            if not line[header.index('D.length')] == '0':
+            avg_d_length.append(int(line[header.index('D.length.used')]))
+            if int(line[header.index('D.length.used')]) > 2:
                 n_d_seg += 1
     fract_d = n_d_seg * 100 / n_lines
     print(f'The average D length is: {sum(avg_d_length) / len(avg_d_length)}')

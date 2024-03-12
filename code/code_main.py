@@ -280,34 +280,34 @@ if __name__ == "__main__":
         "C:\\Users\\gabev\\PycharmProjects\\MRP_TdTKO_mice\\data_files\\B6\\filtered_data\\filtered_data_Normal.tsv"
     ]
 
-    for filename in file_list:
-        sequence_counts = {}
-        sequence_lengths = []
-        read_counts = []
-        sequence_lengths, read_counts, sequence_counts = get_junction_length(filename, sequence_lengths, read_counts,
-                                                                             sequence_counts, delim='\t')
-        labels.append(filename.split('_')[-1].rstrip('.tsv'))
-        x = sorted(sequence_counts.keys())
-        x_points.append(x)
-        y = [sequence_counts[point] for point in x]
-        y = [point * 100 / sum(y) for point in y]
-        y_points.append(y)
-        average = sum(sequence_lengths) / len(sequence_lengths)
-        averages.append(average)
-        print(f'The average is: {average}')
-
     # for filename in file_list:
-    #     insertion_counts = {}
-    #     insertion_counts = get_insertion_counts(filename, insertion_counts, '\t')
+    #     sequence_counts = {}
+    #     sequence_lengths = []
+    #     read_counts = []
+    #     sequence_lengths, read_counts, sequence_counts = get_junction_length(filename, sequence_lengths, read_counts,
+    #                                                                          sequence_counts, delim='\t')
     #     labels.append(filename.split('_')[-1].rstrip('.tsv'))
-    #     x = sorted(insertion_counts.keys())
+    #     x = sorted(sequence_counts.keys())
     #     x_points.append(x)
-    #     y_points.append([insertion_counts[point] for point in x])
+    #     y = [sequence_counts[point] for point in x]
+    #     y = [point * 100 / sum(y) for point in y]
+    #     y_points.append(y)
+    #     average = sum(sequence_lengths) / len(sequence_lengths)
+    #     averages.append(average)
+    #     print(f'The average is: {average}')
+
+    for filename in file_list:
+        insertion_counts = {}
+        insertion_counts = get_insertion_counts(filename, insertion_counts, '\t')
+        labels.append(filename.split('_')[-1].rstrip('.tsv'))
+        x = sorted(insertion_counts.keys())
+        x_points.append(x)
+        y_points.append([insertion_counts[point] for point in x])
 
     from plots import plot_sequence_length_read_count, plot_dist_junction_sequence_length, plot_dist_insertion_length
     # plot_sequence_length_read_count(sequence_lengths, read_counts, label='Normal')
-    plot_dist_junction_sequence_length(x_points, y_points, labels, averages)
-    # plot_dist_insertion_length(x_points, y_points, labels)
+    # plot_dist_junction_sequence_length(x_points, y_points, labels, averages)
+    plot_dist_insertion_length(x_points, y_points, labels)
 
     # threshold_list = [0, 5, 10, 15, 20, 25, 50]
     # refs = read_rtcr_refs()

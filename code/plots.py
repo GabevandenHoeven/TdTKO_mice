@@ -1,3 +1,4 @@
+import numpy
 from matplotlib import pyplot as plt
 
 
@@ -93,6 +94,54 @@ def plot_dist_insertion_length(x_points_lists, y_points_lists, labels):
     plt.legend()
     plt.savefig(
         f'C:\\Users\\gabev\\PycharmProjects\\MRP_TdTKO_mice\\img\\Insertion_length_distribution_{"-".join(labels)}')
+    plt.close()
+
+
+def plot_vj_distance_reads(x_points_lists, y_points_lists, labels):
+    plt.figure()
+    for e in range(len(x_points_lists)):
+        x_points, y_points, label = x_points_lists[e], y_points_lists[e], labels[e]
+        plt.scatter(x_points, y_points, label=label, s=3)
+    plt.title('Distribution of VJ distances')
+    plt.xlabel('VJ distance (nuc)')
+    plt.ylabel('Number of reads')
+    plt.legend()
+    plt.savefig(
+        f'C:\\Users\\gabev\\PycharmProjects\\MRP_TdTKO_mice\\img\\VJ_distance_distribution_{"-".join(labels)}')
+    plt.close()
+
+
+def plot_vj_distance_occ(x_points_lists, y_points_lists, labels):
+    plt.figure()
+    for e in range(len(x_points_lists)):
+        x_points, y_points, label = x_points_lists[e], y_points_lists[e], labels[e]
+        plt.plot(x_points, y_points, label=label)
+    plt.title('Distribution of VJ distances')
+    plt.xlabel('VJ distance (nuc)')
+    plt.ylabel('Fraction of sequences (%)')
+    plt.legend()
+    plt.savefig(
+        f'C:\\Users\\gabev\\PycharmProjects\\MRP_TdTKO_mice\\img\\VJ_distance_distribution_seq_fraction_{"-".join(labels)}')
+    plt.close()
+
+
+def plot_deletions(x_points_list, y_points_list, labels, outfile):
+    plt.figure()
+    x = x_points_list[0]
+    x.extend(x_points_list[1])
+    x = numpy.asarray(list(set(x)))
+    width = 0.40
+    y_points, label = y_points_list[0], labels[0]
+    plt.bar(x-0.2, y_points, width=width, label=label)
+    y_points, label = y_points_list[1], labels[1]
+    plt.bar(x+0.2, y_points, width=width, label=label)
+    plt.xticks(numpy.arange(24))
+    # plt.title('Deletion lengths of V gene for TdTKO and Normal')
+    plt.title('Deletion lengths of J gene for TdTKO and Normal')
+    plt.xlabel('Deletions (nuc)')
+    plt.ylabel('Occurrences')
+    plt.legend()
+    plt.savefig(outfile)
     plt.close()
 
 

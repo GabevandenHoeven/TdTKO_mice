@@ -25,12 +25,12 @@ def filter_tcrb_data(rtcr_ref: dict, tcrb_data_filenames, threshold, max_sequenc
             reader = csv.reader(csvfile, delimiter=delim)
             header = next(reader)
             for row in reader:
-                column += 1
                 reads, v_gene, j_gene, cdr3nt_seq, strain = row[header.index('Number.of.reads')], \
                     row[header.index('V.gene')], row[header.index('J.gene')], \
                     row[header.index('Junction.nucleotide.sequence')], row[header.index('strain')]
                 line = get_vdj_lengths([v_gene, j_gene, cdr3nt_seq], rtcr_ref)
                 if int(reads) > threshold and len(cdr3nt_seq) < max_sequence_size and strain == flt_strain:
+                    column += 1
                     v_end, j_start, phred, phenotype = row[header.index('V.gene.end.position')], \
                         row[header.index('J.gene.start.position')], row[header.index('Minimum.Phred')], \
                         row[header.index('phenotype')]
@@ -48,24 +48,26 @@ def filter_tcrb_data(rtcr_ref: dict, tcrb_data_filenames, threshold, max_sequenc
 
 
 if __name__ == '__main__':
+    refs = read_rtcr_refs()
+
     files = [
-        # "C:\\Users\\gabev\\PycharmProjects\\MRP_TdTKO_mice\\data_files\\tdt.csv"
+        "C:\\Users\\gabev\\PycharmProjects\\MRP_TdTKO_mice\\data_files\\TdTKo\\GSM6893351_Mandl-01-122016.tsv",
+        "C:\\Users\\gabev\\PycharmProjects\\MRP_TdTKO_mice\\data_files\\TdTKo\\GSM6893356_Mandl-20-042016.tsv",
+        "C:\\Users\\gabev\\PycharmProjects\\MRP_TdTKO_mice\\data_files\\TdTKo\\GSM6893359_Mandl-25-112016.tsv",
+        "C:\\Users\\gabev\\PycharmProjects\\MRP_TdTKO_mice\\data_files\\TdTKo\\GSM6893360_Mandl-4-052016.tsv",
+        "C:\\Users\\gabev\\PycharmProjects\\MRP_TdTKO_mice\\data_files\\TdTKo\\GSM6893362_Mandl-AF-human-07082016.tsv"
+        ]
+    new_filename = f'..\\data_files\\B6\\filtered_data\\filtered_data_Normal.tsv'
+    b6 = 'C57BL/6Â '
+    filter_tcrb_data(refs, files, 1, 64, b6, '\t', new_filename)
 
-        # "C:\\Users\\gabev\\PycharmProjects\\MRP_TdTKO_mice\\data_files\\TdTKo\\GSM6893351_Mandl-01-122016.tsv",
-        # "C:\\Users\\gabev\\PycharmProjects\\MRP_TdTKO_mice\\data_files\\TdTKo\\GSM6893356_Mandl-20-042016.tsv",
-        # "C:\\Users\\gabev\\PycharmProjects\\MRP_TdTKO_mice\\data_files\\TdTKo\\GSM6893359_Mandl-25-112016.tsv",
-        # "C:\\Users\\gabev\\PycharmProjects\\MRP_TdTKO_mice\\data_files\\TdTKo\\GSM6893360_Mandl-4-052016.tsv",
-        # "C:\\Users\\gabev\\PycharmProjects\\MRP_TdTKO_mice\\data_files\\TdTKo\\GSM6893362_Mandl-AF-human-07082016.tsv"
-
+    files = [
         "C:\\Users\\gabev\\PycharmProjects\\MRP_TdTKO_mice\\data_files\\B6\\GSM6893369_RP-Mandl-28-M65&M66.tsv",
         "C:\\Users\\gabev\\PycharmProjects\\MRP_TdTKO_mice\\data_files\\B6\\GSM6893370_RP-Mandl-30-M67&M68.tsv",
         "C:\\Users\\gabev\\PycharmProjects\\MRP_TdTKO_mice\\data_files\\B6\\GSM6893365_RP-Mandl-05-M69&M70.tsv",
         "C:\\Users\\gabev\\PycharmProjects\\MRP_TdTKO_mice\\data_files\\B6\\GSM6893366_RP-Mandl-06-M71&M72.tsv",
         "C:\\Users\\gabev\\PycharmProjects\\MRP_TdTKO_mice\\data_files\\B6\\GSM6893367_RP-Mandl-07-M73&M74.tsv"
     ]
-    refs = read_rtcr_refs()
-    new_filename = f'..\\data_files\\B6\\filtered_data\\filtered_data_Normal.tsv'
-    # new_filename = f'..\\data_files\\TdTKo\\filtered_data\\filtered_data_TdTKO.tsv'
-    b6 = 'C57BL/6Â '
+    new_filename = f'..\\data_files\\TdTKo\\filtered_data\\filtered_data_TdTKO.tsv'
     tdt = 'TdT-/-'
-    filter_tcrb_data(refs, files, 1, 64, b6, '\t', new_filename)
+    filter_tcrb_data(refs, files, 1, 64, tdt, '\t', new_filename)
