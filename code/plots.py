@@ -60,7 +60,7 @@ def plot_sequence_length_read_count(x_points, y_points, label):
 
     plt.scatter(x_points, y_points, label=label, s=3)
     plt.title('Read count per Junction sequence length')
-    plt.xlabel('Junction sequence length (nuc)')
+    plt.xlabel('Junction sequence length (nt)')
     plt.ylabel('Read count')
     plt.legend()
     plt.savefig(f'C:\\Users\\gabev\\PycharmProjects\\MRP_TdTKO_mice\\img\\Read_count_per_sequence_length_{label}.png')
@@ -69,13 +69,17 @@ def plot_sequence_length_read_count(x_points, y_points, label):
 
 def plot_dist_junction_sequence_length(x_points_lists, y_points_lists, labels, averages):
     plt.figure()
-    for e in range(len(x_points_lists)):
-        x_points, y_points, label, avg = x_points_lists[e], y_points_lists[e], labels[e], averages[e]
-        plt.plot(x_points, y_points, label=label)
-        plt.axvline(avg, color='black', linestyle='dashed')
+    x_points, y_points, label, avg = x_points_lists[0], y_points_lists[0], labels[0], averages[0]
+    plt.plot(x_points, y_points, label=label)
+    plt.axvline(avg, linestyle='dashed', label='average '+label)
+
+    x_points, y_points, label, avg = x_points_lists[1], y_points_lists[1], labels[1], averages[1]
+    plt.plot(x_points, y_points, label=label)
+    plt.axvline(avg, linestyle='dashed', color='orange', label='average ' + label)
+
     plt.title('Distribution of junction sequence lengths')
-    plt.xlabel('Junction sequence length (nuc)')
-    plt.ylabel('Fraction of sequences (%)')
+    plt.xlabel('Junction sequence length (nt)')
+    plt.ylabel('Percentage of sequences (%)')
     plt.legend()
     plt.savefig(
         f'C:\\Users\\gabev\\PycharmProjects\\MRP_TdTKO_mice\\img\\Junction_length_distribution_{"-".join(labels)}')
@@ -88,9 +92,9 @@ def plot_dist_insertion_length(x_points_lists, y_points_lists, labels):
         x_points, y_points, label = x_points_lists[e], y_points_lists[e], labels[e]
         plt.plot(x_points, y_points, label=label)
     plt.title('Distribution of insertion lengths')
-    plt.ticklabel_format(style='sci', axis='y', scilimits=(0, 0))
-    plt.xlabel('Insertion length (nuc)')
-    plt.ylabel('Number of sequences')
+    # plt.ticklabel_format(style='sci', axis='y', scilimits=(0, 0))
+    plt.xlabel('Insertion length (nt)')
+    plt.ylabel('Percentage of sequences with an insertion (%)')
     plt.legend()
     plt.savefig(
         f'C:\\Users\\gabev\\PycharmProjects\\MRP_TdTKO_mice\\img\\Insertion_length_distribution_{"-".join(labels)}')
@@ -111,21 +115,27 @@ def plot_vj_distance_reads(x_points_lists, y_points_lists, labels):
     plt.close()
 
 
-def plot_vj_distance_occ(x_points_lists, y_points_lists, labels):
+def plot_vj_distance_perc(x_points_lists, y_points_lists, avg, labels):
     plt.figure()
-    for e in range(len(x_points_lists)):
-        x_points, y_points, label = x_points_lists[e], y_points_lists[e], labels[e]
-        plt.plot(x_points, y_points, label=label)
+
+    x_points, y_points, label, average = x_points_lists[0], y_points_lists[0], labels[0], avg[0]
+    plt.plot(x_points, y_points, label=label)
+    plt.axvline(average, linestyle='dashed', label='average '+label)
+
+    x_points, y_points, label, average = x_points_lists[1], y_points_lists[1], labels[1], avg[1]
+    plt.plot(x_points, y_points, label=label)
+    plt.axvline(average, linestyle='dashed', color='orange', label='average ' + label)
+
     plt.title('Distribution of VJ distances')
-    plt.xlabel('VJ distance (nuc)')
-    plt.ylabel('Fraction of sequences (%)')
+    plt.xlabel('VJ distance (nt)')
+    plt.ylabel('Percentage of sequences (%)')
     plt.legend()
     plt.savefig(
         f'C:\\Users\\gabev\\PycharmProjects\\MRP_TdTKO_mice\\img\\VJ_distance_distribution_seq_fraction_{"-".join(labels)}')
     plt.close()
 
 
-def plot_deletions(x_points_list, y_points_list, labels, outfile):
+def plot_deletions(x_points_list, y_points_list, labels, title, outfile):
     plt.figure()
     x = x_points_list[0]
     x.extend(x_points_list[1])
@@ -136,10 +146,9 @@ def plot_deletions(x_points_list, y_points_list, labels, outfile):
     y_points, label = y_points_list[1], labels[1]
     plt.bar(x+0.2, y_points, width=width, label=label)
     plt.xticks(numpy.arange(24))
-    # plt.title('Deletion lengths of V gene for TdTKO and Normal')
-    plt.title('Deletion lengths of J gene for TdTKO and Normal')
-    plt.xlabel('Deletions (nuc)')
-    plt.ylabel('Occurrences')
+    plt.title(title)
+    plt.xlabel('Deletions (nt)')
+    plt.ylabel('Percentage of sequences (%)')
     plt.legend()
     plt.savefig(outfile)
     plt.close()

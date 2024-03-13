@@ -259,15 +259,17 @@ def get_insertion_counts(fn, counts: dict, delim: str):
     :param delim:
     :return:
     """
+    total_seq = 0
     with open(fn, 'r') as file:
         reader = csv.reader(file, delimiter=delim)
         header = next(reader)
         for row in reader:
+            total_seq += 1
             try:
                 counts[int(row[header.index('insertion.length')])] += 1
             except KeyError:
                 counts.update({int(row[header.index('insertion.length')]): 1})
-    return counts
+    return counts, total_seq
 
 
 if __name__ == "__main__":
@@ -298,11 +300,11 @@ if __name__ == "__main__":
 
     for filename in file_list:
         insertion_counts = {}
-        insertion_counts = get_insertion_counts(filename, insertion_counts, '\t')
+        insertion_counts, total = get_insertion_counts(filename, insertion_counts, '\t')
         labels.append(filename.split('_')[-1].rstrip('.tsv'))
         x = sorted(insertion_counts.keys())
         x_points.append(x)
-        y_points.append([insertion_counts[point] for point in x])
+        y_points.append([insertion_counts[point] / total * 100 for point in x])
 
     from plots import plot_sequence_length_read_count, plot_dist_junction_sequence_length, plot_dist_insertion_length
     # plot_sequence_length_read_count(sequence_lengths, read_counts, label='Normal')

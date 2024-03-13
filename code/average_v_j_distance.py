@@ -1,5 +1,5 @@
 import pandas
-from plots import plot_vj_distance_reads, plot_vj_distance_occ
+from plots import plot_vj_distance_reads, plot_vj_distance_perc
 
 
 def calculate_average_v_j_distance(fn, delim):
@@ -18,7 +18,7 @@ def calculate_average_v_j_distance(fn, delim):
     n_rows = len(df)
     avg = sum_ / n_rows
     print(f'The average VJ distance is: {sum_} / {n_rows} = {avg}')
-    return distances, reads, unique_distances, distance_occ
+    return distances, reads, unique_distances, distance_occ, avg
 
 
 if __name__ == '__main__':
@@ -27,17 +27,19 @@ if __name__ == '__main__':
     unique_distances = []
     distance_occurrences = []
     labels = []
+    averages = []
     filenames = [
         'C:\\Users\\gabev\\PycharmProjects\\MRP_TdTKO_mice\\data_files\\TdTKo\\filtered_data\\filtered_data_TdTKO.tsv',
         'C:\\Users\\gabev\\PycharmProjects\\MRP_TdTKO_mice\\data_files\\B6\\filtered_data\\filtered_data_Normal.tsv'
                 ]
     for file in filenames:
-        d, r, unique_d, d_occ = calculate_average_v_j_distance(file, '\t')
+        d, r, unique_d, d_occ, average = calculate_average_v_j_distance(file, '\t')
         vj_distances.append(d)
         read_counts.append(r)
+        averages.append(average)
         unique_distances.append(unique_d)
         d_occ = [occ * 100 / sum(d_occ) for occ in d_occ]
         distance_occurrences.append(d_occ)
         labels.append(file.split('_')[-1].rstrip('.tsv'))
     # plot_vj_distance_reads(vj_distances, read_counts, labels)
-    plot_vj_distance_occ(unique_distances, distance_occurrences, labels)
+    plot_vj_distance_perc(unique_distances, distance_occurrences, averages, labels)
