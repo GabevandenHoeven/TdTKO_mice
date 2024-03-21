@@ -154,6 +154,25 @@ def plot_deletions(x_points_list, y_points_list, labels, title, outfile):
     plt.close()
 
 
+def plot_d_lengths(x_points_list, y_points_list, labels, title, outfile):
+    plt.figure()
+    x = x_points_list[0]
+    x.extend(x_points_list[1])
+    x = numpy.asarray(list(set(x)))
+    width = 0.40
+    y_points, label = y_points_list[0], labels[0]
+    plt.bar(x-0.2, y_points, width=width, label=label)
+    y_points, label = y_points_list[1], labels[1]
+    plt.bar(x+0.2, y_points, width=width, label=label)
+    plt.xticks(numpy.arange(15))
+    plt.title(title)
+    plt.xlabel('D length (nt)')
+    plt.ylabel('Percentage of sequences (%)')
+    plt.legend()
+    plt.savefig(outfile)
+    plt.close()
+
+
 if __name__ == '__main__':
     # plot_supporting_reads()
     plot_fractions_ins()
