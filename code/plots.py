@@ -1,5 +1,6 @@
 import numpy
 from matplotlib import pyplot as plt
+from matplotlib import axes
 
 
 def plot_supporting_reads():
@@ -135,7 +136,7 @@ def plot_vj_distance_perc(x_points_lists, y_points_lists, avg, labels):
     plt.close()
 
 
-def plot_deletions(x_points_list, y_points_list, labels, title, outfile):
+def plot_deletions(x_points_list, y_points_list, labels, ticks, title, outfile):
     plt.figure()
     x = x_points_list[0]
     x.extend(x_points_list[1])
@@ -145,7 +146,29 @@ def plot_deletions(x_points_list, y_points_list, labels, title, outfile):
     plt.bar(x-0.2, y_points, width=width, label=label)
     y_points, label = y_points_list[1], labels[1]
     plt.bar(x+0.2, y_points, width=width, label=label)
-    plt.xticks(numpy.arange(24))
+    plt.xticks(ticks)
+    plt.title(title)
+    plt.xlabel('Deletions (nt)')
+    plt.ylabel('Percentage of sequences (%)')
+    plt.legend()
+    plt.savefig(outfile)
+    plt.close()
+
+
+def plot_d_deletions(x_points_list, y_points_list, labels, title, outfile):
+    plt.figure()
+    x = x_points_list[0]
+    x.extend(x_points_list[1])
+    x = numpy.asarray(list(set(x)))
+    width = 0.40
+    y_points, label = y_points_list[0], labels[0]
+    plt.bar(x-0.2, y_points, width=width, label=label)
+    y_points, label = y_points_list[1], labels[1]
+    plt.bar(x+0.2, y_points, width=width, label=label)
+    ticks = list(x)
+    tick_labels = [e for e in ticks]
+    tick_labels[-1] = 'Unidentified'
+    plt.xticks(ticks=ticks, labels=tick_labels)
     plt.title(title)
     plt.xlabel('Deletions (nt)')
     plt.ylabel('Percentage of sequences (%)')

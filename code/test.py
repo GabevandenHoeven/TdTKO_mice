@@ -30,3 +30,6 @@ if __name__ == '__main__':
 
     complementary = ''.join(complementary)
     print(complementary)
+
+    n = [1, 2, 3, 4] + ['string']
+    print(n)
