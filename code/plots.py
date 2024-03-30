@@ -1,6 +1,5 @@
 import numpy
 from matplotlib import pyplot as plt
-from matplotlib import axes
 
 
 def plot_supporting_reads():
@@ -186,7 +185,7 @@ def plot_d_lengths(x_points_list, y_points_list, labels, title, outfile):
     y_points, label = y_points_list[0], labels[0]
     plt.bar(x-0.2, y_points, width=width, label=label)
     y_points, label = y_points_list[1], labels[1]
-    plt.bar(x+0.2, y_points, width=width, label=label)
+    plt.bar(x+0.2, y_points, width=width, label=label, color='orange')
     plt.xticks(numpy.arange(15))
     plt.title(title)
     plt.xlabel('D length (nt)')
