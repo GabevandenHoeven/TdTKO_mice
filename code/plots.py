@@ -117,13 +117,16 @@ def plot_vj_distance_reads(x_points_lists, y_points_lists, labels):
 
 def plot_vj_distance_perc(x_points_lists, y_points_lists, avg, labels):
     plt.figure()
+    x_points = [x for x in x_points_lists[0] if x <= 25]
+    y_points, label, average = [y for y in y_points_lists[0] if y_points_lists[0].index(y) <= 25], labels[0], avg[0]
+    plt.plot(x_points, y_points, label=label, color='blue')
+    plt.scatter(x_points, y_points, color='blue', s=5)
+    plt.axvline(average, linestyle='dashed', label='average '+label, color='blue')
 
-    x_points, y_points, label, average = x_points_lists[0], y_points_lists[0], labels[0], avg[0]
-    plt.plot(x_points, y_points, label=label)
-    plt.axvline(average, linestyle='dashed', label='average '+label)
-
-    x_points, y_points, label, average = x_points_lists[1], y_points_lists[1], labels[1], avg[1]
-    plt.plot(x_points, y_points, label=label)
+    x_points = [x for x in x_points_lists[1] if x <= 25]
+    y_points, label, average = [y for y in y_points_lists[1] if y_points_lists[1].index(y) <= 25], labels[1], avg[1]
+    plt.plot(x_points, y_points, label=label, color='orange')
+    plt.scatter(x_points, y_points, color='orange', s=5)
     plt.axvline(average, linestyle='dashed', color='orange', label='average ' + label)
 
     plt.title('Distribution of VJ distances')
@@ -183,7 +186,7 @@ def plot_d_lengths(x_points_list, y_points_list, labels, title, outfile):
     x = numpy.asarray(list(set(x)))
     width = 0.40
     y_points, label = y_points_list[0], labels[0]
-    plt.bar(x-0.2, y_points, width=width, label=label)
+    plt.bar(x-0.2, y_points, width=width, label=label, color='blue')
     y_points, label = y_points_list[1], labels[1]
     plt.bar(x+0.2, y_points, width=width, label=label, color='orange')
     plt.xticks(numpy.arange(15))
