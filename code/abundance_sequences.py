@@ -47,6 +47,8 @@ if __name__ == '__main__':
         mean_d_lengths = []
         for i in range(1, mice_per_file[files.index(file)] + 1):
             n_seq_per_incidence = sum(1 for c in seqs.values() if c[0] == i)
+            # i is the incidence or number of mice the sequence is found in.
+            # Here you get the number of sequences matching the expression per incidence.
             try:
                 mean_d = sum(c[1][0] for c in seqs.values() if c[0] == i) / n_seq_per_incidence
                 mean_d_lengths.append(mean_d)

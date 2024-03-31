@@ -120,13 +120,13 @@ def plot_vj_distance_perc(x_points_lists, y_points_lists, avg, labels):
     x_points = [x for x in x_points_lists[0] if x <= 25]
     y_points, label, average = [y for y in y_points_lists[0] if y_points_lists[0].index(y) <= 25], labels[0], avg[0]
     plt.plot(x_points, y_points, label=label, color='blue')
-    plt.scatter(x_points, y_points, color='blue', s=5)
+    plt.scatter(x_points, y_points, color='blue', s=10)
     plt.axvline(average, linestyle='dashed', label='average '+label, color='blue')
 
     x_points = [x for x in x_points_lists[1] if x <= 25]
     y_points, label, average = [y for y in y_points_lists[1] if y_points_lists[1].index(y) <= 25], labels[1], avg[1]
     plt.plot(x_points, y_points, label=label, color='orange')
-    plt.scatter(x_points, y_points, color='orange', s=5)
+    plt.scatter(x_points, y_points, color='orange', s=10)
     plt.axvline(average, linestyle='dashed', color='orange', label='average ' + label)
 
     plt.title('Distribution of VJ distances')
@@ -195,6 +195,21 @@ def plot_d_lengths(x_points_list, y_points_list, labels, title, outfile):
     plt.ylabel('Percentage of sequences (%)')
     plt.legend()
     plt.savefig(outfile)
+    plt.close()
+
+
+def plot_inferred_d_mean_and_per_incidence(x_points_list, y_points_list, labels, plot_labels, title, out):
+    plt.figure()
+    plt.plot(x_points_list[0], y_points_list[0], label=labels[0], color='blue')
+    plt.scatter(x_points_list[0], y_points_list[0], color='blue', s=10)
+    plt.plot(x_points_list[1], y_points_list[1], label=labels[1], color='orange')
+    plt.scatter(x_points_list[1], y_points_list[1], color='orange', s=10)
+    plt.xticks(numpy.arange(1, max(len(x_points_list[0]), len((x_points_list[1])))) + 1)
+    plt.xlabel(plot_labels[0])
+    plt.ylabel(plot_labels[1])
+    plt.title(title)
+    plt.legend()
+    plt.savefig(out)
     plt.close()
 
 
