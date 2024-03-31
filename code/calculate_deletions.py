@@ -81,7 +81,7 @@ if __name__ == '__main__':
 
     out = f'C:\\Users\\gabev\\PycharmProjects\\MRP_TdTKO_mice\\img\\deletion_size_V_TdTKO-Normal.png'
     title = 'Percentage of sequences containing deletions of V gene \nfor TdTKO and Normal'
-    ticks = list(numpy.arange(18))
+    ticks = list(numpy.arange(14))
     plot_deletions(x, y, ['TdTKO', 'Normal'], ticks, title, out)
 
     x = []
@@ -94,7 +94,7 @@ if __name__ == '__main__':
     y.append([jdel_nor[e] / total_nor * 100 for e in sorted(jdel_nor.keys())])
     out = f'C:\\Users\\gabev\\PycharmProjects\\MRP_TdTKO_mice\\img\\deletion_size_J_TdTKO-Normal.png'
     title = 'Percentage of sequences containing deletions of J gene \nfor TdTKO and Normal'
-    ticks = list(numpy.arange(24))
+    ticks = list(numpy.arange(14))
     plot_deletions(x, y, ['TdTKO', 'Normal'], ticks, title, out)
 
     # ----

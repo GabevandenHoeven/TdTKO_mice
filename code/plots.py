@@ -142,12 +142,13 @@ def plot_deletions(x_points_list, y_points_list, labels, ticks, title, outfile):
     plt.figure()
     x = x_points_list[0]
     x.extend(x_points_list[1])
-    x = numpy.asarray(list(set(x)))
+    x = set(x)
+    x = numpy.asarray([e for e in x if e <= 13])
     width = 0.40
-    y_points, label = y_points_list[0], labels[0]
-    plt.bar(x-0.2, y_points, width=width, label=label)
-    y_points, label = y_points_list[1], labels[1]
-    plt.bar(x+0.2, y_points, width=width, label=label)
+    y_points, label = [y for y in y_points_list[0] if y_points_list[0].index(y) <= 13], labels[0]
+    plt.bar(x-0.2, y_points, width=width, label=label, color='blue')
+    y_points, label = [y for y in y_points_list[1] if y_points_list[1].index(y) <= 13], labels[1]
+    plt.bar(x+0.2, y_points, width=width, label=label, color='orange')
     plt.xticks(ticks)
     plt.title(title)
     plt.xlabel('Deletions (nt)')
@@ -164,9 +165,9 @@ def plot_d_deletions(x_points_list, y_points_list, labels, title, outfile):
     x = numpy.asarray(list(set(x)))
     width = 0.40
     y_points, label = y_points_list[0], labels[0]
-    plt.bar(x-0.2, y_points, width=width, label=label)
+    plt.bar(x-0.2, y_points, width=width, label=label, color='blue')
     y_points, label = y_points_list[1], labels[1]
-    plt.bar(x+0.2, y_points, width=width, label=label)
+    plt.bar(x+0.2, y_points, width=width, label=label, color='orange')
     ticks = list(x)
     tick_labels = [e for e in ticks]
     tick_labels[-1] = 'Unidentified'
