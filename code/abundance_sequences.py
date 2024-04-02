@@ -1,5 +1,5 @@
 import csv
-from plots import plot_inferred_d_mean_and_per_incidence
+from plots import plot_line_and_scatter_per_incidence
 
 
 def get_abundance(filename: str, exp: str):
@@ -16,16 +16,19 @@ def get_abundance(filename: str, exp: str):
         reader = csv.reader(file, delimiter='\t')
         header = next(reader)
         for line in reader:
-            mouse, sequence, d_length, v, j, pheno = line[header.index('mouse')], \
+            mouse, sequence, d_length, v, j, pheno, vj_dis, ins = line[header.index('mouse')], \
                 line[header.index('Junction.nucleotide.sequence')], int(line[header.index('D.length.used')]), \
-                line[header.index('V.gene')], line[header.index('J.gene')], line[header.index('phenotype')]
+                line[header.index('V.gene')], line[header.index('J.gene')], line[header.index('phenotype')], \
+                int(line[header.index('V.J.distance')]), int(line[header.index('insertion.length')])
             try:
                 if eval(exp) and pheno == 'CD4+':
                     sequences[v + sequence + j][0] += 1
                     sequences[v + sequence + j][1].append(d_length)
                     sequences[v + sequence + j][2].append(mouse)
+                    sequences[v + sequence + j][3].append(vj_dis)
+                    sequences[v + sequence + j][4].append(ins)
             except KeyError:
-                sequences.update({v + sequence + j: [1, [d_length], [mouse]]})
+                sequences.update({v + sequence + j: [1, [d_length], [mouse], [vj_dis], [ins]]})
     with open(filename, 'r') as file:
         next(file)
         n_rows = len(file.readlines())
@@ -56,7 +59,7 @@ if __name__ == '__main__':
                 mean_d = 0
 
         y.append(mean_d_lengths)
-    plot_inferred_d_mean_and_per_incidence(x, y, ['TdTKO', 'Normal'], ['Incidence', 'Inferred D-segment length (nt)'],
+    plot_line_and_scatter_per_incidence(x, y, ['TdTKO', 'Normal'], ['Incidence', 'Inferred D-segment length (nt)'],
                                            'Mean inferred D-length',
                                            'C:\\Users\\gabev\\PycharmProjects\\MRP_TdTKO_mice\\img'
                                            '\\Mean_inferred_D_length_per_incidence.png')
@@ -76,7 +79,7 @@ if __name__ == '__main__':
             n_seq_per_incidence = sum(1 for c in seqs.values() if c[0] == i)
             incidences.append(n_seq_per_incidence / n_rows * 100)
         y.append(incidences)
-    plot_inferred_d_mean_and_per_incidence(x, y, ['TdTKO', 'Normal'], ['Incidence', 'Percentage of sequences (%)'],
+    plot_line_and_scatter_per_incidence(x, y, ['TdTKO', 'Normal'], ['Incidence', 'Percentage of sequences (%)'],
                                            'Inferred D-length = 0 nt',
                                            'C:\\Users\\gabev\\PycharmProjects\\MRP_TdTKO_mice\\img'
                                            '\\Fraction_no_D_per_incidence.png')
@@ -90,7 +93,7 @@ if __name__ == '__main__':
             n_seq_per_incidence = sum(1 for c in seqs.values() if c[0] == i)
             incidences.append(n_seq_per_incidence / n_rows * 100)
         y.append(incidences)
-    plot_inferred_d_mean_and_per_incidence(x, y, ['TdTKO', 'Normal'], ['Incidence', 'Percentage of sequences (%)'],
+    plot_line_and_scatter_per_incidence(x, y, ['TdTKO', 'Normal'], ['Incidence', 'Percentage of sequences (%)'],
                                            'Inferred D-length <= 2 nt',
                                            'C:\\Users\\gabev\\PycharmProjects\\MRP_TdTKO_mice\\img'
                                            '\\Fraction_max_2nt_D_per_incidence.png')

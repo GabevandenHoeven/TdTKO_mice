@@ -199,13 +199,13 @@ def plot_d_lengths(x_points_list, y_points_list, labels, title, outfile):
     plt.close()
 
 
-def plot_inferred_d_mean_and_per_incidence(x_points_list, y_points_list, labels, plot_labels, title, out):
+def plot_line_and_scatter_per_incidence(x_points_list, y_points_list, labels, plot_labels, title, out):
     plt.figure()
     plt.plot(x_points_list[0], y_points_list[0], label=labels[0], color='blue')
     plt.scatter(x_points_list[0], y_points_list[0], color='blue', s=10)
     plt.plot(x_points_list[1], y_points_list[1], label=labels[1], color='orange')
     plt.scatter(x_points_list[1], y_points_list[1], color='orange', s=10)
-    plt.xticks(numpy.arange(1, max(len(x_points_list[0]), len((x_points_list[1])))) + 1)
+    plt.xticks(numpy.arange(1, max(len(x_points_list[0]), len((x_points_list[1]))) + 1))
     plt.xlabel(plot_labels[0])
     plt.ylabel(plot_labels[1])
     plt.title(title)
@@ -214,6 +214,38 @@ def plot_inferred_d_mean_and_per_incidence(x_points_list, y_points_list, labels,
     plt.close()
 
 
+def plot_boxplot_per_incidence(data, labels, plot_labels, title, out):
+    plt.figure()
+    plt.boxplot(data, showfliers=False)
+    plt.xlabel(plot_labels[0])
+    plt.ylabel(plot_labels[1])
+    plt.xticks(numpy.arange(1, 14))
+    plt.title(title)
+    plt.savefig(out)
+    plt.close()
+
+
+def number_of_seq_per_incidence():
+    x = [numpy.arange(1, 14), numpy.arange(1, 11)]
+    y = [
+        [146484, 37303, 18547, 11275, 7751, 5642, 4306, 3358, 2681, 2401, 2136, 1984, 3232],
+        [1246356, 89089, 24230, 9814, 4758, 2496, 1498, 884, 512, 377]
+    ]
+    plt.figure()
+    plt.plot(x[0], y[0], label='TdTKO', color='blue')
+    plt.scatter(x[0], y[0], color='blue', s=10)
+    plt.plot(x[1], y[1], label='Normal', color='orange')
+    plt.scatter(x[1], y[1], color='orange', s=10)
+    plt.yscale('log')
+    plt.xticks(numpy.arange(1, 14))
+    plt.xlabel('Incidence')
+    plt.ylabel('Number of sequences found in incidence number of mice')
+    plt.title('Number of sequences per incidence')
+    plt.legend()
+    plt.savefig('C:\\Users\\gabev\\PycharmProjects\\MRP_TdTKO_mice\\img\\number_of_seq_per_incidence.png')
+
+
 if __name__ == '__main__':
     # plot_supporting_reads()
-    plot_fractions_ins()
+    # plot_fractions_ins()
+    number_of_seq_per_incidence()
