@@ -216,10 +216,9 @@ def plot_line_and_scatter_per_incidence(x_points_list, y_points_list, labels, pl
 
 def plot_boxplot_per_incidence(data, labels, plot_labels, title, out):
     plt.figure()
-    plt.boxplot(data, showfliers=False)
+    bplot = plt.boxplot(data, showfliers=False, patch_artist=True, labels=labels)
     plt.xlabel(plot_labels[0])
     plt.ylabel(plot_labels[1])
-    plt.xticks(numpy.arange(1, 14))
     plt.title(title)
     plt.savefig(out)
     plt.close()

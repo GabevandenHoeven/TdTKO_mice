@@ -33,11 +33,11 @@ if __name__ == '__main__':
         for i in range(1, mice_per_file[files.index(file)] + 1):
             insertions.append([c[4][0] for c in seqs.values() if c[0] == i])
         data.append(insertions)
-    plot_boxplot_per_incidence(data[0], ['TdTKO', 'Normal'], ['Incidence', 'Mean insertions (nt)'],
+    plot_boxplot_per_incidence(data[0], [1, 3, 5, 7, 9, 11, 13, 15, 17, 19, 21, 22, 23], ['Incidence', 'Mean insertions (nt)'],
                                'Mean insertion length per incidence',
                                'C:\\Users\\gabev\\PycharmProjects\\MRP_TdTKO_mice\\img'
                                '\\Boxplot_insertion_length_per_incidence_TdTKO.png')
-    plot_boxplot_per_incidence(data[1], ['TdTKO', 'Normal'], ['Incidence', 'Mean insertions (nt)'],
+    plot_boxplot_per_incidence(data[1], [2, 4, 6, 8, 10, 12, 14, 16, 18, 20], ['Incidence', 'Mean insertions (nt)'],
                                'Mean insertion length per incidence',
                                'C:\\Users\\gabev\\PycharmProjects\\MRP_TdTKO_mice\\img'
                                '\\Boxplot_insertion_length_per_incidence_Normal.png')
