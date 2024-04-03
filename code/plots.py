@@ -214,12 +214,25 @@ def plot_line_and_scatter_per_incidence(x_points_list, y_points_list, labels, pl
     plt.close()
 
 
-def plot_boxplot_per_incidence(data, labels, positions, plot_labels, title, out):
-    plt.figure()
-    bplot = plt.boxplot(data, showfliers=False, patch_artist=True, positions=positions, labels=labels)
+def plot_boxplot_per_incidence(data, labels, positions, plot_labels, ticks, tick_labels, title, out):
+    plt.figure(figsize=(9, 7))
+    bplot1 = plt.boxplot(data[0], showfliers=False, patch_artist=True, showmeans=True, positions=positions[0])
+    bplot2 = plt.boxplot(data[1], showfliers=False, patch_artist=True, showmeans=True, positions=positions[1])
+    colors = ['blue', 'orange']
+    for bplot in (bplot1, bplot2):
+        color = colors[(bplot1, bplot2).index(bplot)]
+        for patch in bplot['boxes']:
+            patch.set_facecolor(color)
+        for median in bplot['medians']:
+            if color == 'blue':
+                median.set_color('orange')
+            else:
+                median.set_color('blue')
+    plt.xticks(ticks=ticks, labels=tick_labels)
     plt.xlabel(plot_labels[0])
     plt.ylabel(plot_labels[1])
     plt.title(title)
+    plt.legend([bplot1["boxes"][0], bplot2["boxes"][0]], labels, loc='upper right')
     plt.savefig(out)
     plt.close()
 
