@@ -33,12 +33,6 @@ if __name__ == '__main__':
                                         '\\Mean_inferred_D_length_per_incidence.png')
     x = []
     y = []
-    # TODO EVEN WITH THE VJ INCLUDED IN THE SEQUENCE KEY, WE GET MULTIPLE OCCURRENCES IN THE FILE FROM THE SAME MICE
-    #  INTERESTINGLY IT'S USUALLY * 3.
-    #  UPDATE: IT'S IN THE DATA, SEQUENCES ARE COMING FROM CD4+ CD5HI AND CD5LO. PROBABLY I SHOULD FILTER FOR CD4+.
-    #  I FILTERED FOR CD4+, I GOT 2588 IN SEQS BEFORE, NOW I GET 1648
-    #  it seems to go well, edit the plots so that normal only runs till 10 and we have scatter plus line with blue
-    #  and orange
     for file in files:
         x.append([i for i in range(1, mice_per_file[files.index(file)] + 1)])
         seqs, n_rows = get_abundance(file, 'd_length == 0')
