@@ -71,11 +71,13 @@ def plot_sequence_length_read_count(x_points, y_points, label):
 def plot_dist_junction_sequence_length(x_points_lists, y_points_lists, labels, averages):
     plt.figure()
     x_points, y_points, label, avg = x_points_lists[0], y_points_lists[0], labels[0], averages[0]
-    plt.plot(x_points, y_points, label=label)
-    plt.axvline(avg, linestyle='dashed', label='average '+label)
+    plt.plot(x_points, y_points, label=label, color='blue')
+    plt.scatter(x_points, y_points, color='blue', s=10)
+    plt.axvline(avg, linestyle='dashed', label='average '+label, color='blue')
 
     x_points, y_points, label, avg = x_points_lists[1], y_points_lists[1], labels[1], averages[1]
-    plt.plot(x_points, y_points, label=label)
+    plt.plot(x_points, y_points, label=label, color='orange')
+    plt.scatter(x_points, y_points, color='orange', s=10)
     plt.axvline(avg, linestyle='dashed', color='orange', label='average ' + label)
 
     plt.title('Distribution of junction sequence lengths')
