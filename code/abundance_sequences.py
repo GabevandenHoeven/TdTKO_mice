@@ -10,7 +10,7 @@ def get_abundance(filename: str, exp: str):
     :return:
     """
     sequences = {
-        # sequence: [count, [d_lengths], [mice]]
+        # sequence: [count, [d_lengths], [mice], [VJ distances], [insertions]]
     }
     with open(filename, 'r') as file:
         reader = csv.reader(file, delimiter='\t')

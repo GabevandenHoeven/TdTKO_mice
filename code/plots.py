@@ -41,15 +41,16 @@ def plot_fractions_ins():
     x_points = [0, 1, 2, 5, 10, 15, 20, 25, 50]
 
     y_points = [47.94, 36.92, 35.54, 32.07, 27.96, 25.08, 22.90, 21.25, 16.33]
-    plt.plot(x_points, y_points, label='TdTKO')
+    plt.plot(x_points, y_points, label='TdTKO', color='blue')
+    plt.scatter(x_points, y_points, color='blue', s=10)
 
     y_points = [94.11, 92.65, 91.87, 90.33, 88.60, 86.98, 85.33, 83.66, 74.89]
-    plt.plot(x_points, y_points, label='Normal')
+    plt.plot(x_points, y_points, label='Normal', color='orange')
+    plt.scatter(x_points, y_points, color='orange', s=10)
 
-    plt.title('Fraction of sequences with insertions per threshold of supporting reads')
+    plt.title('Fraction of sequences with insertions \nper threshold of supporting reads')
     plt.xlabel('Supporting reads')
-    plt.ylabel('Fraction of seq with insertions')
-    plt.xticks([0, 1, 2, 5, 10, 15, 20, 25, 50])
+    plt.ylabel('Fraction of seq with insertions (%)')
     plt.legend()
     plt.savefig('C:\\Users\\gabev\\PycharmProjects\\MRP_TdTKO_mice\\img\\Normal_TdTKO_fraction_insertions_per_reads.png')
     plt.close()
@@ -88,11 +89,17 @@ def plot_dist_junction_sequence_length(x_points_lists, y_points_lists, labels, a
 
 def plot_dist_insertion_length(x_points_lists, y_points_lists, labels):
     plt.figure()
-    for e in range(len(x_points_lists)):
-        x_points, y_points, label = x_points_lists[e], y_points_lists[e], labels[e]
-        plt.plot(x_points, y_points, label=label)
+    x_, y_ = [x for x in x_points_lists[0] if x_points_lists[0].index(x) <= 20], [y for y in y_points_lists[0]
+                                                                                  if y_points_lists[0].index(y) <= 20]
+
+    plt.plot(x_, y_, label=labels[0], color='blue')
+    plt.scatter(x_, y_, color='blue', s=10)
+    x_, y_ = [x for x in x_points_lists[1] if x_points_lists[1].index(x) <= 20], [y for y in y_points_lists[1]
+                                                                                  if y_points_lists[1].index(y) <= 20]
+    plt.plot(x_, y_, label=labels[1], color='orange')
+    plt.scatter(x_, y_, color='orange', s=10)
+    plt.xticks(numpy.arange(0, 21))
     plt.title('Distribution of insertion lengths')
-    # plt.ticklabel_format(style='sci', axis='y', scilimits=(0, 0))
     plt.xlabel('Insertion length (nt)')
     plt.ylabel('Percentage of sequences with an insertion (%)')
     plt.legend()
@@ -215,7 +222,7 @@ def plot_line_and_scatter_per_incidence(x_points_list, y_points_list, labels, pl
 
 
 def plot_boxplot_per_incidence(data, labels, positions, plot_labels, ticks, tick_labels, title, out):
-    plt.figure(figsize=(9, 7))
+    plt.figure(figsize=(10, 7))
     bplot1 = plt.boxplot(data[0], showfliers=False, patch_artist=True, showmeans=True, positions=positions[0])
     bplot2 = plt.boxplot(data[1], showfliers=False, patch_artist=True, showmeans=True, positions=positions[1])
     colors = ['blue', 'orange']
@@ -232,7 +239,8 @@ def plot_boxplot_per_incidence(data, labels, positions, plot_labels, ticks, tick
     plt.xlabel(plot_labels[0])
     plt.ylabel(plot_labels[1])
     plt.title(title)
-    plt.legend([bplot1["boxes"][0], bplot2["boxes"][0]], labels, loc='upper right')
+    plt.legend([bplot1["boxes"][0], bplot2["boxes"][0]], labels, bbox_to_anchor=(1.14, 1.0), loc='upper right')
+    plt.tight_layout()
     plt.savefig(out)
     plt.close()
 
@@ -259,5 +267,5 @@ def number_of_seq_per_incidence():
 
 if __name__ == '__main__':
     # plot_supporting_reads()
-    # plot_fractions_ins()
-    number_of_seq_per_incidence()
+    plot_fractions_ins()
+    # number_of_seq_per_incidence()
