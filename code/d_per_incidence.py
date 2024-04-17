@@ -12,30 +12,35 @@ if __name__ == '__main__':
     x = []
     y = []
 
-    for file in files:
-        x.append([i for i in range(1, mice_per_file[files.index(file)] + 1)])
-        seqs, n_rows = get_abundance(file, 'd_length >= 0')
-        mean_d_lengths = []
-        for i in range(1, mice_per_file[files.index(file)] + 1):
-            n_seq_per_incidence = sum(1 for c in seqs.values() if c[0] == i)
-            # i is the incidence or number of mice the sequence is found in.
-            # Here you get the number of sequences matching the expression per incidence.
-            try:
-                mean_d = sum(c[1][0] for c in seqs.values() if c[0] == i) / n_seq_per_incidence
-                mean_d_lengths.append(mean_d)
-            except ZeroDivisionError:
-                mean_d = 0
+    # for file in files:
+    #     x.append([i for i in range(1, mice_per_file[files.index(file)] + 1)])
+    #     seqs, n_rows = get_abundance(file, 'd_length >= 0')
+    #     mean_d_lengths = []
+    #     for i in range(1, mice_per_file[files.index(file)] + 1):
+    #         n_seq_per_incidence = sum(1 for c in seqs.values() if c[0] == i)
+    #         # i is the incidence or number of mice the sequence is found in.
+    #         # Here you get the number of sequences matching the expression per incidence.
+    #         try:
+    #             mean_d = sum(c[1][0] for c in seqs.values() if c[0] == i) / n_seq_per_incidence
+    #             mean_d_lengths.append(mean_d)
+    #         except ZeroDivisionError:
+    #             mean_d = 0
+    #
+    #     y.append(mean_d_lengths)
+    # plot_line_and_scatter_per_incidence(x, y, ['TdTKO', 'Normal'], ['Incidence', 'Inferred D-segment length (nt)'],
+    #                                     'Mean inferred D-length',
+    #                                     'C:\\Users\\gabev\\PycharmProjects\\MRP_TdTKO_mice\\img'
+    #                                     '\\Mean_inferred_D_length_per_incidence.png')
 
-        y.append(mean_d_lengths)
-    plot_line_and_scatter_per_incidence(x, y, ['TdTKO', 'Normal'], ['Incidence', 'Inferred D-segment length (nt)'],
-                                        'Mean inferred D-length',
-                                        'C:\\Users\\gabev\\PycharmProjects\\MRP_TdTKO_mice\\img'
-                                        '\\Mean_inferred_D_length_per_incidence.png')
+    # :param exp: str - An expression to check for a specific D length
+    # 'd_length == 0'
+
     x = []
     y = []
     for file in files:
-        x.append([i for i in range(1, mice_per_file[files.index(file)] + 1)])
-        seqs, n_rows = get_abundance(file, 'd_length == 0')
+        max_incidence = mice_per_file[files.index(file)] + 1
+        x.append([i for i in range(1, max_incidence)])
+        seqs, n_rows = get_abundance(file, max_incidence)
         incidences = []
         for i in range(1, mice_per_file[files.index(file)] + 1):
             n_seq_per_incidence = sum(1 for c in seqs.values() if c[0] == i)
