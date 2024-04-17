@@ -89,17 +89,19 @@ def plot_dist_junction_sequence_length(x_points_lists, y_points_lists, labels, a
     plt.close()
 
 
-def plot_dist_insertion_length(x_points_lists, y_points_lists, labels):
+def plot_dist_insertion_length(x_points_lists, y_points_lists, labels, averages):
     plt.figure()
     x_, y_ = [x for x in x_points_lists[0] if x_points_lists[0].index(x) <= 20], [y for y in y_points_lists[0]
                                                                                   if y_points_lists[0].index(y) <= 20]
 
     plt.plot(x_, y_, label=labels[0], color='blue')
     plt.scatter(x_, y_, color='blue', s=10)
+    plt.axvline(averages[0], linestyle='dashed', color='blue', label='average ' + labels[0])
     x_, y_ = [x for x in x_points_lists[1] if x_points_lists[1].index(x) <= 20], [y for y in y_points_lists[1]
                                                                                   if y_points_lists[1].index(y) <= 20]
     plt.plot(x_, y_, label=labels[1], color='orange')
     plt.scatter(x_, y_, color='orange', s=10)
+    plt.axvline(averages[1], linestyle='dashed', color='orange', label='average ' + labels[1])
     plt.xticks(numpy.arange(0, 21))
     plt.title('Distribution of insertion lengths')
     plt.xlabel('Insertion length (nt)')

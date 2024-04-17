@@ -260,16 +260,18 @@ def get_insertion_counts(fn, counts: dict, delim: str):
     :return:
     """
     total_seq = 0
+    insertions = []
     with open(fn, 'r') as file:
         reader = csv.reader(file, delimiter=delim)
         header = next(reader)
         for row in reader:
             total_seq += 1
             try:
+                insertions.append(int(row[header.index('insertion.length')]))
                 counts[int(row[header.index('insertion.length')])] += 1
             except KeyError:
                 counts.update({int(row[header.index('insertion.length')]): 1})
-    return counts, total_seq
+    return counts, total_seq, insertions
 
 
 if __name__ == "__main__":
@@ -300,16 +302,18 @@ if __name__ == "__main__":
 
     # for filename in file_list:
     #     insertion_counts = {}
-    #     insertion_counts, total = get_insertion_counts(filename, insertion_counts, '\t')
+    #     insertion_counts, total, insertions = get_insertion_counts(filename, insertion_counts, '\t')
     #     labels.append(filename.split('_')[-1].rstrip('.tsv'))
     #     x = sorted(insertion_counts.keys())
     #     x_points.append(x)
     #     y_points.append([insertion_counts[point] / total * 100 for point in x])
+    #     averages.append(sum(insertions) / total)
+    #     print(f'The average is: {sum(insertions) / total}')
 
     from plots import plot_sequence_length_read_count, plot_dist_junction_sequence_length, plot_dist_insertion_length
     # plot_sequence_length_read_count(sequence_lengths, read_counts, label='Normal')
-    plot_dist_junction_sequence_length(x_points, y_points, labels, averages)
-    # plot_dist_insertion_length(x_points, y_points, labels)
+    # plot_dist_junction_sequence_length(x_points, y_points, labels, averages)
+    # plot_dist_insertion_length(x_points, y_points, labels, averages)
 
     # threshold_list = [0, 5, 10, 15, 20, 25, 50]
     # refs = read_rtcr_refs()
