@@ -12,32 +12,33 @@ if __name__ == '__main__':
     y = []
 
     for file in files:
-        x.append([i for i in range(1, mice_per_file[files.index(file)] + 1)])
-        seqs, n_rows = get_abundance(file, 'd_length >= 0')
+        max_incidence = mice_per_file[files.index(file)]
+        x.append([i for i in range(1, max_incidence + 1)])
+        fract_incidence, seq_per_incidence = get_abundance(file, 'seq[3] >= 0', max_incidence)
         insertions = []
-        for i in range(1, mice_per_file[files.index(file)] + 1):
-            n_seq_per_incidence = sum(1 for c in seqs.values() if c[0] == i)
+        for incidence in range(max_incidence):
+            incidence_group = seq_per_incidence[incidence]
             try:
-                mean_ins = sum(c[4][0] for c in seqs.values() if c[0] == i) / n_seq_per_incidence
-                insertions.append(mean_ins)
+                insertions.append(sum(seq[5] for seq in incidence_group) / len(incidence_group))
             except ZeroDivisionError:
-                mean_ins = 0
+                insertions.append(0)
         y.append(insertions)
+
     plot_line_and_scatter_per_incidence(x, y, ['TdTKO', 'Normal'], ['Incidence', 'Mean insertions (nt)'],
                                         'Mean insertion length per incidence',
                                         'C:\\Users\\gabev\\PycharmProjects\\MRP_TdTKO_mice\\img'
                                         '\\Mean_insertion_length_per_incidence.png')
-    data = []
-    for file in files:
-        seqs, n_rows = get_abundance(file, 'd_length >= 0')
-        insertions = []
-        for i in range(1, mice_per_file[files.index(file)] + 1):
-            insertions.append([c[4][0] for c in seqs.values() if c[0] == i])
-        data.append(insertions)
-    plot_boxplot_per_incidence(data, ['TdTKO', 'Normal'],
-                               [[1, 3, 5, 7, 9, 11, 13, 15, 17, 19, 21, 22, 23], [2, 4, 6, 8, 10, 12, 14, 16, 18, 20]],
-                               ['Incidence', 'Insertions (nt)'],
-                               [1.5, 3.5, 5.5, 7.5, 9.5, 11.5, 13.5, 15.5, 17.5, 19.5, 21, 22, 23],
-                               list(numpy.arange(1, 14)), 'Insertion length per incidence',
-                               'C:\\Users\\gabev\\PycharmProjects\\MRP_TdTKO_mice\\img'
-                               '\\Boxplot_insertion_length_per_incidence.png')
+    # data = []
+    # for file in files:
+    #     seqs, n_rows = get_abundance(file, 'd_length >= 0')
+    #     insertions = []
+    #     for i in range(1, mice_per_file[files.index(file)] + 1):
+    #         insertions.append([c[4][0] for c in seqs.values() if c[0] == i])
+    #     data.append(insertions)
+    # plot_boxplot_per_incidence(data, ['TdTKO', 'Normal'],
+    #                            [[1, 3, 5, 7, 9, 11, 13, 15, 17, 19, 21, 22, 23], [2, 4, 6, 8, 10, 12, 14, 16, 18, 20]],
+    #                            ['Incidence', 'Insertions (nt)'],
+    #                            [1.5, 3.5, 5.5, 7.5, 9.5, 11.5, 13.5, 15.5, 17.5, 19.5, 21, 22, 23],
+    #                            list(numpy.arange(1, 14)), 'Insertion length per incidence',
+    #                            'C:\\Users\\gabev\\PycharmProjects\\MRP_TdTKO_mice\\img'
+    #                            '\\Boxplot_insertion_length_per_incidence.png')

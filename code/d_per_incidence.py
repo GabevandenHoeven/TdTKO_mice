@@ -19,7 +19,10 @@ if __name__ == '__main__':
         mean_d_lengths = []
         for incidence in range(max_incidence):
             incidence_group = seq_per_incidence[incidence]
-            mean_d_lengths.append(sum(seq[3] for seq in incidence_group) / len(seq_per_incidence[incidence]))
+            try:
+                mean_d_lengths.append(sum(seq[3] for seq in incidence_group) / len(incidence_group))
+            except ZeroDivisionError:
+                mean_d_lengths.append(0)
         y.append(mean_d_lengths)
 
     plot_line_and_scatter_per_incidence(x, y, ['TdTKO', 'Normal'], ['Incidence', 'Inferred D-segment length (nt)'],
