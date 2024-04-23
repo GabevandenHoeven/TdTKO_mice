@@ -263,7 +263,7 @@ def number_of_seq_per_incidence():
     plt.yscale('log')
     plt.xticks(numpy.arange(1, 14))
     plt.xlabel('Incidence')
-    plt.ylabel('Number of sequences found in incidence number of mice')
+    plt.ylabel('Number of sequences')
     plt.title('Number of sequences per incidence')
     plt.legend()
     plt.savefig('C:\\Users\\gabev\\PycharmProjects\\MRP_TdTKO_mice\\img\\number_of_seq_per_incidence.png')
@@ -271,5 +271,5 @@ def number_of_seq_per_incidence():
 
 if __name__ == '__main__':
     # plot_supporting_reads()
-    plot_fractions_ins()
-    # number_of_seq_per_incidence()
+    # plot_fractions_ins()
+    number_of_seq_per_incidence()

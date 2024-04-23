@@ -15,7 +15,7 @@ if __name__ == '__main__':
     for file in files:
         max_incidence = mice_per_file[files.index(file)]
         x.append([i for i in range(1, max_incidence + 1)])
-        fract_incidence, seq_per_incidence = get_abundance(file, 'seq[3] >= 0', max_incidence)
+        seq_per_incidence = get_abundance(file, 'seq[3] >= 0', max_incidence)[1]
         mean_d_lengths = []
         for incidence in range(max_incidence):
             incidence_group = seq_per_incidence[incidence]
@@ -35,8 +35,8 @@ if __name__ == '__main__':
     for file in files:
         max_incidence = mice_per_file[files.index(file)]
         x.append([i for i in range(1, max_incidence + 1)])
-        fract_incidences = get_abundance(file, 'seq[3] == 0', max_incidence)
-        y.append(fract_incidences)
+        fract_incidence = get_abundance(file, 'seq[3] == 0', max_incidence)[0]
+        y.append(fract_incidence)
     plot_line_and_scatter_per_incidence(x, y, ['TdTKO', 'Normal'], ['Incidence', 'Percentage of sequences (%)'],
                                         'Inferred D-length = 0 nt',
                                         'C:\\Users\\gabev\\PycharmProjects\\MRP_TdTKO_mice\\img'
@@ -46,8 +46,8 @@ if __name__ == '__main__':
     for file in files:
         max_incidence = mice_per_file[files.index(file)]
         x.append([i for i in range(1, max_incidence + 1)])
-        fract_incidences = get_abundance(file, 'seq[3] <= 2', max_incidence)
-        y.append(fract_incidences)
+        fract_incidence = get_abundance(file, 'seq[3] <= 2', max_incidence)[0]
+        y.append(fract_incidence)
     plot_line_and_scatter_per_incidence(x, y, ['TdTKO', 'Normal'], ['Incidence', 'Percentage of sequences (%)'],
                                         'Inferred D-length <= 2 nt',
                                         'C:\\Users\\gabev\\PycharmProjects\\MRP_TdTKO_mice\\img'
