@@ -128,7 +128,8 @@ def get_vdj_lengths(input_list: list, RTCR_ref: dict):
     :param RTCR_ref: dict - dictionary with all the TCR reference sequences, in the function read_rtcr_refs it can be
     specified which organism.
     :returns line_result: list -
-    [#nt used of V, #nt matching D, #nt used of J, #nt deleted of V, #nt deleted of J, #nt insertions]
+    [#nt used of V, matched D, #nt matching D, #nt used of J, #nt deleted of V, #nt deleted of J, #nt insertions,
+    last nt of V in the CDR3 sequence, first nt of J in the CDR3 sequence]
 
     """
     V, J, CDR3nt = input_list
@@ -185,7 +186,8 @@ def get_vdj_lengths(input_list: list, RTCR_ref: dict):
     Dused = noVJ_CDR3[d_match.a:d_match.a + matchingDlen]
     inslen = len(noVJ_CDR3) - matchingDlen
     # line_result = [len(Vused), matchingDlen, len(Jused), Vdel, Jdel, inslen]
-    line_result = [str(len(Vused)), Dused, str(matchingDlen), str(len(Jused)), str(Vdel), str(Jdel), str(inslen)]
+    line_result = [str(len(Vused)), Dused, str(matchingDlen), str(len(Jused)), str(Vdel), str(Jdel), str(inslen),
+                   str(match_V + 1), str(len(Vused) + len(noVJ_CDR3) + 1)]
     return line_result
 
 
