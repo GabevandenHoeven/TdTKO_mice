@@ -46,26 +46,28 @@ if __name__ == '__main__':
     generative_model = load_model.GenerativeModelVDJ()
     generative_model.load_and_process_igor_model(marginals_filename)
     seq_gen_model = seq_gen.SequenceGenerationVDJ(generative_model, genomic_data)
+    n_mice = 20
+    n_seq = 150000
+    for mouse in range(1, n_mice + 1):
+        filename = f'C:\\Users\\gabev\\PycharmProjects\\MRP_TdTKO_mice\\data_files\\TdTKo\\generated_Mgen{mouse}_TdTKO.tsv'
+        with open(filename, 'w') as outfile:
+            outfile.write('Column1\tmouse\tV.gene\tD.gene\tJ.gene\tJunction.nucleotide.sequence\tphenotype\tstrain\n')
+        with open(filename, 'a') as outfile:
+            for i in range(1, n_seq + 1):
+                sequence, aa, v, j, d = seq_gen_model.gen_rnd_prod_noins_CDR3()
+                v = convert_olga_to_imgt_id(v, 'V')
+                d = convert_olga_to_imgt_id(d, 'D')
+                j = convert_olga_to_imgt_id(j, 'J')
+                outfile.write(f'{i}\tMgen{mouse}\t{v}\t{d}\t{j}\t{sequence}\tGenerated\tTdT-/-\n')
 
-    n = 1000000
-    filename = 'C:\\Users\\gabev\\PycharmProjects\\MRP_TdTKO_mice\\data_files\\TdTKo\\filtered_data\\generated_data_TdTKO.tsv'
-    with open(filename, 'w') as outfile:
-        outfile.write('Column1\tV.gene\tD.gene\tJ.gene\tJunction.nucleotide.sequence\tphenotype\tstrain\n')
-    with open(filename, 'a') as outfile:
-        for i in range(1, n + 1):
-            sequence, aa, v, j, d = seq_gen_model.gen_rnd_prod_noins_CDR3()
-            v = convert_olga_to_imgt_id(v, 'V')
-            d = convert_olga_to_imgt_id(d, 'D')
-            j = convert_olga_to_imgt_id(j, 'J')
-            outfile.write(f'{i}\t{v}\t{d}\t{j}\t{sequence}\tGenerated\tTdT-/-\n')
-
-    filename = 'C:\\Users\\gabev\\PycharmProjects\\MRP_TdTKO_mice\\data_files\\B6\\filtered_data\\generated_data_Normal.tsv'
-    with open(filename, 'w') as outfile:
-        outfile.write('Column1\tV.gene\tD.gene\tJ.gene\tJunction.nucleotide.sequence\tphenotype\tstrain\n')
-    with open(filename, 'a') as outfile:
-        for i in range(n):
-            sequence, aa, v, j, d = seq_gen_model.gen_rnd_prod_CDR3()
-            v = convert_olga_to_imgt_id(v, 'V')
-            d = convert_olga_to_imgt_id(d, 'D')
-            j = convert_olga_to_imgt_id(j, 'J')
-            outfile.write(f'{i}\t{v}\t{d}\t{j}\t{sequence}\tGenerated\tC57BL/6Â \n')
+    for mouse in range(1, n_mice + 1):
+        filename = f'C:\\Users\\gabev\\PycharmProjects\\MRP_TdTKO_mice\\data_files\\B6\\generated_Mgen{mouse}_Normal.tsv'
+        with open(filename, 'w') as outfile:
+            outfile.write('Column1\tmouse\tV.gene\tD.gene\tJ.gene\tJunction.nucleotide.sequence\tphenotype\tstrain\n')
+        with open(filename, 'a') as outfile:
+            for i in range(1, n_seq + 1):
+                sequence, aa, v, j, d = seq_gen_model.gen_rnd_prod_CDR3()
+                v = convert_olga_to_imgt_id(v, 'V')
+                d = convert_olga_to_imgt_id(d, 'D')
+                j = convert_olga_to_imgt_id(j, 'J')
+                outfile.write(f'{i}\tMgen{mouse}\t{v}\t{d}\t{j}\t{sequence}\tGenerated\tC57BL/6Â \n')
