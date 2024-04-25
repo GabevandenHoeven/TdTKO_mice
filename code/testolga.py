@@ -18,7 +18,7 @@ print(p)
 seq_gen_model = seq_gen.SequenceGenerationVDJ(generative_model, genomic_data)
 print('Sequences without insertions')
 for i in range(10):
-    sequence = seq_gen_model.gen_rnd_prod_CDR3_noins()
+    sequence = seq_gen_model.gen_rnd_prod_noins_CDR3()
     print(sequence)
 print('Sequences with insertions')
 for i in range(10):

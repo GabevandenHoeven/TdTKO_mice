@@ -1,11 +1,11 @@
 import csv
 
 v_cdr3 = ['TGCACCTGCAGTGCAGATCTG', 'TGTGCCAGCAGCCAAGATCTT', 'TGTGCCAGCAGCTTAGCGCTA', 'TGTGCCAGCAGCTAAGATCTT',
-          'TGTGCCAGCAGCCAAGATCTT', '', '', '', '', '', '', 'TGTGCCAGCTCTCTCGAGA', 'TGTGCCAGCAGTGATGCATC',
-          'TGTGCCAGCTCTCTCGAGA', 'TGTGCCAGCGGTGATGCATC', '', 'TGTGCCAGCAGTGATGCATC', 'TGTGCCAGCAGTTTCTAGAA',
-          'TGTGCCAGCAGTTTAGCGCTA', 'TGTGCAAGCAGCTTAGATCTA', 'TGTGCTAGCAGTAGAGATCTC', '', 'TGTGCCAGCAGTATAGCTAT',
-          'TGTGGTGCTAGGGATCCC', '', '', 'TGCTCCAGCAGTCAATCGATT', 'TGTGCCAGCAGTCTGTATACA', '', 'TGTGCCAGCAGTCTGTCGACA',
-          '', '', 'TGTGCTAGCAGTTTATCGATA', 'TGTAGTTCTAGAGATCTC', 'TGGATAGTCTGAGCGCTC']
+           'TGTGCCAGCAGCCAAGATCTT', '', '', '', '', '', '', 'TGTGCCAGCTCTCTCGAGA', 'TGTGCCAGCAGTGATGCATC',
+           'TGTGCCAGCTCTCTCGAGA', 'TGTGCCAGCGGTGATGCATC', '', 'TGTGCCAGCAGTGATGCATC',
+           'TGTGCCAGCAGTTTCTAGAA', 'TGTGCCAGCAGTTTAGCGCTA', 'TGTGCAAGCAGCTTAGATCTA', 'TGTGCTAGCAGTAGAGATCTC',
+           '', 'TGTGCCAGCAGTATAGCTAT', 'TGTGGTGCTAGGGATCCC', '', '', 'TGCTCCAGCAGTCAATCGATT', 'TGTGCCAGCAGTCTGTATACA',
+           '', 'TGTGCCAGCAGTCTGTCGACA', '', '', 'TGTGCTAGCAGTTTATCGATA', 'TGTAGTTCTAGAGATCTC', 'TGTGCCTGGAGTCTAGAC']
 j_cdr3 = ['TTTGCAAACACAGAAGTCTTCTTT', 'TTTGCAAACTCCGACTACACCTTC', 'AGAATTCTGGAAATACGCTCTATTTT',
           'GAAATTTCCAACGAAAGATTATTTTTC', 'GTTATAACAACCAGGCTCCGCTTTTT', '', '', 'GTTATAACTATGCTGAGCAGTTCTTC',
           'TTTGCAAACACCGGGCAGCTCTACTTT', 'CACTAGTGCAGAAACGCTGTATTTT', 'GACTAGTCAAAACACCTTGTACTTT',
@@ -18,6 +18,7 @@ with open('..\\data_files\\mus_musculus_vdj_gene_segments.tsv', 'r') as file:
         gene_id = line[1]
         gene_seq = line[5]
         cdr3_index = line[3]
+        passed = False
         if 'V' in gene_id:
             gene_cdr3 = gene_seq[int(cdr3_index) - 3:]
             print(gene_cdr3)
@@ -26,7 +27,16 @@ with open('..\\data_files\\mus_musculus_vdj_gene_segments.tsv', 'r') as file:
                 if gene_cdr3 == cdr3:
                     olga_index = v_cdr3.index(s)
                     print(f'olga_id:{olga_index}\tgene_id:{gene_id}')
+                    passed = True
                     break
+            if not passed:
+                for s in v_cdr3:
+                    if gene_cdr3 == s:
+                        olga_index = v_cdr3.index(s)
+                        print(f'olga_id:{olga_index}\tgene_id:{gene_id}')
+                        passed = True
+                        break
+
         elif 'J' in gene_id:
             gene_cdr3 = gene_seq[:int(cdr3_index) + 3]
             print(gene_cdr3)
@@ -46,3 +56,18 @@ with open('..\\data_files\\mus_musculus_vdj_gene_segments.tsv', 'r') as file:
                     print(f'olga_id:{olga_index}\tgene_id:{gene_id}')
                     break
 
+# files = [
+#     'C:\\Users\\gabev\\PycharmProjects\\MRP_TdTKO_mice\\data_files\\TdTKo\\filtered_data\\filtered_data_TdTKO.tsv',
+#     'C:\\Users\\gabev\\PycharmProjects\\MRP_TdTKO_mice\\data_files\\B6\\filtered_data\\filtered_data_Normal.tsv'
+# ]
+#
+# for file in files:
+#     c = 0
+#     with open(file, 'r') as f:
+#         reader = csv.reader(f, delimiter='\t')
+#         header = next(reader)
+#         for line in reader:
+#             vgene = line[header.index('V.gene')]
+#             if vgene == 'TRBV31*01':
+#                 c += 1
+#     print(c)
