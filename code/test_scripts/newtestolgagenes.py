@@ -12,7 +12,7 @@ j_cdr3 = ['TTTGCAAACACAGAAGTCTTCTTT', 'TTTGCAAACTCCGACTACACCTTC', 'AGAATTCTGGAAA
           'GGTTAACCAAGACACCCAGTACTTT', '', 'GGAGCTCCTATGAACAGTACTTC']
 d_cdr3 = ['TCCCGGGACAGGGGGCGCCC', 'TCCCGGGACTGGGGGGGCGCCC']
 
-with open('..\\data_files\\mus_musculus_vdj_gene_segments.tsv', 'r') as file:
+with open('../../data_files/mus_musculus_vdj_gene_segments.tsv', 'r') as file:
     reader = csv.reader(file, delimiter='\t')
     for line in reader:
         gene_id = line[1]

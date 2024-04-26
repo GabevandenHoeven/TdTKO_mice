@@ -22,6 +22,7 @@ def get_abundance(filename: str, exp: str, max_incidence: int):
     with open(filename, 'r') as file:
         reader = csv.reader(file, delimiter='\t')
         header = next(reader)
+        dup = 0
         for line in reader:
             mouse, sequence, d_length, v, j, vj_dis, ins = line[header.index('mouse')], \
                 line[header.index('Junction.nucleotide.sequence')], int(line[header.index('D.length.used')]), \
@@ -29,13 +30,17 @@ def get_abundance(filename: str, exp: str, max_incidence: int):
                 int(line[header.index('V.J.distance')]), int(line[header.index('insertion.length')])
             try:
                 if mouse in sequences[v + sequence + j][2]:
-                    raise ValueError('ValueError\nThis sequence from this mouse is already in the dictionary')
+                    if 'gen' not in mouse:
+                        raise ValueError('This sequence from this mouse is already in the dictionary')
+                    dup += 1
+                    print(f'Sequence: {v+sequence+j} for mouse {mouse} occurs multiple times.\nDuplicates: {dup}')
+                    continue
                 elif d_length != sequences[v + sequence + j][3]:
-                    raise ValueError('ValueError\nThe same sequence has a different D length')
+                    raise ValueError('The same sequence has a different D length')
                 elif vj_dis != sequences[v + sequence + j][4]:
-                    raise ValueError('ValueError\nThe same sequence has a different VJ distance')
+                    raise ValueError('The same sequence has a different VJ distance')
                 elif ins != sequences[v + sequence + j][5]:
-                    raise ValueError('ValueError\nThe same sequence has a different insertion length')
+                    raise ValueError('The same sequence has a different insertion length')
                 else:
                     sequences[v + sequence + j][0] += 1
                     sequences[v + sequence + j][2].append(mouse)
@@ -53,6 +58,9 @@ def get_abundance(filename: str, exp: str, max_incidence: int):
         n_seq_per_incidence = sum(1 for seq in tmp_list if eval(exp))
         # How many sequences in each incidence group match the expression
         n_rows = len(tmp_list)
-        fractions.append(n_seq_per_incidence / n_rows * 100)
+        try:
+            fractions.append(n_seq_per_incidence / n_rows * 100)
+        except ZeroDivisionError:
+            fractions.append(0)
     return fractions, incidences
 

@@ -4,11 +4,15 @@ import numpy
 
 if __name__ == '__main__':
     files = [
-        'C:\\Users\\gabev\\PycharmProjects\\MRP_TdTKO_mice\\data_files\\TdTKo\\filtered_data\\filtered_data_TdTKO.tsv',
-        'C:\\Users\\gabev\\PycharmProjects\\MRP_TdTKO_mice\\data_files\\B6\\filtered_data\\filtered_data_Normal.tsv'
+        # 'C:\\Users\\gabev\\PycharmProjects\\MRP_TdTKO_mice\\data_files\\TdTKo\\filtered_data\\filtered_data_TdTKO.tsv',
+        # 'C:\\Users\\gabev\\PycharmProjects\\MRP_TdTKO_mice\\data_files\\B6\\filtered_data\\filtered_data_Normal.tsv'
+        '..\\data_files\\TdTKo\\filtered_data\\generated_filtered_data_TdTKO.tsv',
+        '..\\data_files\\B6\\filtered_data\\generated_filtered_data_Normal.tsv'
     ]
-    mice_per_file = [13, 10]
+    # mice_per_file = [13, 10]
     # There are 13 mice in file 0 from 'files' and 10 in file 1
+    mice_per_file = [20, 20]
+
     x = []
     y = []
 
@@ -28,7 +32,7 @@ if __name__ == '__main__':
     plot_line_and_scatter_per_incidence(x, y, ['TdTKO', 'Normal'], ['Incidence', 'Inferred D-segment length (nt)'],
                                         'Mean inferred D-length',
                                         'C:\\Users\\gabev\\PycharmProjects\\MRP_TdTKO_mice\\img'
-                                        '\\Mean_inferred_D_length_per_incidence.png')
+                                        '\\Mean_inferred_D_length_per_incidence_generated.png')
 
     x = []
     y = []
@@ -40,7 +44,7 @@ if __name__ == '__main__':
     plot_line_and_scatter_per_incidence(x, y, ['TdTKO', 'Normal'], ['Incidence', 'Percentage of sequences (%)'],
                                         'Inferred D-length = 0 nt',
                                         'C:\\Users\\gabev\\PycharmProjects\\MRP_TdTKO_mice\\img'
-                                        '\\Fraction_no_D_per_incidence.png')
+                                        '\\Fraction_no_D_per_incidence_generated.png')
     x = []
     y = []
     for file in files:
@@ -51,7 +55,7 @@ if __name__ == '__main__':
     plot_line_and_scatter_per_incidence(x, y, ['TdTKO', 'Normal'], ['Incidence', 'Percentage of sequences (%)'],
                                         'Inferred D-length <= 2 nt',
                                         'C:\\Users\\gabev\\PycharmProjects\\MRP_TdTKO_mice\\img'
-                                        '\\Fraction_max_2nt_D_per_incidence.png')
+                                        '\\Fraction_max_2nt_D_per_incidence_generated.png')
 
     # data = []
     # for file in files:

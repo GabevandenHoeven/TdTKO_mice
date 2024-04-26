@@ -21,7 +21,7 @@ def check_sequence_length(filename):
 
 if __name__ == '__main__':
 
-    file = 'C:\\Users\\gabev\\PycharmProjects\\MRP_TdTKO_mice\\data_files\\TdTKo\\filtered_data\\filtered_data_TdTKO.tsv'
+    file = '/data_files/TdTKo/filtered_data/filtered_data_TdTKO.tsv'
     check_sequence_length(file)
-    file = 'C:\\Users\\gabev\\PycharmProjects\\MRP_TdTKO_mice\\data_files\\B6\\filtered_data\\filtered_data_Normal.tsv'
+    file = '/data_files/B6/filtered_data/filtered_data_Normal.tsv'
     check_sequence_length(file)
