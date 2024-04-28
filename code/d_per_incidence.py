@@ -28,7 +28,10 @@ if __name__ == '__main__':
             except ZeroDivisionError:
                 mean_d_lengths.append(0)
         y.append(mean_d_lengths)
-
+    # plot_line_and_scatter_per_incidence(x, y, ['TdTKO', 'Normal'], ['Incidence', 'Inferred D-segment length (nt)'],
+    #                                     'Mean inferred D-length',
+    #                                     'C:\\Users\\gabev\\PycharmProjects\\MRP_TdTKO_mice\\img'
+    #                                     '\\Mean_inferred_D_length_per_incidence.png')
     plot_line_and_scatter_per_incidence(x, y, ['TdTKO', 'Normal'], ['Incidence', 'Inferred D-segment length (nt)'],
                                         'Mean inferred D-length',
                                         'C:\\Users\\gabev\\PycharmProjects\\MRP_TdTKO_mice\\img'
@@ -41,6 +44,10 @@ if __name__ == '__main__':
         x.append([i for i in range(1, max_incidence + 1)])
         fract_incidence = get_abundance(file, 'seq[3] == 0', max_incidence)[0]
         y.append(fract_incidence)
+    # plot_line_and_scatter_per_incidence(x, y, ['TdTKO', 'Normal'], ['Incidence', 'Percentage of sequences (%)'],
+    #                                     'Inferred D-length = 0 nt',
+    #                                     'C:\\Users\\gabev\\PycharmProjects\\MRP_TdTKO_mice\\img'
+    #                                     '\\Fraction_no_D_per_incidence.png')
     plot_line_and_scatter_per_incidence(x, y, ['TdTKO', 'Normal'], ['Incidence', 'Percentage of sequences (%)'],
                                         'Inferred D-length = 0 nt',
                                         'C:\\Users\\gabev\\PycharmProjects\\MRP_TdTKO_mice\\img'
@@ -52,6 +59,10 @@ if __name__ == '__main__':
         x.append([i for i in range(1, max_incidence + 1)])
         fract_incidence = get_abundance(file, 'seq[3] <= 2', max_incidence)[0]
         y.append(fract_incidence)
+    # plot_line_and_scatter_per_incidence(x, y, ['TdTKO', 'Normal'], ['Incidence', 'Percentage of sequences (%)'],
+    #                                     'Inferred D-length <= 2 nt',
+    #                                     'C:\\Users\\gabev\\PycharmProjects\\MRP_TdTKO_mice\\img'
+    #                                     '\\Fraction_max_2nt_D_per_incidence.png')
     plot_line_and_scatter_per_incidence(x, y, ['TdTKO', 'Normal'], ['Incidence', 'Percentage of sequences (%)'],
                                         'Inferred D-length <= 2 nt',
                                         'C:\\Users\\gabev\\PycharmProjects\\MRP_TdTKO_mice\\img'

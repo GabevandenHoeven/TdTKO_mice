@@ -22,7 +22,7 @@ def get_abundance(filename: str, exp: str, max_incidence: int):
     with open(filename, 'r') as file:
         reader = csv.reader(file, delimiter='\t')
         header = next(reader)
-        dup = 0
+        dup = {}
         for line in reader:
             mouse, sequence, d_length, v, j, vj_dis, ins = line[header.index('mouse')], \
                 line[header.index('Junction.nucleotide.sequence')], int(line[header.index('D.length.used')]), \
@@ -32,8 +32,12 @@ def get_abundance(filename: str, exp: str, max_incidence: int):
                 if mouse in sequences[v + sequence + j][2]:
                     if 'gen' not in mouse:
                         raise ValueError('This sequence from this mouse is already in the dictionary')
-                    dup += 1
-                    print(f'Sequence: {v+sequence+j} for mouse {mouse} occurs multiple times.\nDuplicates: {dup}')
+                    try:
+                        dup[v+sequence+j] += 1
+                    except KeyError:
+                        dup.update({v+sequence+j: 1})
+                    print(f'Sequence: {v+sequence+j} for mouse {mouse} occurs multiple times.\n'
+                          f'Duplicates: {dup[v+sequence+j]}')
                     continue
                 elif d_length != sequences[v + sequence + j][3]:
                     raise ValueError('The same sequence has a different D length')

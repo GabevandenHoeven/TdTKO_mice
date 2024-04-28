@@ -4,10 +4,13 @@ import numpy
 
 if __name__ == '__main__':
     files = [
-        'C:\\Users\\gabev\\PycharmProjects\\MRP_TdTKO_mice\\data_files\\TdTKo\\filtered_data\\filtered_data_TdTKO.tsv',
-        'C:\\Users\\gabev\\PycharmProjects\\MRP_TdTKO_mice\\data_files\\B6\\filtered_data\\filtered_data_Normal.tsv'
+        # 'C:\\Users\\gabev\\PycharmProjects\\MRP_TdTKO_mice\\data_files\\TdTKo\\filtered_data\\filtered_data_TdTKO.tsv',
+        # 'C:\\Users\\gabev\\PycharmProjects\\MRP_TdTKO_mice\\data_files\\B6\\filtered_data\\filtered_data_Normal.tsv'
+        '..\\data_files\\TdTKo\\filtered_data\\generated_filtered_data_TdTKO.tsv',
+        '..\\data_files\\B6\\filtered_data\\generated_filtered_data_Normal.tsv'
     ]
-    mice_per_file = [13, 10]
+    # mice_per_file = [13, 10]
+    mice_per_file = [20, 20]
     x = []
     y = []
 
@@ -24,10 +27,14 @@ if __name__ == '__main__':
                 insertions.append(0)
         y.append(insertions)
 
+    # plot_line_and_scatter_per_incidence(x, y, ['TdTKO', 'Normal'], ['Incidence', 'Mean insertions (nt)'],
+    #                                     'Mean insertion length per incidence',
+    #                                     'C:\\Users\\gabev\\PycharmProjects\\MRP_TdTKO_mice\\img'
+    #                                     '\\Mean_insertion_length_per_incidence.png')
     plot_line_and_scatter_per_incidence(x, y, ['TdTKO', 'Normal'], ['Incidence', 'Mean insertions (nt)'],
                                         'Mean insertion length per incidence',
                                         'C:\\Users\\gabev\\PycharmProjects\\MRP_TdTKO_mice\\img'
-                                        '\\Mean_insertion_length_per_incidence.png')
+                                        '\\Mean_insertion_length_per_incidence_generated.png')
     # data = []
     # for file in files:
     #     seqs, n_rows = get_abundance(file, 'd_length >= 0')
