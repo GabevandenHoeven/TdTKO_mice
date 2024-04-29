@@ -282,40 +282,44 @@ if __name__ == "__main__":
     labels = []
     averages = []
     file_list = [
-        "C:\\Users\\gabev\\PycharmProjects\\MRP_TdTKO_mice\\data_files\\TdTKo\\filtered_data\\filtered_data_TdTKO.tsv",
-        "C:\\Users\\gabev\\PycharmProjects\\MRP_TdTKO_mice\\data_files\\B6\\filtered_data\\filtered_data_Normal.tsv"
+        # "C:\\Users\\gabev\\PycharmProjects\\MRP_TdTKO_mice\\data_files\\TdTKo\\filtered_data\\filtered_data_TdTKO.tsv",
+        # "C:\\Users\\gabev\\PycharmProjects\\MRP_TdTKO_mice\\data_files\\B6\\filtered_data\\filtered_data_Normal.tsv"
+        '..\\data_files\\TdTKo\\filtered_data\\generated_filtered_data_TdTKO.tsv',
+        '..\\data_files\\B6\\filtered_data\\generated_filtered_data_Normal.tsv'
     ]
 
-    for filename in file_list:
-        sequence_counts = {}
-        sequence_lengths = []
-        read_counts = []
-        sequence_lengths, read_counts, sequence_counts = get_junction_length(filename, sequence_lengths, read_counts,
-                                                                             sequence_counts, delim='\t')
-        labels.append(filename.split('_')[-1].rstrip('.tsv'))
-        x = sorted(sequence_counts.keys())
-        x_points.append(x)
-        y = [sequence_counts[point] for point in x]
-        y = [point * 100 / sum(y) for point in y]
-        y_points.append(y)
-        average = sum(sequence_lengths) / len(sequence_lengths)
-        averages.append(average)
-        print(f'The average is: {average}')
-
     # for filename in file_list:
-    #     insertion_counts = {}
-    #     insertion_counts, total, insertions = get_insertion_counts(filename, insertion_counts, '\t')
+    #     sequence_counts = {}
+    #     sequence_lengths = []
+    #     read_counts = []
+    #     sequence_lengths, read_counts, sequence_counts = get_junction_length(filename, sequence_lengths, read_counts,
+    #                                                                          sequence_counts, delim='\t')
     #     labels.append(filename.split('_')[-1].rstrip('.tsv'))
-    #     x = sorted(insertion_counts.keys())
+    #     x = sorted(sequence_counts.keys())
     #     x_points.append(x)
-    #     y_points.append([insertion_counts[point] / total * 100 for point in x])
-    #     averages.append(sum(insertions) / total)
-    #     print(f'The average is: {sum(insertions) / total}')
+    #     y = [sequence_counts[point] for point in x]
+    #     y = [point * 100 / sum(y) for point in y]
+    #     y_points.append(y)
+    #     average = sum(sequence_lengths) / len(sequence_lengths)
+    #     averages.append(average)
+    #     print(f'The average is: {average}')
+
+    for filename in file_list:
+        insertion_counts = {}
+        insertion_counts, total, insertions = get_insertion_counts(filename, insertion_counts, '\t')
+        labels.append(filename.split('_')[-1].rstrip('.tsv'))
+        x = sorted(insertion_counts.keys())
+        x_points.append(x)
+        y_points.append([insertion_counts[point] / total * 100 for point in x])
+        averages.append(sum(insertions) / total)
+        print(f'The average is: {sum(insertions) / total}')
 
     from plots import plot_sequence_length_read_count, plot_dist_junction_sequence_length, plot_dist_insertion_length
     # plot_sequence_length_read_count(sequence_lengths, read_counts, label='Normal')
     # plot_dist_junction_sequence_length(x_points, y_points, labels, averages)
-    # plot_dist_insertion_length(x_points, y_points, labels, averages)
+    title = f'C:\\Users\\gabev\\PycharmProjects\\MRP_TdTKO_mice\\img\\' \
+            f'Generated_Insertion_length_distribution_{"-".join(labels)}'
+    plot_dist_insertion_length(x_points, y_points, labels, averages, title)
 
     # threshold_list = [0, 5, 10, 15, 20, 25, 50]
     # refs = read_rtcr_refs()

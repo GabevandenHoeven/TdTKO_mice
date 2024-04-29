@@ -26,15 +26,19 @@ def get_d_lengths(filename):
 if __name__ == '__main__':
     x = []
     y = []
-    file = 'C:\\Users\\gabev\\PycharmProjects\\MRP_TdTKO_mice\\data_files\\TdTKo\\filtered_data\\filtered_data_TdTKO.tsv'
+    # file = 'C:\\Users\\gabev\\PycharmProjects\\MRP_TdTKO_mice\\data_files\\TdTKo\\filtered_data\\filtered_data_TdTKO.tsv'
+    file = 'C:\\Users\\gabev\\PycharmProjects\\MRP_TdTKO_mice\\data_files\\TdTKo\\filtered_data\\generated_filtered_data_TdTKO.tsv'
     ds, total_lines = get_d_lengths(file)
     x.append(sorted(ds.keys()))
     y.append([ds[e] / total_lines * 100 for e in sorted(ds.keys())])
-    file = 'C:\\Users\\gabev\\PycharmProjects\\MRP_TdTKO_mice\\data_files\\B6\\filtered_data\\filtered_data_Normal.tsv'
+    # file = 'C:\\Users\\gabev\\PycharmProjects\\MRP_TdTKO_mice\\data_files\\B6\\filtered_data\\filtered_data_Normal.tsv'
+    file = 'C:\\Users\\gabev\\PycharmProjects\\MRP_TdTKO_mice\\data_files\\B6\\filtered_data\\generated_filtered_data_Normal.tsv'
     ds, total_lines = get_d_lengths(file)
     x.append(sorted(ds.keys()))
     y.append([ds[e] / total_lines * 100 for e in sorted(ds.keys())])
 
-    out = f'C:\\Users\\gabev\\PycharmProjects\\MRP_TdTKO_mice\\img\\Distribution_of_D_lengths_TdTKO-Normal.png'
+    # out = f'C:\\Users\\gabev\\PycharmProjects\\MRP_TdTKO_mice\\img\\Distribution_of_D_lengths_TdTKO-Normal.png'
+    out = f'C:\\Users\\gabev\\PycharmProjects\\MRP_TdTKO_mice\\img\\' \
+          f'Generated_Distribution_of_D_lengths_TdTKO-Normal.png'
     title = f'Distribution of D lengths'
     plot_d_lengths(x, y, ['TdTKO', 'Normal'], title, out)

@@ -89,7 +89,7 @@ def plot_dist_junction_sequence_length(x_points_lists, y_points_lists, labels, a
     plt.close()
 
 
-def plot_dist_insertion_length(x_points_lists, y_points_lists, labels, averages):
+def plot_dist_insertion_length(x_points_lists, y_points_lists, labels, averages, title):
     plt.figure()
     x_, y_ = [x for x in x_points_lists[0] if x_points_lists[0].index(x) <= 20], [y for y in y_points_lists[0]
                                                                                   if y_points_lists[0].index(y) <= 20]
@@ -107,8 +107,7 @@ def plot_dist_insertion_length(x_points_lists, y_points_lists, labels, averages)
     plt.xlabel('Insertion length (nt)')
     plt.ylabel('Percentage of sequences with an insertion (%)')
     plt.legend()
-    plt.savefig(
-        f'C:\\Users\\gabev\\PycharmProjects\\MRP_TdTKO_mice\\img\\Insertion_length_distribution_{"-".join(labels)}')
+    plt.savefig(title)
     plt.close()
 
 
@@ -126,7 +125,7 @@ def plot_vj_distance_reads(x_points_lists, y_points_lists, labels):
     plt.close()
 
 
-def plot_vj_distance_perc(x_points_lists, y_points_lists, avg, labels):
+def plot_vj_distance_perc(x_points_lists, y_points_lists, avg, labels, title):
     plt.figure()
     x_points = [x for x in x_points_lists[0] if x <= 25]
     y_points, label, average = [y for y in y_points_lists[0] if y_points_lists[0].index(y) <= 25], labels[0], avg[0]
@@ -144,8 +143,7 @@ def plot_vj_distance_perc(x_points_lists, y_points_lists, avg, labels):
     plt.xlabel('VJ distance (nt)')
     plt.ylabel('Percentage of sequences (%)')
     plt.legend()
-    plt.savefig(
-        f'C:\\Users\\gabev\\PycharmProjects\\MRP_TdTKO_mice\\img\\VJ_distance_distribution_seq_fraction_{"-".join(labels)}')
+    plt.savefig(title)
     plt.close()
 
 
