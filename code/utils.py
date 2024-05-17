@@ -40,22 +40,24 @@ def find_p_nucleotides_loop_right(expression, insertion, template, p_nucleotides
     :return:
     """
     if expression:
-        break_ = False
+        break_, i = False, 0
         rev = insertion[::-1]
         for i in range(min(len(rev), len(template))):
             if check_complementary(rev[i], template[i]):
                 p_nucleotides += 1
-            elif i != 0:
-                insertion = insertion[:-i]
-                # Removing the found P nucleotides, so they can't be found twice if they match up with the
-                # palindromic sequence of the other segment.
-                # TODO: if you remove them here there might be a better match to the D segment that gets ignored
+            elif i == 0:
+                # Because this function checks for the end of the insertion, if there is no match no nucleotides should
+                # be removed. This would happen in the else statement.
                 break_ = True
                 break
             else:
+                insertion = insertion[:-i]
+                # Removing the found P nucleotides, so they can't be found twice if they match up with the
+                # palindromic sequence of the other segment.
                 break_ = True
+                break
         if not break_:
-            insertion = ''
+            insertion = insertion[:-(i+1)]
 
     return p_nucleotides, insertion
 
@@ -72,7 +74,7 @@ def find_p_nucleotides_loop_left(expression, insertion, template, p_nucleotides)
     :return:
     """
     if expression:
-        break_ = False
+        break_, i = False, 0
         rev = template[::-1]
         for i in range(min(len(insertion), len(rev))):
             if check_complementary(insertion[i], rev[i]):
@@ -84,7 +86,7 @@ def find_p_nucleotides_loop_left(expression, insertion, template, p_nucleotides)
                 break_ = True
                 break
         if not break_:
-            insertion = ''
+            insertion = insertion[i+1:]
 
     return p_nucleotides, insertion
 
@@ -155,10 +157,6 @@ def get_vdj_lengths(input_list: list, RTCR_ref: dict):
     Dused = noVJ_CDR3[d_match.a:d_match.a + matchingDlen]
     inslen = len(noVJ_CDR3) - matchingDlen
 
-    # if CDR3nt == 'TGTGCCAGCAGTCCGTCCCGGGACGAAAGATTATTTTTC':
-    # if CDR3nt == 'TGTGCAAGCAGCTTAGATGGGACATATGAACAGTACTTC':
-    #     print()
-
     # Checking for palindromic nt, not all insertions are n-nucleotides
     lp_nucleotides, rp_nucleotides, l_ins, r_ins = 0, 0, '', ''
     if inslen != 0:
@@ -185,12 +183,11 @@ def get_vdj_lengths(input_list: list, RTCR_ref: dict):
             p_nucleotides2, r_ins2 = find_p_nucleotides_loop_right((r_ins2 != '' and Jdel == 0),
                                                                    r_ins2, Jused, p_nucleotides2)
             rp_nucleotides = max(p_nucleotides1, p_nucleotides2)
-            if p_nucleotides1 != p_nucleotides2:
-                print()
+
             # Check between V and D
             p_nucleotides1, l_ins1 = find_p_nucleotides_loop_left(l_ins != '' and Vdel == 0, l_ins, Vused, 0)
 
-            # Since the DJ junction is done first, l_ins can contain palindromic nucleotides from the right hand
+            # Since the DJ junction is done first, l_ins can contain palindromic nucleotides from the right-hand
             # insertion and the J gene. r_ins is retrieved from ins_pairs
             p_nucleotides1, l_ins1 = find_p_nucleotides_loop_right(
                 (D_seq_string.split(',')[0].startswith(Dused) or D_seq_string.split(',')[1].startswith(Dused))
@@ -202,8 +199,7 @@ def get_vdj_lengths(input_list: list, RTCR_ref: dict):
             p_nucleotides2, l_ins2 = find_p_nucleotides_loop_left(l_ins2 != '' and Vdel == 0,
                                                                   l_ins2, Vused, p_nucleotides2)
             lp_nucleotides = max(p_nucleotides1, p_nucleotides2)
-            if p_nucleotides1 != p_nucleotides2:
-                print()
+
             p_nt_pairs.append((lp_nucleotides, rp_nucleotides))
 
         sum_p_nt_matches = [sum(i) for i in p_nt_pairs]
@@ -215,10 +211,12 @@ def get_vdj_lengths(input_list: list, RTCR_ref: dict):
             # If there are multiple pairs of lp and rp with the same total number of palindromic nucleotides,
             # the pair with the longest single palindromic sequence is chosen.
             # TODO: longest single palindromic sequence may be the best option here anyway. 2-0, 3-0, 4-0 is better
-            #  than 1-1, 2-1, 2-2 etc.
-            max_p_match = [max(i) for i in p_nt_pairs]
-            lp_nucleotides, rp_nucleotides = p_nt_pairs[max_p_match.index(max(max_p_match))]
-            l_ins, r_ins = ins_pairs[max_p_match.index(max(max_p_match))]
+            #  than 1-1, 2-1, 2-2 etc. EDIT: No, we want to maximise the number of nucleotides explainable by D or
+            #  P-nucleotides because they have a known pattern so we can provide evidence for our reasoning
+            #  as oppose to N-additions (we are also assuming minimum sequencing/PCR errors with this).
+            max_p_nt_matches = [max(i) for i in p_nt_pairs]
+            lp_nucleotides, rp_nucleotides = p_nt_pairs[max_p_nt_matches.index(max(max_p_nt_matches))]
+            l_ins, r_ins = ins_pairs[max_p_nt_matches.index(max(max_p_nt_matches))]
 
     line_result = [str(len(Vused)), Dused, str(matchingDlen), str(len(Jused)), str(Vdel), str(Jdel), str(len(l_ins)),
                    str(len(r_ins)), str(lp_nucleotides), str(rp_nucleotides), str(match_V + 1),
