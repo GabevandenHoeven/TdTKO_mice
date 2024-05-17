@@ -5,13 +5,13 @@ from plots import plot_line_and_scatter_per_incidence, plot_boxplot_per_incidenc
 
 if __name__ == '__main__':
     files = [
-        # 'C:\\Users\\gabev\\PycharmProjects\\MRP_TdTKO_mice\\data_files\\TdTKo\\filtered_data\\filtered_data_TdTKO.tsv',
-        # 'C:\\Users\\gabev\\PycharmProjects\\MRP_TdTKO_mice\\data_files\\B6\\filtered_data\\filtered_data_Normal.tsv'
-        '..\\data_files\\TdTKo\\filtered_data\\generated_filtered_data_TdTKO.tsv',
-        '..\\data_files\\B6\\filtered_data\\generated_filtered_data_Normal.tsv'
+        '..\\data_files\\TdTKO\\filtered_data\\filtered_data_exp_TdTKO.tsv',
+        '..\\data_files\\Normal\\filtered_data\\filtered_data_exp_Normal.tsv'
+        # '..\\data_files\\TdTKO\\filtered_data\\filtered_data_gen_TdTKO.tsv',
+        # '..\\data_files\\Normal\\filtered_data\\filtered_data_gen_Normal.tsv'
     ]
-    # mice_per_file = [13, 10]
-    mice_per_file = [20, 20]
+    mice_per_file = [13, 10]
+    # mice_per_file = [20, 20]
     x = []
     y = []
 
@@ -28,14 +28,14 @@ if __name__ == '__main__':
                 mean_v_j_distances.append(0)
         y.append(mean_v_j_distances)
 
-    # plot_line_and_scatter_per_incidence(x, y, ['TdTKO', 'Normal'], ['Incidence', 'Mean VJ distance (nt)'],
-    #                                     'Mean VJ distance per incidence',
-    #                                     'C:\\Users\\gabev\\PycharmProjects\\MRP_TdTKO_mice\\img'
-    #                                     '\\Mean_VJ_distance_per_incidence.png')
-    plot_line_and_scatter_per_incidence(x, y, ['TdTKO', 'Normal'], ['Incidence', 'Mean VJ distance (nt)'],
+    plot_line_and_scatter_per_incidence(x, y, ['TdTKO', 'Normal'], ['Fraction of incidence', 'Mean VJ distance (nt)'],
                                         'Mean VJ distance per incidence',
                                         'C:\\Users\\gabev\\PycharmProjects\\MRP_TdTKO_mice\\img'
-                                        '\\Mean_VJ_distance_per_incidence_generated.png')
+                                        '\\Mean_VJ_distance_per_incidence.png')
+    # plot_line_and_scatter_per_incidence(x, y, ['TdTKO', 'Normal'], ['Fraction of incidence', 'Mean VJ distance (nt)'],
+    #                                     'Mean VJ distance per incidence',
+    #                                     'C:\\Users\\gabev\\PycharmProjects\\MRP_TdTKO_mice\\img'
+    #                                     '\\Mean_VJ_distance_per_incidence_generated.png')
     # data = []
     # for file in files:
     #     seqs, n_rows = get_abundance(file, 'd_length >= 0')

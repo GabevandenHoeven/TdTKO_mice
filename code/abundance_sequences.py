@@ -67,4 +67,3 @@ def get_abundance(filename: str, exp: str, max_incidence: int):
         except ZeroDivisionError:
             fractions.append(0)
     return fractions, incidences
-

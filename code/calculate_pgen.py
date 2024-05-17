@@ -35,6 +35,7 @@ def calculate_pgen(filename, pgen):
             new_line.insert(index+1, str(p))
             new_line = '\t'.join(new_line) + '\n'
             outfile.append(new_line)
+    filename = filename.rstrip('.tsv') + ' (1).tsv'
     with open(filename, 'w') as out_file:
         out_file.writelines(outfile)
     return
@@ -52,10 +53,10 @@ def check_thread_status(t, filename):
 
 if __name__ == '__main__':
     files = [
-        '..\\data_files\\TdTKo\\filtered_data\\filtered_data_exp_TdTKO.tsv',
-        '..\\data_files\\B6\\filtered_data\\filtered_data_exp_Normal.tsv',
-        '..\\data_files\\TdTKo\\filtered_data\\filtered_data_gen_TdTKO.tsv',
-        '..\\data_files\\B6\\filtered_data\\filtered_data_gen_Normal.tsv'
+        '..\\data_files\\TdTKO\\filtered_data\\filtered_data_exp_TdTKO.tsv',
+        # '..\\data_files\\Normal\\filtered_data\\filtered_data_exp_Normal.tsv',
+        # '..\\data_files\\TdTKO\\filtered_data\\filtered_data_gen_TdTKO.tsv',
+        # '..\\data_files\\Normal\\filtered_data\\filtered_data_gen_Normal.tsv'
     ]
     processes = []
     pgen = load_olga_mouse_trb_pgen_model()

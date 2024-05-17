@@ -24,7 +24,7 @@ def plot_supporting_reads():
         plt.close()
 
 
-def plot_fractions_ins():
+def plot_fractions_ins(x_points, y_points, title):
     plt.figure()
 
     # old ----------------------------------------------------------------------------------
@@ -37,22 +37,25 @@ def plot_fractions_ins():
 
     # y_points = [94.11, 36.93, 18.45, 10.68, 6.61, 4.28, 0.78]
     # plt.plot(x_points, y_points, label='Normal')
+    # before p-nt -------------------------------------------------------------------------
+    # x_points = [0, 1, 2, 5, 10, 15, 20, 25, 50]
+    # y_points = [47.94, 36.92, 35.54, 32.07, 27.96, 25.08, 22.90, 21.25, 16.33] TdTKO
+    # y_points = [94.11, 92.65, 91.87, 90.33, 88.60, 86.98, 85.33, 83.66, 74.89] Normal
     # -------------------------------------------------------------------------------------
-    x_points = [0, 1, 2, 5, 10, 15, 20, 25, 50]
+    # after p-nt TdTKO: [13.31, 13.31, 12.41, 10.72, 8.75, 7.41, 6.39, 5.61, 3.75]
+    # after p-nt Normal: [86.75, 86.75, 85.49, 83.25, 80.69, 78.25, 75.78, 73.24, 60.40]
 
-    y_points = [47.94, 36.92, 35.54, 32.07, 27.96, 25.08, 22.90, 21.25, 16.33]
-    plt.plot(x_points, y_points, label='TdTKO', color='blue')
-    plt.scatter(x_points, y_points, color='blue', s=10)
+    plt.plot(x_points, y_points[0], label='TdTKO', color='blue')
+    plt.scatter(x_points, y_points[0], color='blue', s=10)
 
-    y_points = [94.11, 92.65, 91.87, 90.33, 88.60, 86.98, 85.33, 83.66, 74.89]
-    plt.plot(x_points, y_points, label='Normal', color='orange')
-    plt.scatter(x_points, y_points, color='orange', s=10)
+    plt.plot(x_points, y_points[1], label='Normal', color='orange')
+    plt.scatter(x_points, y_points[1], color='orange', s=10)
 
     plt.title('Fraction of sequences with insertions \nper threshold of supporting reads')
     plt.xlabel('Supporting reads')
     plt.ylabel('Fraction of seq with insertions (%)')
     plt.legend()
-    plt.savefig('C:\\Users\\gabev\\PycharmProjects\\MRP_TdTKO_mice\\img\\Normal_TdTKO_fraction_insertions_per_reads.png')
+    plt.savefig(title)
     plt.close()
 
 
@@ -210,11 +213,11 @@ def plot_d_lengths(x_points_list, y_points_list, labels, title, outfile):
 
 def plot_line_and_scatter_per_incidence(x_points_list, y_points_list, labels, plot_labels, title, out):
     plt.figure()
-    plt.plot(x_points_list[0], y_points_list[0], label=labels[0], color='blue')
-    plt.scatter(x_points_list[0], y_points_list[0], color='blue', s=10)
-    plt.plot(x_points_list[1], y_points_list[1], label=labels[1], color='orange')
-    plt.scatter(x_points_list[1], y_points_list[1], color='orange', s=10)
-    plt.xticks(numpy.arange(1, max(len(x_points_list[0]), len((x_points_list[1]))) + 1))
+    plt.plot([n / len(x_points_list[0]) for n in x_points_list[0]], y_points_list[0], label=labels[0], color='blue')
+    plt.scatter([n / len(x_points_list[0]) for n in x_points_list[0]], y_points_list[0], color='blue', s=10)
+    plt.plot([n / len(x_points_list[1]) for n in x_points_list[1]], y_points_list[1], label=labels[1], color='orange')
+    plt.scatter([n / len(x_points_list[1]) for n in x_points_list[1]], y_points_list[1], color='orange', s=10)
+    plt.xticks(numpy.arange(0, 1.1, 0.1))
     plt.xlabel(plot_labels[0])
     plt.ylabel(plot_labels[1])
     plt.title(title)
@@ -269,5 +272,4 @@ def number_of_seq_per_incidence():
 
 if __name__ == '__main__':
     # plot_supporting_reads()
-    # plot_fractions_ins()
     number_of_seq_per_incidence()
