@@ -37,7 +37,7 @@ def convert_olga_to_imgt_id(olga_id: int, gene: str):
 
 
 if __name__ == '__main__':
-    params_filename = 'models\\Mus+musculus\\TRB\\models\\model_params.txt'
+    params_filename = 'models\\Mus+musculus\\TRB\\models\\model_params_no_err.txt'
     marginals_filename = '..\\venv\\Lib\\site-packages\\olga\\default_models\\mouse_T_beta\\model_marginals.txt'
     v_anchor_pos_file = '..\\venv\\Lib\\site-packages\\olga\\default_models\\mouse_T_beta\\V_gene_CDR3_anchors.csv'
     j_anchor_pos_file = '..\\venv\\Lib\\site-packages\\olga\\default_models\\mouse_T_beta\\J_gene_CDR3_anchors.csv'
@@ -49,25 +49,26 @@ if __name__ == '__main__':
     n_mice = 20
     n_seq = 150000
     for mouse in range(1, n_mice + 1):
-        filename = f'C:\\Users\\gabev\\PycharmProjects\\MRP_TdTKO_mice\\data_files\\TdTKo\\generated_Mgen{mouse}_TdTKO.tsv'
+        filename = f'C:\\Users\\gabev\\PycharmProjects\\MRP_TdTKO_mice\\data_files\\TdTKO\\generated_Mgen{mouse}_TdTKO1.tsv'
         with open(filename, 'w') as outfile:
-            outfile.write('Column1\tmouse\tV.gene\tD.gene\tJ.gene\tJunction.nucleotide.sequence\tphenotype\tstrain\n')
+            outfile.write('Column1\tmouse\tV.gene\tD.gene\tJ.gene\tJunction.nucleotide.sequence\tD.used\tphenotype\tstrain\n')
         with open(filename, 'a') as outfile:
             for i in range(1, n_seq + 1):
-                sequence, aa, v, j, d = seq_gen_model.gen_rnd_prod_noins_CDR3()
-                v = convert_olga_to_imgt_id(v, 'V')
-                d = convert_olga_to_imgt_id(d, 'D')
-                j = convert_olga_to_imgt_id(j, 'J')
-                outfile.write(f'{i}\tMgen{mouse}\t{v}\t{d}\t{j}\t{sequence}\tGenerated\tTdT-/-\n')
+                sequence, aa, v_gene, j_gene, d_gene, d_used = seq_gen_model.gen_rnd_prod_noins_CDR3()
+                v_gene = convert_olga_to_imgt_id(v_gene, 'V')
+                d_gene = convert_olga_to_imgt_id(d_gene, 'D')
+                j_gene = convert_olga_to_imgt_id(j_gene, 'J')
+                outfile.write(
+                    f'{i}\tMgen{mouse}\t{v_gene}\t{d_gene}\t{j_gene}\t{sequence}\t{d_used}\tGenerated\tTdT-/-\n')
 
     for mouse in range(1, n_mice + 1):
-        filename = f'C:\\Users\\gabev\\PycharmProjects\\MRP_TdTKO_mice\\data_files\\B6\\generated_Mgen{mouse}_Normal.tsv'
+        filename = f'C:\\Users\\gabev\\PycharmProjects\\MRP_TdTKO_mice\\data_files\\Normal\\generated_Mgen{mouse}_Normal.tsv'
         with open(filename, 'w') as outfile:
-            outfile.write('Column1\tmouse\tV.gene\tD.gene\tJ.gene\tJunction.nucleotide.sequence\tphenotype\tstrain\n')
+            outfile.write('Column1\tmouse\tV.gene\tD.gene\tJ.gene\tJunction.nucleotide.sequence\tD.used\tphenotype\tstrain\n')
         with open(filename, 'a') as outfile:
             for i in range(1, n_seq + 1):
-                sequence, aa, v, j, d = seq_gen_model.gen_rnd_prod_CDR3()
-                v = convert_olga_to_imgt_id(v, 'V')
-                d = convert_olga_to_imgt_id(d, 'D')
-                j = convert_olga_to_imgt_id(j, 'J')
-                outfile.write(f'{i}\tMgen{mouse}\t{v}\t{d}\t{j}\t{sequence}\tGenerated\tC57BL/6Â \n')
+                sequence, aa, v_gene, j_gene, d_gene, d_used = seq_gen_model.gen_rnd_prod_CDR3()
+                v_gene = convert_olga_to_imgt_id(v_gene, 'V')
+                d_gene = convert_olga_to_imgt_id(d_gene, 'D')
+                j_gene = convert_olga_to_imgt_id(j_gene, 'J')
+                outfile.write(f'{i}\tMgen{mouse}\t{v_gene}\t{d_gene}\t{j_gene}\t{sequence}\t{d_used}\tGenerated\tC57BL/6Â \n')
