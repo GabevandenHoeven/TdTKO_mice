@@ -24,8 +24,12 @@ def get_d_length_and_fraction_with_d(filename):
 
 
 if __name__ == '__main__':
-    # file = 'C:\\Users\\gabev\\PycharmProjects\\MRP_TdTKO_mice\\data_files\\B6\\filtered_data\\filtered_data_Normal.tsv'
-    # file = 'C:\\Users\\gabev\\PycharmProjects\\MRP_TdTKO_mice\\data_files\\TdTKo\\filtered_data\\filtered_data_TdTKO.tsv'
-    # file = '..\\data_files\\B6\\filtered_data\\generated_filtered_data_Normal.tsv'
-    file = '..\\data_files\\TdTKo\\filtered_data\\generated_filtered_data_TdTKO.tsv'
+    # file = '..\\data_files\\Normal\\filtered_data\\filtered_data_exp_Normal_v1.tsv'
+    # file = '..\\data_files\\TdTKO\\filtered_data\\filtered_data_exp_TdTKO_v1.tsv'
+    # file = '..\\data_files\\Normal\\filtered_data\\filtered_data_gen_Normal_v1.tsv'
+    # file = '..\\data_files\\TdTKO\\filtered_data\\filtered_data_gen_TdTKO_v1.tsv'
+    # file = '..\\data_files\\Normal\\filtered_data\\filtered_data_exp_Normal_v2.tsv'
+    # file = '..\\data_files\\TdTKO\\filtered_data\\filtered_data_exp_TdTKO_v2.tsv'
+    # file = '..\\data_files\\Normal\\filtered_data\\filtered_data_gen_Normal_v2.tsv'
+    file = '..\\data_files\\TdTKO\\filtered_data\\filtered_data_gen_TdTKO_v2.tsv'
     get_d_length_and_fraction_with_d(file)
