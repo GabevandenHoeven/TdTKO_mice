@@ -6,31 +6,26 @@ import re
 
 
 def sequence_matcher(a: str, b: str):
-    """For every nucleotide in the substring this function tries to match the remainder of the substring to
-    the superstrings. The indexes in the sub- and superstrings of the longest match will be returned together with
+    """For every nucleotide in the substring a, this function tries to match the remainder of the substring to
+    the super strings: b. The starting indexes in the substring of all unique matches will be returned together with
     the length of the match. If the nucleotide in a is not found in b, no match will be returned.
 
     :param a: str - The substring.
-    :param b: str - The superstrings. If there are multiple possibilities they should be separated using ','.
-    :return: The longest matches between the remainder of a and any part in b for every nucleotide in a
+    :param b: str - The super strings. If there are multiple possibilities they should be separated using ','.
+    :return: All unique matches between the remainder of a and any part in b for every nucleotide in a
 
     Examples:
     a: CGGT
     b: GGGACAGGGGGC,GGGACTGGGGGGGC
-    returns: [(0, 4, 1), (1, 0, 2), (2, 0, 1), (3, 18, 1)]
+    returns: [(0, 1), (1, 1), (1, 2), (2, 1), (3, 1)]
 
     a: CGGGGT
     b: GGGACAGGGGGC,GGGACTGGGGGGGC
-    returns: [(0, 4, 1), (1, 6, 4), (2, 0, 3), (3, 0, 2), (4, 0, 1), (5, 18, 1)]
+    returns: [(0, 1), (1, 1), (1, 2), (1, 3), (1, 4), (2, 1), (2, 2), (2, 3), (3, 1), (3, 2), (4, 1), (5, 1)]
 
     a: CGGTAT
     b: GGGACAGGGGGC,GGGACTGGGGGGGC
-    returns: [(0, 4, 1), (1, 0, 2), (2, 0, 1), (3, 18, 1), (4, 3, 1), (5, 18, 1)]
-
-    returning no match to T:
-    a: CGGTAT
-    b: GGGACAGGGGGC,GGGACAGGGGGGGC
-    returns: [(0, 4, 1), (1, 0, 2), (2, 0, 1), (4, 3, 1)]
+    returns: [(0, 1), (1, 1), (1, 2), (2, 1), (3, 1), (4, 1), (5, 1)]
     """
     matches = []
 
@@ -44,6 +39,9 @@ def sequence_matcher(a: str, b: str):
             coding_pass = True
             while coding_pass:
                 try:
+                    for m in range(len(match_lengths)):
+                        if (i, match_lengths[m]) not in matches:
+                            matches.append((i, match_lengths[m]))
                     if a[ii + 1] == b[k + 1]:
                         k += 1
                         ii += 1
@@ -57,13 +55,6 @@ def sequence_matcher(a: str, b: str):
                     else:
                         raise IndexError(e.args)
 
-        try:
-            matches.append((i, start_indexes[match_lengths.index(max(match_lengths))], max(match_lengths)))
-        except ValueError as e:
-            if e.args[0] == 'max() arg is an empty sequence':
-                pass
-            else:
-                raise ValueError(e.args)
     return matches
 
 
@@ -213,84 +204,65 @@ def get_vdj_lengths(input_list: list, RTCR_ref: dict):
     # mice seqs from IMGT
 
     # This is TRB, so check for D
-
-    # possible_ds = difflib.SequenceMatcher(None, noVJ_CDR3, D_seq_string).get_matching_blocks()
-    # matchingDlen = max(d.get_matching_blocks(), key=lambda x: x[2])[2]
-    # d_match = d.find_longest_match()
-    possible_ds = sequence_matcher(noVJ_CDR3, D_seq_string)
     matchingDlen, lp_nucleotides, rp_nucleotides, Dused, l_ins, r_ins = 0, 0, 0, '', '', ''
+
+    # d_gene = difflib.SequenceMatcher(None, noVJ_CDR3, D_seq_string)
+    # matchingDlen = max(d_gene.get_matching_blocks(), key=lambda x: x[2])[2]
+    # d_match = max(d_gene.get_matching_blocks(), key=lambda x: x[2])
+    # Dused = noVJ_CDR3[d_match.a: d_match.a + matchingDlen]
+    # l_ins, r_ins = noVJ_CDR3[:d_match.a], noVJ_CDR3[d_match.a + matchingDlen:]
+
+    possible_ds = sequence_matcher(noVJ_CDR3, D_seq_string)
     d_p_matches = []
 
     for d_match in possible_ds:
-        matchingDlen = d_match[2]
+        matchingDlen = d_match[1]
         Dused = noVJ_CDR3[d_match[0]:d_match[0] + matchingDlen]
         inslen = len(noVJ_CDR3) - matchingDlen
-
+        lp_nucleotides, rp_nucleotides, l_ins, r_ins = 0, 0, '', ''
         # Checking for palindromic nt, not all insertions are n-nucleotides
         if inslen != 0:
-            p_nt_pairs = []
-            ins_pairs = []
-            matches = re.finditer(rf'({Dused})', noVJ_CDR3)
-            for match in matches:
-                lp_nucleotides, rp_nucleotides, l_ins, r_ins = 0, 0, '', ''
-                l_ins, r_ins = noVJ_CDR3[:match.start()], noVJ_CDR3[match.end():]
-                ins_pairs.append((l_ins, r_ins))
+            l_ins, r_ins = noVJ_CDR3[:d_match[0]], noVJ_CDR3[d_match[0] + d_match[1]:]
 
-                # Check between D and J
-                p_nucleotides1, r_ins1 = find_p_nucleotides_loop_right((r_ins != '' and Jdel == 0), r_ins, Jused, 0)
+            # Check between D and J
+            p_nucleotides1, r_ins1 = find_p_nucleotides_loop_right((r_ins != '' and Jdel == 0), r_ins, Jused, 0)
 
-                # The palindromic nucleotides can also come from the D segment, but only if there are no deletions.
-                p_nucleotides1, r_ins1 = find_p_nucleotides_loop_left(
-                    (D_seq_string.split(',')[0].endswith(Dused) or D_seq_string.split(',')[1].endswith(Dused))
-                    and r_ins1 != '', r_ins1, Dused, p_nucleotides1)
+            # The palindromic nucleotides can also come from the D segment, but only if there are no deletions.
+            p_nucleotides1, r_ins1 = find_p_nucleotides_loop_left(
+                (D_seq_string.split(',')[0].endswith(Dused) or D_seq_string.split(',')[1].endswith(Dused))
+                and r_ins1 != '', r_ins1, Dused, p_nucleotides1)
 
-                # There might be a better match if you check the D first
-                p_nucleotides2, r_ins2 = find_p_nucleotides_loop_left(
-                    (D_seq_string.split(',')[0].endswith(Dused) or D_seq_string.split(',')[1].endswith(Dused))
-                    and r_ins != '', r_ins, Dused, 0)
-                p_nucleotides2, r_ins2 = find_p_nucleotides_loop_right((r_ins2 != '' and Jdel == 0),
-                                                                       r_ins2, Jused, p_nucleotides2)
-                rp_nucleotides = max(p_nucleotides1, p_nucleotides2)
+            # There might be a better match if you check the D first
+            p_nucleotides2, r_ins2 = find_p_nucleotides_loop_left(
+                (D_seq_string.split(',')[0].endswith(Dused) or D_seq_string.split(',')[1].endswith(Dused))
+                and r_ins != '', r_ins, Dused, 0)
+            p_nucleotides2, r_ins2 = find_p_nucleotides_loop_right((r_ins2 != '' and Jdel == 0),
+                                                                   r_ins2, Jused, p_nucleotides2)
+            rp_nucleotides = max(p_nucleotides1, p_nucleotides2)
 
-                # Check between V and D
-                p_nucleotides1, l_ins1 = find_p_nucleotides_loop_left(l_ins != '' and Vdel == 0, l_ins, Vused, 0)
+            # Check between V and D
+            p_nucleotides1, l_ins1 = find_p_nucleotides_loop_left(l_ins != '' and Vdel == 0, l_ins, Vused, 0)
 
-                # Since the DJ junction is done first, l_ins can contain palindromic nucleotides from the right-hand
-                # insertion and the J gene. r_ins is retrieved from ins_pairs
-                p_nucleotides1, l_ins1 = find_p_nucleotides_loop_right(
-                    (D_seq_string.split(',')[0].startswith(Dused) or D_seq_string.split(',')[1].startswith(Dused))
-                    and l_ins1 != '', l_ins1, Dused + ins_pairs[-1][1] + Jused, p_nucleotides1)
+            # Since the DJ junction is done first, l_ins can contain palindromic nucleotides from the right-hand
+            # insertion and the J gene. r_ins is retrieved from ins_pairs
+            p_nucleotides1, l_ins1 = find_p_nucleotides_loop_right(
+                (D_seq_string.split(',')[0].startswith(Dused) or D_seq_string.split(',')[1].startswith(Dused))
+                and l_ins1 != '', l_ins1, Dused + r_ins + Jused, p_nucleotides1)
 
-                p_nucleotides2, l_ins2 = find_p_nucleotides_loop_right(
-                    (D_seq_string.split(',')[0].startswith(Dused) or D_seq_string.split(',')[1].startswith(Dused))
-                    and l_ins != '', l_ins, Dused + ins_pairs[-1][1] + Jused, 0)
-                p_nucleotides2, l_ins2 = find_p_nucleotides_loop_left(l_ins2 != '' and Vdel == 0,
-                                                                      l_ins2, Vused, p_nucleotides2)
-                lp_nucleotides = max(p_nucleotides1, p_nucleotides2)
+            p_nucleotides2, l_ins2 = find_p_nucleotides_loop_right(
+                (D_seq_string.split(',')[0].startswith(Dused) or D_seq_string.split(',')[1].startswith(Dused))
+                and l_ins != '', l_ins, Dused + r_ins + Jused, 0)
+            p_nucleotides2, l_ins2 = find_p_nucleotides_loop_left(l_ins2 != '' and Vdel == 0,
+                                                                  l_ins2, Vused, p_nucleotides2)
+            lp_nucleotides = max(p_nucleotides1, p_nucleotides2)
 
-                p_nt_pairs.append((lp_nucleotides, rp_nucleotides))
-
-            sum_p_nt_matches = [sum(i) for i in p_nt_pairs]
-            num_max_sum_size = sum_p_nt_matches.count(max(sum_p_nt_matches))
-            if num_max_sum_size == 1:
-                lp_nucleotides, rp_nucleotides = p_nt_pairs[sum_p_nt_matches.index(max(sum_p_nt_matches))]
-                l_ins, r_ins = ins_pairs[sum_p_nt_matches.index(max(sum_p_nt_matches))]
-            else:
-                # If there are multiple pairs of lp and rp with the same total number of palindromic nucleotides,
-                # the pair with the longest single palindromic sequence is chosen.
-                # TODO: longest single palindromic sequence may be the best option here anyway. 2-0, 3-0, 4-0 is
-                #  better than 1-1, 2-1, 2-2 etc. EDIT: No, we want to maximise the number of nucleotides
-                #  explainable by D or P-nucleotides because they have a known pattern so we can provide evidence
-                #  for our reasoning as oppose to N-additions
-                #  (we are also assuming minimum sequencing/PCR errors with this).
-                max_p_nt_matches = [max(i) for i in p_nt_pairs]
-                lp_nucleotides, rp_nucleotides = p_nt_pairs[max_p_nt_matches.index(max(max_p_nt_matches))]
-                l_ins, r_ins = ins_pairs[max_p_nt_matches.index(max(max_p_nt_matches))]
         d_p_matches.append((matchingDlen, lp_nucleotides, rp_nucleotides, Dused, l_ins, r_ins))
 
     try:
-        d_p_matches_summed = [(i[0] + i[1] + i[2]) for i in d_p_matches]
-        best_match = d_p_matches[d_p_matches_summed.index(max(d_p_matches_summed))]
+        # If the noVJ_CDR3 completely matches a D segment that match is chosen.
+        max_d_p_nt = max([(match[0] + match[1] + match[2]) for match in d_p_matches])
+        max_d_p_nt_list = [match for match in d_p_matches if (match[0] + match[1] + match[2]) == max_d_p_nt]
+        best_match = max(max_d_p_nt_list, key=lambda x: x[0])
         matchingDlen, lp_nucleotides, rp_nucleotides, Dused, l_ins, r_ins = best_match
     except ValueError as e:
         if e.args[0] == 'max() arg is an empty sequence':
