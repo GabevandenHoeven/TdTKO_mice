@@ -62,6 +62,7 @@ from __future__ import division
 import numpy as np
 from olga.utils import nt2aa, calc_steady_state_dist
 
+
 class SequenceGenerationVDJ(object):
     """Class of to generate sequences from a VDJ generative model.
 
@@ -134,33 +135,35 @@ class SequenceGenerationVDJ(object):
 
         """
 
-        self.CPV = (generative_model.PV/np.sum(generative_model.PV)).cumsum()
-        self.CPDJ = (generative_model.PDJ/np.sum(generative_model.PDJ)).flatten().cumsum()
-        self.CinsVD = (generative_model.PinsVD/np.sum(generative_model.PinsVD)).cumsum()
-        self.CinsDJ = (generative_model.PinsDJ/np.sum(generative_model.PinsDJ)).cumsum()
-
+        self.CPV = (generative_model.PV / np.sum(generative_model.PV)).cumsum()
+        self.CPDJ = (generative_model.PDJ / np.sum(generative_model.PDJ)).flatten().cumsum()
+        self.CinsVD = (generative_model.PinsVD / np.sum(generative_model.PinsVD)).cumsum()
+        self.CinsDJ = (generative_model.PinsDJ / np.sum(generative_model.PinsDJ)).cumsum()
 
         for V in range(generative_model.PdelV_given_V.shape[1]):
-            if np.sum(generative_model.PdelV_given_V[:, V])> 0:
-                generative_model.PdelV_given_V[:, V] = generative_model.PdelV_given_V[:, V]/np.sum(generative_model.PdelV_given_V[:, V])
+            if np.sum(generative_model.PdelV_given_V[:, V]) > 0:
+                generative_model.PdelV_given_V[:, V] = generative_model.PdelV_given_V[:, V] / np.sum(
+                    generative_model.PdelV_given_V[:, V])
 
-        self.given_V_CPdelV = generative_model.PdelV_given_V.T.cumsum(axis = 1)
+        self.given_V_CPdelV = generative_model.PdelV_given_V.T.cumsum(axis=1)
 
         for J in range(generative_model.PdelJ_given_J.shape[1]):
-            if np.sum(generative_model.PdelJ_given_J[:, J])> 0:
-                generative_model.PdelJ_given_J[:, J] = generative_model.PdelJ_given_J[:, J]/np.sum(generative_model.PdelJ_given_J[:, J])
+            if np.sum(generative_model.PdelJ_given_J[:, J]) > 0:
+                generative_model.PdelJ_given_J[:, J] = generative_model.PdelJ_given_J[:, J] / np.sum(
+                    generative_model.PdelJ_given_J[:, J])
 
-        self.given_J_CPdelJ = generative_model.PdelJ_given_J.T.cumsum(axis = 1)
+        self.given_J_CPdelJ = generative_model.PdelJ_given_J.T.cumsum(axis=1)
 
         for D in range(generative_model.PdelDldelDr_given_D.shape[2]):
-            if np.sum(generative_model.PdelDldelDr_given_D[:,  :, D]) > 0:
-                generative_model.PdelDldelDr_given_D[:, :, D] = generative_model.PdelDldelDr_given_D[:, :, D]/np.sum(generative_model.PdelDldelDr_given_D[:, :, D])
+            if np.sum(generative_model.PdelDldelDr_given_D[:, :, D]) > 0:
+                generative_model.PdelDldelDr_given_D[:, :, D] = generative_model.PdelDldelDr_given_D[:, :, D] / np.sum(
+                    generative_model.PdelDldelDr_given_D[:, :, D])
 
-        self.given_D_CPdelDldelDr = np.array([ generative_model.PdelDldelDr_given_D[:, :, i].flatten().cumsum() for i in range(generative_model.PdelDldelDr_given_D.shape[2])])
+        self.given_D_CPdelDldelDr = np.array([generative_model.PdelDldelDr_given_D[:, :, i].flatten().cumsum() for i in
+                                              range(generative_model.PdelDldelDr_given_D.shape[2])])
 
-
-        self.C_Rvd = generative_model.Rvd.T.cumsum(axis = 1)
-        self.C_Rdj = generative_model.Rdj.T.cumsum(axis = 1)
+        self.C_Rvd = generative_model.Rvd.T.cumsum(axis=1)
+        self.C_Rdj = generative_model.Rdj.T.cumsum(axis=1)
 
         if generative_model.first_nt_bias_insVD is None:
             first_nt_bias_insVD = calc_steady_state_dist(generative_model.Rvd)
@@ -172,20 +175,17 @@ class SequenceGenerationVDJ(object):
         else:
             first_nt_bias_insDJ = generative_model.first_nt_bias_insDJ
 
-
-
         self.C_first_nt_bias_insVD = first_nt_bias_insVD.cumsum()
         self.C_first_nt_bias_insDJ = first_nt_bias_insDJ.cumsum()
 
         self.num_J_genes = generative_model.PDJ.shape[1]
         self.num_delDr_poss = generative_model.PdelDldelDr_given_D.shape[1]
 
-
         self.cutV_genomic_CDR3_segs = genomic_data.cutV_genomic_CDR3_segs
         self.cutD_genomic_CDR3_segs = genomic_data.cutD_genomic_CDR3_segs
         self.cutJ_genomic_CDR3_segs = genomic_data.cutJ_genomic_CDR3_segs
 
-    def gen_rnd_prod_CDR3(self, conserved_J_residues = 'FVW'):
+    def gen_rnd_prod_CDR3(self, conserved_J_residues='FVW'):
         """Generate a productive CDR3 seq from a Monte Carlo draw of the model.
 
         Parameters
@@ -204,7 +204,10 @@ class SequenceGenerationVDJ(object):
             Index of V allele chosen to generate the CDR3 seq
         J_choice : int
             Index of J allele chosen to generate the CDR3 seq
-
+        D_choice : int
+            Index of D allele chosen to generate the CDR3 seq
+        D_seq : str
+            The nucleotide sequence of the D allele that was used in the sequence
         """
         coding_pass = False
 
@@ -212,38 +215,38 @@ class SequenceGenerationVDJ(object):
             recomb_events = self.choose_random_recomb_events()
             V_seq = self.cutV_genomic_CDR3_segs[recomb_events['V']]
 
-            #This both checks that the position of the conserved C is
-            #identified and that the V isn't fully deleted out of the CDR3
-            #region
+            # This both checks that the position of the conserved C is
+            # identified and that the V isn't fully deleted out of the CDR3
+            # region
             if len(V_seq) <= max(recomb_events['delV'], 0):
                 continue
             D_seq = self.cutD_genomic_CDR3_segs[recomb_events['D']]
             J_seq = self.cutJ_genomic_CDR3_segs[recomb_events['J']]
 
-            #We check that the D and J aren't deleted more than allowed. Note
-            #the generative model really should reflect this structure already
+            # We check that the D and J aren't deleted more than allowed. Note
+            # the generative model really should reflect this structure already
             if len(D_seq) < (recomb_events['delDl'] + recomb_events['delDr']) or len(J_seq) < recomb_events['delJ']:
                 continue
 
             V_seq = V_seq[:len(V_seq) - recomb_events['delV']]
-            D_seq = D_seq[recomb_events['delDl']:len(D_seq)-recomb_events['delDr']]
+            D_seq = D_seq[recomb_events['delDl']:len(D_seq) - recomb_events['delDr']]
             J_seq = J_seq[recomb_events['delJ']:]
 
-            if (len(V_seq)+ len(D_seq) + len(J_seq) + recomb_events['insVD'] + recomb_events['insDJ']) % 3 != 0:
+            if (len(V_seq) + len(D_seq) + len(J_seq) + recomb_events['insVD'] + recomb_events['insDJ']) % 3 != 0:
                 continue
 
-
             insVD_seq = rnd_ins_seq(recomb_events['insVD'], self.C_Rvd, self.C_first_nt_bias_insVD)
-            insDJ_seq = rnd_ins_seq(recomb_events['insDJ'], self.C_Rdj, self.C_first_nt_bias_insDJ)[::-1] #have to reverse the DJ seq
+            insDJ_seq = rnd_ins_seq(recomb_events['insDJ'], self.C_Rdj, self.C_first_nt_bias_insDJ)[
+                        ::-1]  # have to reverse the DJ seq
 
-            #Translate to amino acid sequence, see if productive
+            # Translate to amino acid sequence, see if productive
             ntseq = V_seq + insVD_seq + D_seq + insDJ_seq + J_seq
             aaseq = nt2aa(ntseq)
 
-            if '*' not in aaseq and aaseq[0]=='C' and aaseq[-1] in conserved_J_residues:
-                return ntseq, aaseq, recomb_events['V'], recomb_events['J'], recomb_events['D']
+            if '*' not in aaseq and aaseq[0] == 'C' and aaseq[-1] in conserved_J_residues:
+                return ntseq, aaseq, recomb_events['V'], recomb_events['J'], recomb_events['D'], D_seq
 
-    def gen_rnd_prod_noins_CDR3(self, conserved_J_residues = 'FVW'):
+    def gen_rnd_prod_noins_CDR3(self, conserved_J_residues='FVW'):
         """Generate a productive CDR3 seq from a Monte Carlo draw of the model, without insertions.
 
         Parameters
@@ -264,7 +267,8 @@ class SequenceGenerationVDJ(object):
             Index of J allele chosen to generate the CDR3 seq
         D_choice : int
             Index of D allele chosen to generate the CDR3 seq
-
+        D_seq : str
+            The part of the D segment that was used in the sequence
         """
         coding_pass = False
 
@@ -272,33 +276,32 @@ class SequenceGenerationVDJ(object):
             recomb_events = self.choose_random_recomb_events()
             V_seq = self.cutV_genomic_CDR3_segs[recomb_events['V']]
 
-            #This both checks that the position of the conserved C is
-            #identified and that the V isn't fully deleted out of the CDR3
-            #region
+            # This both checks that the position of the conserved C is
+            # identified and that the V isn't fully deleted out of the CDR3
+            # region
             if len(V_seq) <= max(recomb_events['delV'], 0):
                 continue
             D_seq = self.cutD_genomic_CDR3_segs[recomb_events['D']]
             J_seq = self.cutJ_genomic_CDR3_segs[recomb_events['J']]
 
-            #We check that the D and J aren't deleted more than allowed. Note
-            #the generative model really should reflect this structure already
+            # We check that the D and J aren't deleted more than allowed. Note
+            # the generative model really should reflect this structure already
             if len(D_seq) < (recomb_events['delDl'] + recomb_events['delDr']) or len(J_seq) < recomb_events['delJ']:
                 continue
 
             V_seq = V_seq[:len(V_seq) - recomb_events['delV']]
-            D_seq = D_seq[recomb_events['delDl']:len(D_seq)-recomb_events['delDr']]
+            D_seq = D_seq[recomb_events['delDl']:len(D_seq) - recomb_events['delDr']]
             J_seq = J_seq[recomb_events['delJ']:]
 
             if (len(V_seq) + len(D_seq) + len(J_seq)) % 3 != 0:
                 continue
 
-
-            #Translate to amino acid sequence, see if productive
+            # Translate to amino acid sequence, see if productive
             ntseq = V_seq + D_seq + J_seq
             aaseq = nt2aa(ntseq)
 
-            if '*' not in aaseq and aaseq[0]=='C' and aaseq[-1] in conserved_J_residues:
-                return ntseq, aaseq, recomb_events['V'], recomb_events['J'], recomb_events['D']
+            if '*' not in aaseq and aaseq[0] == 'C' and aaseq[-1] in conserved_J_residues:
+                return ntseq, aaseq, recomb_events['V'], recomb_events['J'], recomb_events['D'], D_seq
 
     def choose_random_recomb_events(self):
         """Sample the genomic model for VDJ recombination events.
@@ -319,20 +322,19 @@ class SequenceGenerationVDJ(object):
         recomb_events = {}
         recomb_events['V'] = self.CPV.searchsorted(np.random.random())
 
-        #For 2D arrays make sure to take advantage of a mod expansion to find indicies
+        # For 2D arrays make sure to take advantage of a mod expansion to find indicies
         DJ_choice = self.CPDJ.searchsorted(np.random.random())
-        recomb_events['D'] = DJ_choice//self.num_J_genes
+        recomb_events['D'] = DJ_choice // self.num_J_genes
         recomb_events['J'] = DJ_choice % self.num_J_genes
 
-
-        #Refer to the correct slices for the dependent distributions
+        # Refer to the correct slices for the dependent distributions
         recomb_events['delV'] = self.given_V_CPdelV[recomb_events['V'], :].searchsorted(np.random.random())
 
         recomb_events['delJ'] = self.given_J_CPdelJ[recomb_events['J'], :].searchsorted(np.random.random())
 
         delDldelDr_choice = self.given_D_CPdelDldelDr[recomb_events['D'], :].searchsorted(np.random.random())
 
-        recomb_events['delDl'] = delDldelDr_choice//self.num_delDr_poss
+        recomb_events['delDl'] = delDldelDr_choice // self.num_delDr_poss
         recomb_events['delDr'] = delDldelDr_choice % self.num_delDr_poss
 
         recomb_events['insVD'] = self.CinsVD.searchsorted(np.random.random())
@@ -340,7 +342,8 @@ class SequenceGenerationVDJ(object):
 
         return recomb_events
 
-#%%
+
+# %%
 class SequenceGenerationVJ(object):
     """Class of to generate sequences from a VJ generative model.
 
@@ -393,25 +396,26 @@ class SequenceGenerationVJ(object):
 
         """
 
-        self.CPVJ = (generative_model.PVJ/np.sum(generative_model.PVJ)).flatten().cumsum()
-        self.CPinsVJ = (generative_model.PinsVJ/np.sum(generative_model.PinsVJ)).cumsum()
+        self.CPVJ = (generative_model.PVJ / np.sum(generative_model.PVJ)).flatten().cumsum()
+        self.CPinsVJ = (generative_model.PinsVJ / np.sum(generative_model.PinsVJ)).cumsum()
 
         for V in range(generative_model.PdelV_given_V.shape[1]):
-            if np.sum(generative_model.PdelV_given_V[:, V])> 0:
-                generative_model.PdelV_given_V[:, V] = generative_model.PdelV_given_V[:, V]/np.sum(generative_model.PdelV_given_V[:, V])
+            if np.sum(generative_model.PdelV_given_V[:, V]) > 0:
+                generative_model.PdelV_given_V[:, V] = generative_model.PdelV_given_V[:, V] / np.sum(
+                    generative_model.PdelV_given_V[:, V])
 
-        self.given_V_CPdelV = generative_model.PdelV_given_V.T.cumsum(axis = 1)
+        self.given_V_CPdelV = generative_model.PdelV_given_V.T.cumsum(axis=1)
 
         for J in range(generative_model.PdelJ_given_J.shape[1]):
-            if np.sum(generative_model.PdelJ_given_J[:, J])> 0:
-                generative_model.PdelJ_given_J[:, J] = generative_model.PdelJ_given_J[:, J]/np.sum(generative_model.PdelJ_given_J[:, J])
+            if np.sum(generative_model.PdelJ_given_J[:, J]) > 0:
+                generative_model.PdelJ_given_J[:, J] = generative_model.PdelJ_given_J[:, J] / np.sum(
+                    generative_model.PdelJ_given_J[:, J])
 
-        self.given_J_CPdelJ = generative_model.PdelJ_given_J.T.cumsum(axis = 1)
+        self.given_J_CPdelJ = generative_model.PdelJ_given_J.T.cumsum(axis=1)
 
+        self.C_Rvj = generative_model.Rvj.T.cumsum(axis=1)
 
-        self.C_Rvj = generative_model.Rvj.T.cumsum(axis = 1)
-
-        if generative_model.first_nt_bias_insVJ == None:
+        if generative_model.first_nt_bias_insVJ is None:
             first_nt_bias_insVJ = calc_steady_state_dist(generative_model.Rvj)
         else:
             first_nt_bias_insVJ = generative_model.first_nt_bias_insVJ
@@ -423,7 +427,7 @@ class SequenceGenerationVJ(object):
         self.cutV_genomic_CDR3_segs = genomic_data.cutV_genomic_CDR3_segs
         self.cutJ_genomic_CDR3_segs = genomic_data.cutJ_genomic_CDR3_segs
 
-    def gen_rnd_prod_CDR3(self, conserved_J_residues = 'FVW'):
+    def gen_rnd_prod_CDR3(self, conserved_J_residues='FVW'):
         """Generate a productive CDR3 seq from a Monte Carlo draw of the model.
 
         Parameters
@@ -451,32 +455,31 @@ class SequenceGenerationVJ(object):
             recomb_events = self.choose_random_recomb_events()
             V_seq = self.cutV_genomic_CDR3_segs[recomb_events['V']]
 
-            #This both checks that the position of the conserved C is
-            #identified and that the V isn't fully deleted out of the CDR3
-            #region
+            # This both checks that the position of the conserved C is
+            # identified and that the V isn't fully deleted out of the CDR3
+            # region
             if len(V_seq) <= max(recomb_events['delV'], 0):
                 continue
             J_seq = self.cutJ_genomic_CDR3_segs[recomb_events['J']]
 
-            #We check that J isn't deleted more than allowed. Note the
-            #generative model really should reflect this structure already
+            # We check that J isn't deleted more than allowed. Note the
+            # generative model really should reflect this structure already
             if len(J_seq) < recomb_events['delJ']:
                 continue
 
             V_seq = V_seq[:len(V_seq) - recomb_events['delV']]
             J_seq = J_seq[recomb_events['delJ']:]
 
-            if (len(V_seq)+len(J_seq) + recomb_events['insVJ']) % 3 != 0:
+            if (len(V_seq) + len(J_seq) + recomb_events['insVJ']) % 3 != 0:
                 continue
-
 
             insVJ_seq = rnd_ins_seq(recomb_events['insVJ'], self.C_Rvj, self.C_first_nt_bias_insVJ)
 
-            #Translate to amino acid sequence, see if productive
+            # Translate to amino acid sequence, see if productive
             ntseq = V_seq + insVJ_seq + J_seq
             aaseq = nt2aa(ntseq)
 
-            if '*' not in aaseq and aaseq[0]=='C' and aaseq[-1] in conserved_J_residues:
+            if '*' not in aaseq and aaseq[0] == 'C' and aaseq[-1] in conserved_J_residues:
                 return ntseq, aaseq, recomb_events['V'], recomb_events['J']
 
     def choose_random_recomb_events(self):
@@ -497,13 +500,12 @@ class SequenceGenerationVJ(object):
 
         recomb_events = {}
 
-        #For 2D arrays make sure to take advantage of a mod expansion to find indicies
+        # For 2D arrays make sure to take advantage of a mod expansion to find indicies
         VJ_choice = self.CPVJ.searchsorted(np.random.random())
-        recomb_events['V'] = VJ_choice//self.num_J_genes
+        recomb_events['V'] = VJ_choice // self.num_J_genes
         recomb_events['J'] = VJ_choice % self.num_J_genes
 
-
-        #Refer to the correct slices for the dependent distributions
+        # Refer to the correct slices for the dependent distributions
         recomb_events['delV'] = self.given_V_CPdelV[recomb_events['V'], :].searchsorted(np.random.random())
 
         recomb_events['delJ'] = self.given_J_CPdelJ[recomb_events['J'], :].searchsorted(np.random.random())
@@ -511,7 +513,8 @@ class SequenceGenerationVJ(object):
 
         return recomb_events
 
-#%% Function to get sequence identity (of a given length)
+
+# %% Function to get sequence identity (of a given length)
 def rnd_ins_seq(ins_len, C_R, CP_first_nt):
     """Generate a random insertion nucleotide sequence of length ins_len.
 
