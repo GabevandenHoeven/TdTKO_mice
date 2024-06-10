@@ -1,5 +1,6 @@
 import numpy
 from matplotlib import pyplot as plt
+from utils import calculate_confidence_intervals
 
 
 def plot_supporting_reads():
@@ -250,6 +251,36 @@ def plot_boxplot_per_incidence(data, labels, positions, plot_labels, ticks, tick
     plt.close()
 
 
+def plot_vj_usage(xticks, sorted_values, dim, title, labels, outfile, tick_labels):
+    plt.figure(figsize=dim)
+    # xticks = numpy.arange(1, len(tick_labels) + 1)
+    plt.xticks(xticks, labels=tick_labels, rotation=90)
+    plt.title(title)
+    plt.xlabel(labels[0])
+    plt.ylabel(labels[1])
+    xticks = numpy.arange(0.75, len(tick_labels) * 2, 2)
+    means = []
+    confidence_intervals = []
+    for i in range(len(sorted_values[0])):
+        mean, conf_int = calculate_confidence_intervals(sorted_values[0][i])
+        means.append(mean)
+        confidence_intervals.append(conf_int)
+    plot_confidence_interval(xticks, sorted_values[0], means, confidence_intervals, 'blue', 'TdTKO')
+
+    means = []
+    confidence_intervals = []
+    xticks = numpy.arange(1.25, (len(tick_labels)) * 2, 2)
+    for i in range(len(sorted_values[1])):
+        mean, conf_int = calculate_confidence_intervals(sorted_values[1][i])
+        means.append(mean)
+        confidence_intervals.append(conf_int)
+    plot_confidence_interval(xticks, sorted_values[1], means, confidence_intervals, 'orange', 'Normal')
+    plt.subplots_adjust(bottom=0.15)
+    plt.legend()
+    plt.savefig(outfile)
+    return
+
+
 def number_of_seq_per_incidence():
     x = [numpy.arange(1, 14), numpy.arange(1, 11)]
     y = [
@@ -268,6 +299,59 @@ def number_of_seq_per_incidence():
     plt.title('Number of sequences per incidence')
     plt.legend()
     plt.savefig('C:\\Users\\gabev\\PycharmProjects\\MRP_TdTKO_mice\\img\\number_of_seq_per_incidence.png')
+
+
+def plot_confidence_interval(xticks, values, means, confidence_intervals, colour, label, line_width=0.25):
+    # mean = statistics.mean(values)
+    # stdev = statistics.stdev(values)
+    # confidence_interval = z * stdev / math.sqrt(len(values))
+    # x = [[i + 1] * len(l[i]) for i in range(len(l))]
+    for i in range(len(confidence_intervals)):
+        left = xticks[i] - line_width / 2
+        top = means[i] - confidence_intervals[i]
+        right = xticks[i] + line_width / 2
+        bottom = means[i] + confidence_intervals[i]
+        plt.plot([xticks[i], xticks[i]], [top, bottom], color='black')
+        plt.plot([left, right], [top, top], color='black')
+        plt.plot([left, right], [bottom, bottom], color='black')
+        plt.plot([left, right], [means[i], means[i]], color='green')
+    xs = []
+    ys = []
+    for i in range(len(xticks)):
+        x = [xticks[i]] * len(values[i])
+        xs.extend(x)
+        ys.extend(values[i])
+    plt.scatter(xs, ys, color=colour, s=10, label=label)
+
+
+def plot_deletions_conf_int(xticks, sorted_values, dim, title, labels, outfile, tick_labels):
+    plt.figure(figsize=dim)
+    # xticks = numpy.arange(1, len(tick_labels) + 1)
+    plt.xticks(xticks)
+    plt.title(title)
+    plt.xlabel(labels[0])
+    plt.ylabel(labels[1])
+    xticks = numpy.arange(0.75, len(tick_labels) * 2, 2)
+    means = []
+    confidence_intervals = []
+    for i in range(len(sorted_values[0])):
+        mean, conf_int = calculate_confidence_intervals(sorted_values[0][i])
+        means.append(mean)
+        confidence_intervals.append(conf_int)
+    plot_confidence_interval(xticks, sorted_values[0], means, confidence_intervals, 'blue', 'TdTKO')
+
+    means = []
+    confidence_intervals = []
+    xticks = numpy.arange(1.25, (len(tick_labels)) * 2, 2)
+    for i in range(len(sorted_values[1])):
+        mean, conf_int = calculate_confidence_intervals(sorted_values[1][i])
+        means.append(mean)
+        confidence_intervals.append(conf_int)
+    plot_confidence_interval(xticks, sorted_values[1], means, confidence_intervals, 'orange', 'Normal')
+    plt.subplots_adjust(bottom=0.15)
+    plt.legend()
+    plt.savefig(outfile)
+    return
 
 
 if __name__ == '__main__':
