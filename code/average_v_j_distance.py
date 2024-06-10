@@ -1,5 +1,5 @@
 import pandas
-from plots import plot_vj_distance_reads, plot_vj_distance_perc
+from code.test_scripts.plots import plot_vj_distance_reads, plot_vj_distance_perc
 
 
 def calculate_average_v_j_distance(fn, delim):

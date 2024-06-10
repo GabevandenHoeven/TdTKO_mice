@@ -1,5 +1,5 @@
 import csv
-from plots import plot_d_lengths
+from code.test_scripts.plots import plot_d_lengths
 
 
 def get_d_lengths(filename):

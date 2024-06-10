@@ -144,7 +144,6 @@ if __name__ == "__main__":
     #     averages.append(average)
     #     print(f'The average is: {average}')
 
-    from plots import plot_sequence_length_read_count, plot_dist_junction_sequence_length
     # plot_sequence_length_read_count(sequence_lengths, read_counts, label='Normal')
     # plot_dist_junction_sequence_length(x_points, y_points, labels, averages)
 

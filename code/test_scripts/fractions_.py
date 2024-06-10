@@ -1,6 +1,6 @@
 import csv
 
-from code_main import get_vdj_lengths, read_rtcr_refs
+# from  import get_vdj_lengths, read_rtcr_refs
 
 
 def get_fractions(filename, reference_file, delim, threshold, total_above_threshold, insert_above_threshold):

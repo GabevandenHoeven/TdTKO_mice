@@ -1,4 +1,4 @@
-from plots import plot_dist_insertion_length
+from code.test_scripts.plots import plot_dist_insertion_length
 import csv
 
 

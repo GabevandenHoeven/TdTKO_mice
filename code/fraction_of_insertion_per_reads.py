@@ -1,4 +1,4 @@
-from plots import plot_fractions_ins
+from code.test_scripts.plots import plot_fractions_ins
 import csv
 
 

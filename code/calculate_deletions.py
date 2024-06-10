@@ -1,5 +1,5 @@
 import csv
-from plots import plot_deletions, plot_d_deletions
+from code.test_scripts.plots import plot_deletions, plot_d_deletions
 import numpy
 
 
