@@ -3,6 +3,8 @@ import time
 import difflib
 import csv
 import re
+import statistics
+import math
 
 
 def sequence_matcher(a: str, b: str):
@@ -317,3 +319,17 @@ def reconfigure_header_tdt_normal_data(fn):
     with open(fn, 'w') as file:
         file.write(header)
         file.writelines(out)
+
+
+def calculate_confidence_intervals(values, z=1.96):
+    """
+
+    :param values:
+    :param z:
+    :return:
+    """
+    mean = statistics.mean(values)
+    stdev = statistics.stdev(values)
+    confidence_interval = z * stdev / math.sqrt(len(values))
+    return mean, confidence_interval
+
