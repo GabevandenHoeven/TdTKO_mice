@@ -327,7 +327,7 @@ def plot_confidence_interval(xticks, values, means, confidence_intervals, colour
 def plot_deletions_conf_int(xticks, sorted_values, dim, title, labels, outfile, tick_labels):
     plt.figure(figsize=dim)
     # xticks = numpy.arange(1, len(tick_labels) + 1)
-    plt.xticks(xticks)
+    plt.xticks(xticks, labels=tick_labels)
     plt.title(title)
     plt.xlabel(labels[0])
     plt.ylabel(labels[1])
@@ -348,7 +348,6 @@ def plot_deletions_conf_int(xticks, sorted_values, dim, title, labels, outfile, 
         means.append(mean)
         confidence_intervals.append(conf_int)
     plot_confidence_interval(xticks, sorted_values[1], means, confidence_intervals, 'orange', 'Normal')
-    plt.subplots_adjust(bottom=0.15)
     plt.legend()
     plt.savefig(outfile)
     return

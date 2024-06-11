@@ -1,35 +1,37 @@
 import csv
-from code.test_scripts.plots import plot_deletions, plot_d_deletions
+from plots import plot_deletions, plot_d_deletions, plot_deletions_conf_int
 import numpy
 
 
-def get_vj_deletions(filename):
+def get_vj_deletions(filename, delim='\t'):
     """
 
     :param filename:
+    :param delim:
     :return:
     """
-    v_del = {
-        # deletion length: occurrences
-    }
-    j_del = {
-        # deletion length: occurrences
-    }
+    mice = {}
+
     total = 0
     with open(filename, 'r') as infile:
-        reader = csv.reader(infile, delimiter='\t')
+        reader = csv.reader(infile, delimiter=delim)
         header = next(reader)
         for line in reader:
             total += 1
-            try:
-                v_del[int(line[header.index('V.length.deleted')])] += 1
-            except KeyError:
-                v_del.update({int(line[header.index('V.length.deleted')]): 1})
-            try:
-                j_del[int(line[header.index('J.length.deleted')])] += 1
-            except KeyError:
-                j_del.update({int(line[header.index('J.length.deleted')]): 1})
-    return v_del, j_del, total
+            mouse = line[header.index('Mouse')]
+            v_del, j_del = int(line[header.index('V.length.deleted')]), int(line[header.index('J.length.deleted')])
+            if mouse not in mice.keys():
+                mice.update({mouse: [{}, {}, 0]})
+            mice[mouse][2] += 1
+            if v_del not in mice[mouse][0].keys():
+                mice[mouse][0].update({v_del: 1})
+            else:
+                mice[mouse][0][v_del] += 1
+            if j_del not in mice[mouse][1].keys():
+                mice[mouse][1].update({j_del: 1})
+            else:
+                mice[mouse][1][j_del] += 1
+    return mice, total
 
 
 def calculate_d_deletions(filename):
@@ -67,60 +69,111 @@ def calculate_d_deletions(filename):
 
 
 if __name__ == '__main__':
-    x = []
-    y = []
-    # file = '..\\data_files\\TdTKO\\filtered_data\\filtered_data_exp_TdTKO.tsv'
-    file = '..\\data_files\\TdTKO\\filtered_data\\filtered_data_gen_TdTKO.tsv'
-    vdel_tdt, jdel_tdt, total_tdt = get_vj_deletions(file)
-    x.append(sorted(vdel_tdt.keys()))
-    y.append([vdel_tdt[e] / total_tdt * 100 for e in sorted(vdel_tdt.keys())])
+    files = [
+        '..\\data_files\\TdTKO\\filtered_data\\filtered_data_exp_TdTKO_v2.tsv',
+        '..\\data_files\\Normal\\filtered_data\\filtered_data_exp_Normal_v2.tsv'
+        # '..\\data_files\\TdTKO\\filtered_data\\filtered_data_gen_TdTKO_v2.tsv',
+        # '..\\data_files\\Normal\\filtered_data\\filtered_data_gen_Normal_v2.tsv'
+    ]
+    v_list = []
+    j_list = []
+    for file in files:
+        mice, total = get_vj_deletions(file)
+        vs = []
+        js = []
+        for m in mice.keys():
+            seqs = mice[m][2]
+            vs.append([(mice[m][0][v] / seqs * 100) for v in sorted(mice[m][0].keys())])
+            js.append([(mice[m][1][j] / seqs * 100) for j in sorted(mice[m][1].keys())])
+        v_list.append(vs)
+        j_list.append(js)
 
-    # file = '..\\data_files\\Normal\\filtered_data\\filtered_data_exp_Normal.tsv'
-    file = '..\\data_files\\Normal\\filtered_data\\filtered_data_gen_Normal.tsv'
-    vdel_nor, jdel_nor, total_nor = get_vj_deletions(file)
-    x.append(sorted(vdel_nor.keys()))
-    y.append([vdel_nor[e] / total_nor * 100 for e in sorted(vdel_nor.keys())])
+    sorted_values = []
+    for i in range(len(v_list)):
+        sorted_values_i = []
+        for ii in range(max([len(e) for e in v_list[i]])):
+            x = [v_list[i][m][ii] for m in range(len(v_list[i]))]
+            sorted_values_i.append(x)
+        sorted_values.append(sorted_values_i)
 
-    # out = f'..\\img\\deletion_size_V_TdTKO-Normal.png'
-    out = f'..\\img\\Generated_deletion_size_V_TdTKO-Normal.png'
-    title = 'Percentage of sequences containing deletions of V gene \nfor TdTKO and Normal'
-    ticks = list(numpy.arange(14))
-    plot_deletions(x, y, ['TdTKO', 'Normal'], ticks, title, out)
+    xticks = numpy.arange(1, (max(len(e) for e in sorted_values)) * 2, 2)
+    x_labels = numpy.arange((max(len(e) for e in sorted_values)))
+    plot_deletions_conf_int(xticks, sorted_values, (8, 10), 'V deletions confint exp',
+                            ('Deletion size (nt)', 'Percentage sequences (%)'),
+                            '..\\img\\V_del_confint.png', x_labels)
+    # plot_deletions_conf_int(xticks, sorted_values, (8, 10), 'V deletions confint exp',
+    #                         ('Deletion size (nt)', 'Percentage sequences (%)'),
+    #                         '..\\img\\V_del_confint.png', x_labels)
 
-    x = []
-    y = []
+    sorted_values = []
+    for i in range(len(j_list)):
+        sorted_values_i = []
+        for ii in range(max([len(e) for e in j_list[i]])):
+            x = []
+            for m in range(len(j_list[i])):
+                if len(j_list[i][m]) > ii:
+                    x.append(j_list[i][m][ii])
+            # x2 = [j_list[i][m][ii] for m in range(len(j_list[i]))]
+            sorted_values_i.append(x)
+        sorted_values.append(sorted_values_i)
 
-    x.append(sorted(jdel_tdt.keys()))
-    y.append([jdel_tdt[e] / total_tdt * 100 for e in sorted(jdel_tdt.keys())])
+    xticks = numpy.arange(1, (max(len(e) for e in sorted_values)) * 2, 2)
+    x_labels = numpy.arange((max(len(e) for e in sorted_values)))
+    plot_deletions_conf_int(xticks, sorted_values, (8, 10), 'J deletions exp',
+                            ('Deletion size (nt)', 'Percentage sequences (%)'),
+                            '..\\img\\J_del_confint.png', x_labels)
+    # plot_deletions_conf_int(xticks, sorted_values, (8, 10), 'J deletions exp',
+    #                         ('Deletion size (nt)', 'Percentage sequences (%)'),
+    #                         '..\\img\\J_del_confint.png', x_labels)
 
-    x.append(sorted(jdel_nor.keys()))
-    y.append([jdel_nor[e] / total_nor * 100 for e in sorted(jdel_nor.keys())])
-    # out = f'..\\img\\deletion_size_J_TdTKO-Normal.png'
-    out = f'..\\img\\Generated_deletion_size_J_TdTKO-Normal.png'
-    title = 'Percentage of sequences containing deletions of J gene \nfor TdTKO and Normal'
-    ticks = list(numpy.arange(14))
-    plot_deletions(x, y, ['TdTKO', 'Normal'], ticks, title, out)
+    # ----------------------------------------------------------------------------------
+
+    # file = '..\\data_files\\Normal\\filtered_data\\filtered_data_exp_Normal_v2.tsv'
+    # # file = '..\\data_files\\Normal\\filtered_data\\filtered_data_gen_Normal.tsv'
+    # vdel_nor, jdel_nor, total_nor = get_vj_deletions(file)
+    # x.append(sorted(vdel_nor.keys()))
+    # y.append([vdel_nor[e] / total_nor * 100 for e in sorted(vdel_nor.keys())])
+    #
+    # out = f'..\\img\\deletion_size_V_TdTKO-Normal2.png'
+    # # out = f'..\\img\\Generated_deletion_size_V_TdTKO-Normal.png'
+    # title = 'Percentage of sequences containing deletions of V gene \nfor TdTKO and Normal'
+    # ticks = list(numpy.arange(14))
+    # # plot_deletions(x, y, ['TdTKO', 'Normal'], ticks, title, out)
+    #
+    # x = []
+    # y = []
+    #
+    # x.append(sorted(jdel_tdt.keys()))
+    # y.append([jdel_tdt[e] / total_tdt * 100 for e in sorted(jdel_tdt.keys())])
+    #
+    # x.append(sorted(jdel_nor.keys()))
+    # y.append([jdel_nor[e] / total_nor * 100 for e in sorted(jdel_nor.keys())])
+    # out = f'..\\img\\deletion_size_J_TdTKO-Normal2.png'
+    # # out = f'..\\img\\Generated_deletion_size_J_TdTKO-Normal.png'
+    # title = 'Percentage of sequences containing deletions of J gene \nfor TdTKO and Normal'
+    # ticks = list(numpy.arange(14))
+    # # plot_deletions(x, y, ['TdTKO', 'Normal'], ticks, title, out)
 
     # ----
-    x = []
-    y = []
+    # x = []
+    # y = []
     # file = 'C:\\Users\\gabev\\PycharmProjects\\MRP_TdTKO_mice\\data_files\\TdTKo\\filtered_data\\filtered_data_TdTKO.tsv'
-    file = 'C:\\Users\\gabev\\PycharmProjects\\MRP_TdTKO_mice\\data_files\\TdTKo\\filtered_data\\generated_filtered_data_TdTKO.tsv'
-    d_del_tdt, unidentified_tdt, total_tdt = calculate_d_deletions(file)
-    x.append(sorted(d_del_tdt.keys()))
-    x[-1].append(x[-1][-1] + 2)
-    y.append([d_del_tdt[e] / total_tdt * 100 for e in sorted(d_del_tdt.keys())])
-    y[-1].append(unidentified_tdt / total_tdt * 100)
+    # file = 'C:\\Users\\gabev\\PycharmProjects\\MRP_TdTKO_mice\\data_files\\TdTKo\\filtered_data\\generated_filtered_data_TdTKO.tsv'
+    # d_del_tdt, unidentified_tdt, total_tdt = calculate_d_deletions(file)
+    # x.append(sorted(d_del_tdt.keys()))
+    # x[-1].append(x[-1][-1] + 2)
+    # y.append([d_del_tdt[e] / total_tdt * 100 for e in sorted(d_del_tdt.keys())])
+    # y[-1].append(unidentified_tdt / total_tdt * 100)
 
     # file = 'C:\\Users\\gabev\\PycharmProjects\\MRP_TdTKO_mice\\data_files\\B6\\filtered_data\\filtered_data_Normal.tsv'
-    file = 'C:\\Users\\gabev\\PycharmProjects\\MRP_TdTKO_mice\\data_files\\B6\\filtered_data\\generated_filtered_data_Normal.tsv'
-    d_del_nor, unidentified_nor, total_nor = calculate_d_deletions(file)
-    x.append(sorted(d_del_nor.keys()))
-    x[-1].append(x[-1][-1] + 2)
-    y.append([d_del_nor[e] / total_nor * 100 for e in sorted(d_del_tdt.keys())])
-    y[-1].append(unidentified_nor / total_nor * 100)
+    # file = 'C:\\Users\\gabev\\PycharmProjects\\MRP_TdTKO_mice\\data_files\\B6\\filtered_data\\generated_filtered_data_Normal.tsv'
+    # d_del_nor, unidentified_nor, total_nor = calculate_d_deletions(file)
+    # x.append(sorted(d_del_nor.keys()))
+    # x[-1].append(x[-1][-1] + 2)
+    # y.append([d_del_nor[e] / total_nor * 100 for e in sorted(d_del_tdt.keys())])
+    # y[-1].append(unidentified_nor / total_nor * 100)
 
     # out = f'C:\\Users\\gabev\\PycharmProjects\\MRP_TdTKO_mice\\img\\deletion_size_D_TdTKO-Normal.png'
-    out = f'C:\\Users\\gabev\\PycharmProjects\\MRP_TdTKO_mice\\img\\Generated_deletion_size_D_TdTKO-Normal.png'
-    title = 'Percentage of sequences containing deletions of D gene \nfor TdTKO and Normal'
-    plot_d_deletions(x, y, ['TdTKO', 'Normal'], title, out)
+    # out = f'C:\\Users\\gabev\\PycharmProjects\\MRP_TdTKO_mice\\img\\Generated_deletion_size_D_TdTKO-Normal.png'
+    # title = 'Percentage of sequences containing deletions of D gene \nfor TdTKO and Normal'
+    # plot_d_deletions(x, y, ['TdTKO', 'Normal'], title, out)
