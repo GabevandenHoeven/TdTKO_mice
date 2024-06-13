@@ -333,3 +333,36 @@ def calculate_confidence_intervals(values, z=1.96):
     confidence_interval = z * stdev / math.sqrt(len(values))
     return mean, confidence_interval
 
+
+def get_unique_sequences_from_file(filename, delim='\t'):
+    """Checks a data file for the CDR3 sequences in it to be unique. The first line of a unique sequence in the file,
+    gets added to the output list.
+    For example:
+    Column1	Mouse	Number.of.reads	V.length.used	D.used	D.length.used	J.length.used	V.length.deleted
+    J.length.deleted	Left.insertion.length	Right.insertion.length	Left.palindromic	Right.palindromic
+    V.J.distance	V.gene	J.gene	V.gene.end.position	J.gene.start.position	Min.Phred
+    Junction.nucleotide.sequence	phenotype	strain
+    3	M28	6682	9		0	21	6	0	0	0	0	0	0	TRBV12-2*01	TRBJ2-3*01	9	10	40	TGTGCCAGCAGTGCAGAAACGCTGTATTTT	CD4+	TdT-/-
+    8	M28	2761	17		0	16	0	4	0	0	0	0	0	TRBV16*01	TRBJ1-1*01	17	18	40	TGTGCAAGCAGCTTAGACACAGAAGTCTTCTTT	CD4+	TdT-/-
+    24	M29	1966	9		0	21	6	0	0	0	0	0	0	TRBV12-2*01	TRBJ2-3*01	9	10	40	TGTGCCAGCAGTGCAGAAACGCTGTATTTT	CD4+	TdT-/-
+
+    Here, line 3 and 8 get added because they are unique sequences, but line 24 is the same as line 3 in sequence,
+    so it is disregarded.
+
+    :param filename: str - The name of the file, should be a path if it is not within the current working directory
+    :param delim: str - The delimiter of the data file, which character is used to separate values.
+    :return:
+    """
+    new_lines = []
+    sequences_check = []
+    with open(filename, 'r') as file:
+        reader = csv.reader(file, delimiter=delim)
+        header = next(reader)
+        new_lines.append(header)
+        for line in reader:
+            if line[header.index('V.gene')] + line[header.index('Junction.nucleotide.sequence')] + line[header.index('J.gene')] not in sequences_check:
+                new_lines.append(line)
+                sequences_check.append(line[header.index('V.gene')] +
+                                       line[header.index('Junction.nucleotide.sequence')] +
+                                       line[header.index('J.gene')])
+    return new_lines
