@@ -1,5 +1,4 @@
 import csv
-from code.test_scripts.plots import plot_line_and_scatter_per_incidence
 
 
 def get_abundance(filename: str, exp: str, max_incidence: int):

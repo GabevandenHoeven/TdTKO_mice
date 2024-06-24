@@ -5,6 +5,7 @@ import csv
 import re
 import statistics
 import math
+from statistics import StatisticsError
 
 
 def sequence_matcher(a: str, b: str):
@@ -112,7 +113,7 @@ def find_p_nucleotides_loop_right(expression, insertion, template, p_nucleotides
                 break_ = True
                 break
         if not break_:
-            insertion = insertion[:-(i+1)]
+            insertion = insertion[:-(i + 1)]
 
     return p_nucleotides, insertion
 
@@ -141,7 +142,7 @@ def find_p_nucleotides_loop_left(expression, insertion, template, p_nucleotides)
                 break_ = True
                 break
         if not break_:
-            insertion = insertion[i+1:]
+            insertion = insertion[i + 1:]
 
     return p_nucleotides, insertion
 
@@ -329,7 +330,10 @@ def calculate_confidence_intervals(values, z=1.96):
     :return:
     """
     mean = statistics.mean(values)
-    stdev = statistics.stdev(values)
+    try:
+        stdev = statistics.stdev(values)
+    except StatisticsError:
+        stdev = 0
     confidence_interval = z * stdev / math.sqrt(len(values))
     return mean, confidence_interval
 
@@ -343,26 +347,60 @@ def get_unique_sequences_from_file(filename, delim='\t'):
     V.J.distance	V.gene	J.gene	V.gene.end.position	J.gene.start.position	Min.Phred
     Junction.nucleotide.sequence	phenotype	strain
     3	M28	6682	9		0	21	6	0	0	0	0	0	0	TRBV12-2*01	TRBJ2-3*01	9	10	40	TGTGCCAGCAGTGCAGAAACGCTGTATTTT	CD4+	TdT-/-
+    6	M28	5623	9		0	21	6	0	0	0	0	0	0	TRBV12-2*01	TRBJ2-3*01	9	10	40	TGTGCCAGCAGTGCAGAAACGCTGTATTTT	CD4+	TdT-/-
     8	M28	2761	17		0	16	0	4	0	0	0	0	0	TRBV16*01	TRBJ1-1*01	17	18	40	TGTGCAAGCAGCTTAGACACAGAAGTCTTCTTT	CD4+	TdT-/-
     24	M29	1966	9		0	21	6	0	0	0	0	0	0	TRBV12-2*01	TRBJ2-3*01	9	10	40	TGTGCCAGCAGTGCAGAAACGCTGTATTTT	CD4+	TdT-/-
 
-    Here, line 3 and 8 get added because they are unique sequences, but line 24 is the same as line 3 in sequence,
-    so it is disregarded.
+    Here, line 3, 8 and 24 get added because they are unique sequences or belong to a different mouse,
+    but line 6 is the same as line 3 in sequence and mouse, so it is disregarded.
 
     :param filename: str - The name of the file, should be a path if it is not within the current working directory
     :param delim: str - The delimiter of the data file, which character is used to separate values.
     :return:
     """
-    new_lines = []
-    sequences_check = []
+    new_lines, sequences_check = [], {}
     with open(filename, 'r') as file:
         reader = csv.reader(file, delimiter=delim)
         header = next(reader)
         new_lines.append(header)
         for line in reader:
-            if line[header.index('V.gene')] + line[header.index('Junction.nucleotide.sequence')] + line[header.index('J.gene')] not in sequences_check:
+            try:
+                sequences_check[
+                    line[header.index('V.gene')] +
+                    line[header.index('Junction.nucleotide.sequence')] +
+                    line[header.index('J.gene')]]
+            except KeyError:
                 new_lines.append(line)
-                sequences_check.append(line[header.index('V.gene')] +
-                                       line[header.index('Junction.nucleotide.sequence')] +
-                                       line[header.index('J.gene')])
+                sequences_check.update({line[header.index('V.gene')] +
+                                        line[header.index('Junction.nucleotide.sequence')] +
+                                        line[header.index('J.gene')]: True})
+    return new_lines
+
+
+def get_unique_sequences_per_mouse_from_file(filename, delim='\t'):
+    """This function is a variation on the ``get_unique_sequences_from_file`` function.
+    This function allows for the same sequence to be added if the sequence is found in a different mouse.
+
+    :param filename:
+    :param delim:
+    :return:
+    """
+    new_lines, sequences_check = [], {}
+    with open(filename, 'r') as file:
+        reader = csv.reader(file, delimiter=delim)
+        header = next(reader)
+        new_lines.append(header)
+        for line in reader:
+            try:
+                sequences_check[
+                    line[header.index('Mouse')] +
+                    line[header.index('V.gene')] +
+                    line[header.index('Junction.nucleotide.sequence')] +
+                    line[header.index('J.gene')]]
+            except KeyError:
+                new_lines.append(line)
+                sequences_check.update({line[header.index('Mouse')] +
+                                        line[header.index('V.gene')] +
+                                        line[header.index('Junction.nucleotide.sequence')] +
+                                        line[header.index('J.gene')]: True})
     return new_lines

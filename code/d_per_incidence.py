@@ -1,5 +1,5 @@
 from abundance_sequences import get_abundance
-from code.test_scripts.plots import plot_line_and_scatter_per_incidence
+from plots import plot_line_and_scatter_per_incidence
 
 if __name__ == '__main__':
     files = [

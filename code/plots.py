@@ -129,7 +129,7 @@ def plot_vj_distance_reads(x_points_lists, y_points_lists, labels):
     plt.close()
 
 
-def plot_vj_distance_perc(x_points_lists, y_points_lists, avg, labels, title):
+def plot_vj_distance_perc(x_points_lists, y_points_lists, avg, labels, out_file):
     plt.figure()
     x_points = [x for x in x_points_lists[0] if x <= 25]
     y_points, label, average = [y for y in y_points_lists[0] if y_points_lists[0].index(y) <= 25], labels[0], avg[0]
@@ -147,7 +147,7 @@ def plot_vj_distance_perc(x_points_lists, y_points_lists, avg, labels, title):
     plt.xlabel('VJ distance (nt)')
     plt.ylabel('Percentage of sequences (%)')
     plt.legend()
-    plt.savefig(title)
+    plt.savefig(out_file)
     plt.close()
 
 
@@ -318,9 +318,13 @@ def plot_confidence_interval(xticks, values, means, confidence_intervals, colour
     xs = []
     ys = []
     for i in range(len(xticks)):
-        x = [xticks[i]] * len(values[i])
-        xs.extend(x)
-        ys.extend(values[i])
+        try:
+            x = [xticks[i]] * len(values[i])
+            xs.extend(x)
+            ys.extend(values[i])
+        except IndexError as e:
+            pass
+
     plt.scatter(xs, ys, color=colour, s=10, label=label)
 
 

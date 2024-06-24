@@ -1,36 +1,34 @@
 import csv
 from plots import plot_deletions, plot_d_deletions, plot_deletions_conf_int
 import numpy
+from utils import get_unique_sequences_from_file
 
 
-def get_vj_deletions(filename, delim='\t'):
+def get_vj_deletions(data):
     """
 
-    :param filename:
-    :param delim:
+    :param data:
     :return:
     """
     mice = {}
 
     total = 0
-    with open(filename, 'r') as infile:
-        reader = csv.reader(infile, delimiter=delim)
-        header = next(reader)
-        for line in reader:
-            total += 1
-            mouse = line[header.index('Mouse')]
-            v_del, j_del = int(line[header.index('V.length.deleted')]), int(line[header.index('J.length.deleted')])
-            if mouse not in mice.keys():
-                mice.update({mouse: [{}, {}, 0]})
-            mice[mouse][2] += 1
-            if v_del not in mice[mouse][0].keys():
-                mice[mouse][0].update({v_del: 1})
-            else:
-                mice[mouse][0][v_del] += 1
-            if j_del not in mice[mouse][1].keys():
-                mice[mouse][1].update({j_del: 1})
-            else:
-                mice[mouse][1][j_del] += 1
+    header = data[0]
+    for line in data[1:]:
+        total += 1
+        mouse = line[header.index('Mouse')]
+        v_del, j_del = int(line[header.index('V.length.deleted')]), int(line[header.index('J.length.deleted')])
+        if mouse not in mice.keys():
+            mice.update({mouse: [{}, {}, 0]})
+        mice[mouse][2] += 1
+        if v_del not in mice[mouse][0].keys():
+            mice[mouse][0].update({v_del: 1})
+        else:
+            mice[mouse][0][v_del] += 1
+        if j_del not in mice[mouse][1].keys():
+            mice[mouse][1].update({j_del: 1})
+        else:
+            mice[mouse][1][j_del] += 1
     return mice, total
 
 
@@ -70,15 +68,16 @@ def calculate_d_deletions(filename):
 
 if __name__ == '__main__':
     files = [
-        '..\\data_files\\TdTKO\\filtered_data\\filtered_data_exp_TdTKO_v2.tsv',
-        '..\\data_files\\Normal\\filtered_data\\filtered_data_exp_Normal_v2.tsv'
-        # '..\\data_files\\TdTKO\\filtered_data\\filtered_data_gen_TdTKO_v2.tsv',
-        # '..\\data_files\\Normal\\filtered_data\\filtered_data_gen_Normal_v2.tsv'
+        # '..\\data_files\\TdTKO\\filtered_data\\filtered_data_exp_TdTKO_v2.tsv',
+        # '..\\data_files\\Normal\\filtered_data\\filtered_data_exp_Normal_v2.tsv'
+        '..\\data_files\\TdTKO\\filtered_data\\filtered_data_gen_TdTKO_v2.tsv',
+        '..\\data_files\\Normal\\filtered_data\\filtered_data_gen_Normal_v2.tsv'
     ]
     v_list = []
     j_list = []
     for file in files:
-        mice, total = get_vj_deletions(file)
+        filtered_data = get_unique_sequences_from_file(file)
+        mice, total = get_vj_deletions(filtered_data)
         vs = []
         js = []
         for m in mice.keys():
@@ -98,9 +97,9 @@ if __name__ == '__main__':
 
     xticks = numpy.arange(1, (max(len(e) for e in sorted_values)) * 2, 2)
     x_labels = numpy.arange((max(len(e) for e in sorted_values)))
-    plot_deletions_conf_int(xticks, sorted_values, (8, 10), 'V deletions confint exp',
+    plot_deletions_conf_int(xticks, sorted_values, (8, 10), 'Deletions in V segments with confidence intervals',
                             ('Deletion size (nt)', 'Percentage sequences (%)'),
-                            '..\\img\\V_del_confint.png', x_labels)
+                            '..\\img\\unique_seq_img\\V_del_confint_gen.png', x_labels)
     # plot_deletions_conf_int(xticks, sorted_values, (8, 10), 'V deletions confint exp',
     #                         ('Deletion size (nt)', 'Percentage sequences (%)'),
     #                         '..\\img\\V_del_confint.png', x_labels)
@@ -119,9 +118,9 @@ if __name__ == '__main__':
 
     xticks = numpy.arange(1, (max(len(e) for e in sorted_values)) * 2, 2)
     x_labels = numpy.arange((max(len(e) for e in sorted_values)))
-    plot_deletions_conf_int(xticks, sorted_values, (8, 10), 'J deletions exp',
+    plot_deletions_conf_int(xticks, sorted_values, (8, 10), 'Deletions in J segments with confidence intervals',
                             ('Deletion size (nt)', 'Percentage sequences (%)'),
-                            '..\\img\\J_del_confint.png', x_labels)
+                            '..\\img\\unique_seq_img\\J_del_confint_gen.png', x_labels)
     # plot_deletions_conf_int(xticks, sorted_values, (8, 10), 'J deletions exp',
     #                         ('Deletion size (nt)', 'Percentage sequences (%)'),
     #                         '..\\img\\J_del_confint.png', x_labels)
