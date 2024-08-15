@@ -1,33 +1,29 @@
-import pandas
-from plots import plot_vj_distance_reads, plot_vj_distance_perc
+from plots import plot_vj_distance_perc
+from utils import get_unique_sequences_from_file
 
 
-def calculate_average_v_j_distance(fn, delim):
+def calculate_average_v_j_distance(lines):
     """
 
-    :param fn:
-    :param delim:
+    :param lines:
     :return:
     """
-    df = pandas.read_csv(fn, sep=delim, header=0)
-    sum_ = df['V.J.distance'].sum()
-    # reads = list(df['Number.of.reads'])
-    reads = 0
-    distances = list(df['V.J.distance'])
-    distance_occ = list(df['V.J.distance'].value_counts().sort_index())
-    unique_distances = sorted(list(df['V.J.distance'].unique()))
-    n_rows = len(df)
-    avg = sum_ / n_rows
-    print(f'The average VJ distance is: {sum_} / {n_rows} = {avg}')
-    return distances, reads, unique_distances, distance_occ, avg
+    header = lines[0]
+    distances = {}
+    total = 0
+    for line in lines[1:]:
+        total += 1
+        try:
+            distances[int(line[header.index('V.J.distance')])] += 1
+        except KeyError:
+            distances.update({int(line[header.index('V.J.distance')]): 1})
+    return distances, total
 
 
 if __name__ == '__main__':
-    vj_distances = []
-    read_counts = []
-    unique_distances = []
-    distance_occurrences = []
-    labels = []
+    x = []
+    y = []
+    labels = ['TdTKO', 'Normal']
     averages = []
     filenames = [
         '..\\data_files\\TdTKO\\filtered_data\\filtered_data_exp_TdTKO_v2.tsv',
@@ -36,15 +32,14 @@ if __name__ == '__main__':
         # '..\\data_files\\Normal\\filtered_data\\filtered_data_gen_Normal_v2.tsv'
                 ]
     for file in filenames:
-        d, r, unique_d, d_occ, average = calculate_average_v_j_distance(file, '\t')
-        vj_distances.append(d)
-        read_counts.append(r)
+        unique_lines = get_unique_sequences_from_file(file)
+        vj_distances, total_lines = calculate_average_v_j_distance(unique_lines)
+        x.append([e for e in sorted(vj_distances.keys())])
+        y_ = [vj_distances[e] / total_lines * 100 for e in sorted(vj_distances.keys())]
+        y.append(y_)
+        average = sum([e * vj_distances[e] for e in vj_distances.keys()]) / total_lines
         averages.append(average)
-        unique_distances.append(unique_d)
-        d_occ = [occ * 100 / sum(d_occ) for occ in d_occ]
-        distance_occurrences.append(d_occ)
-        labels.append(file.split('_')[-1].rstrip('.tsv'))
-    # plot_vj_distance_reads(vj_distances, read_counts, labels)
     out_fn = f'..\\img\\unique_seq_img\\VJ_distance_distribution_seq_fraction_{"-".join(labels)}'
     # out_fn = f'..\\img\\unique_seq_img\\Generated_VJ_distance_distribution_seq_fraction_{"-".join(labels)}'
-    plot_vj_distance_perc(unique_distances, distance_occurrences, averages, labels, out_fn)
+    # plot_vj_distance_perc(x, y, averages, labels, out_fn)
+    print(averages)

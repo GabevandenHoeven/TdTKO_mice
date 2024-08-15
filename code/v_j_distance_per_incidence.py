@@ -1,7 +1,7 @@
 import numpy
 from abundance_sequences import get_abundance
-from code.test_scripts.plots import plot_line_and_scatter_per_incidence, plot_boxplot_per_incidence
-
+from plots import plot_line_and_scatter_per_incidence, plot_boxplot_per_incidence
+from utils import get_unique_sequences_per_mouse_from_file
 
 if __name__ == '__main__':
     files = [
@@ -18,7 +18,8 @@ if __name__ == '__main__':
     for file in files:
         max_incidence = mice_per_file[files.index(file)]
         x.append([i for i in range(1, max_incidence + 1)])
-        fract_incidence, seq_per_incidence = get_abundance(file, 'seq[3] >= 0', max_incidence)
+        filtered_data = get_unique_sequences_per_mouse_from_file(file)
+        fract_incidence, seq_per_incidence = get_abundance(filtered_data, 'seq[3] >= 0', max_incidence)
         mean_v_j_distances = []
         for i in range(max_incidence):
             incidence_group = seq_per_incidence[i]

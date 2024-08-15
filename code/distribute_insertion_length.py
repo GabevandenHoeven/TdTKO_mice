@@ -1,8 +1,9 @@
-from code.test_scripts.plots import plot_dist_insertion_length
+from plots import plot_dist_insertion_length
+from utils import get_unique_sequences_from_file
 import csv
 
 
-def get_insertion_counts(fn, counts: dict, delim: str):
+def get_insertion_counts(file):
     """
 
     :param fn:
@@ -12,37 +13,36 @@ def get_insertion_counts(fn, counts: dict, delim: str):
     """
     total_seq = 0
     insertions = []
-    with open(fn, 'r') as file:
-        reader = csv.reader(file, delimiter=delim)
-        header = next(reader)
-        for row in reader:
-            total_seq += 1
-            try:
-                ins = (int(row[header.index('Left.insertion.length')]) - int(row[header.index('Left.palindromic')])) + \
-                      (int(row[header.index('Right.insertion.length')]) - int(row[header.index('Right.palindromic')]))
-                insertions.append(ins)
-                counts[ins] += 1
-            except KeyError:
-                counts.update({ins: 1})
+    counts = {}
+    ins = None
+    header = file[0]
+    for row in file[1:]:
+        total_seq += 1
+        try:
+            ins = (int(row[header.index('Left.insertion.length')]) - int(row[header.index('Left.palindromic')])) + \
+                  (int(row[header.index('Right.insertion.length')]) - int(row[header.index('Right.palindromic')]))
+            insertions.append(ins)
+            counts[ins] += 1
+        except KeyError:
+            counts.update({ins: 1})
     return counts, total_seq, insertions
 
 
 if __name__ == '__main__':
     x_points = []
     y_points = []
-    labels = []
+    labels = ['TdTKO', 'Normal']
     averages = []
     file_list = [
-        '..\\data_files\\TdTKO\\filtered_data\\filtered_data_exp_TdTKO.tsv',
-        '..\\data_files\\Normal\\filtered_data\\filtered_data_exp_Normal.tsv',
+        '..\\data_files\\TdTKO\\filtered_data\\filtered_data_exp_TdTKO_v2.tsv',
+        '..\\data_files\\Normal\\filtered_data\\filtered_data_exp_Normal_v2.tsv',
         # '..\\data_files\\TdTKO\\filtered_data\\filtered_data_gen_TdTKO.tsv',
         # '..\\data_files\\Normal\\filtered_data\\filtered_data_gen_Normal.tsv'
     ]
 
     for filename in file_list:
-        insertion_counts = {}
-        insertion_counts, total, insertions = get_insertion_counts(filename, insertion_counts, '\t')
-        labels.append(filename.split('_')[-1].rstrip('.tsv'))
+        unique_sequences = get_unique_sequences_from_file(filename)
+        insertion_counts, total, insertions = get_insertion_counts(unique_sequences)
         x = sorted(insertion_counts.keys())
         x_points.append(x)
         y_points.append([insertion_counts[point] / total * 100 for point in x])

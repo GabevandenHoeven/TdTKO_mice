@@ -7,6 +7,8 @@ import statistics
 import math
 from statistics import StatisticsError
 
+import numpy
+
 
 def sequence_matcher(a: str, b: str):
     """For every nucleotide in the substring a, this function tries to match the remainder of the substring to
@@ -385,18 +387,19 @@ def get_unique_sequences_per_mouse_from_file(filename, delim='\t'):
     :param delim:
     :return:
     """
-    new_lines, sequences_check = [], {}
+    new_lines, sequences_check, dups = [], {}, 0
     with open(filename, 'r') as file:
         reader = csv.reader(file, delimiter=delim)
         header = next(reader)
         new_lines.append(header)
         for line in reader:
             try:
-                sequences_check[
-                    line[header.index('Mouse')] +
-                    line[header.index('V.gene')] +
-                    line[header.index('Junction.nucleotide.sequence')] +
-                    line[header.index('J.gene')]]
+                if sequences_check[
+                                    line[header.index('Mouse')] +
+                                    line[header.index('V.gene')] +
+                                    line[header.index('Junction.nucleotide.sequence')] +
+                                    line[header.index('J.gene')]]:
+                    dups += 1
             except KeyError:
                 new_lines.append(line)
                 sequences_check.update({line[header.index('Mouse')] +
@@ -404,3 +407,18 @@ def get_unique_sequences_per_mouse_from_file(filename, delim='\t'):
                                         line[header.index('Junction.nucleotide.sequence')] +
                                         line[header.index('J.gene')]: True})
     return new_lines
+
+
+def flatten_list_unique(obj):
+    """
+
+    :param obj:
+    :return:
+    """
+    def flatten(x):
+        if isinstance(x, (list, tuple, set, range)):
+            for x_ in x:
+                yield from flatten_list_unique(x_)
+        else:
+            yield x
+    return list(flatten(obj))

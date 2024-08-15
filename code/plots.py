@@ -1,6 +1,7 @@
 import numpy
 from matplotlib import pyplot as plt
 from utils import calculate_confidence_intervals
+import scipy.stats as stats
 
 
 def plot_supporting_reads():
@@ -54,7 +55,7 @@ def plot_fractions_ins(x_points, y_points, title):
 
     plt.title('Fraction of sequences with insertions \nper threshold of supporting reads')
     plt.xlabel('Supporting reads')
-    plt.ylabel('Fraction of seq with insertions (%)')
+    plt.ylabel('Percentage of sequences with insertions (%)')
     plt.legend()
     plt.savefig(title)
     plt.close()
@@ -109,7 +110,7 @@ def plot_dist_insertion_length(x_points_lists, y_points_lists, labels, averages,
     plt.xticks(numpy.arange(0, 21))
     plt.title('Distribution of insertion lengths')
     plt.xlabel('Insertion length (nt)')
-    plt.ylabel('Percentage of sequences with an insertion (%)')
+    plt.ylabel('Percentage of sequences (%)')
     plt.legend()
     plt.savefig(title)
     plt.close()
@@ -193,7 +194,7 @@ def plot_d_deletions(x_points_list, y_points_list, labels, title, outfile):
     plt.close()
 
 
-def plot_d_lengths(x_points_list, y_points_list, labels, title, outfile):
+def plot_d_lengths(x_points_list, y_points_list, means_, st_devs_, labels, title, outfile):
     plt.figure()
     x = x_points_list[0]
     x.extend(x_points_list[1])
@@ -201,8 +202,19 @@ def plot_d_lengths(x_points_list, y_points_list, labels, title, outfile):
     width = 0.40
     y_points, label = y_points_list[0], labels[0]
     plt.bar(x-0.2, y_points, width=width, label=label, color='blue')
+    plt.axvline(means_[0], linestyle='dashed', color='blue', label='average ' + label)
+    norm_ = numpy.linspace(means_[0] - 3 * st_devs_[0], means_[0] + 3 * st_devs_[0], 15)
+    pdf = stats.norm.pdf(norm_, means_[0], st_devs_[0])
+    ratio = sum(y_points) / sum(pdf)
+    plt.plot(norm_, pdf * ratio, color='blue')
+
     y_points, label = y_points_list[1], labels[1]
     plt.bar(x+0.2, y_points, width=width, label=label, color='orange')
+    plt.axvline(means_[1], linestyle='dashed', color='orange', label='average ' + label)
+    norm_ = numpy.linspace(means_[1] - 3 * st_devs_[1], means_[1] + 3 * st_devs_[1], 15)
+    pdf = stats.norm.pdf(norm_, means_[1], st_devs_[1])
+    ratio = sum(y_points) / sum(pdf)
+    plt.plot(norm_, pdf * ratio, color='orange')
     plt.xticks(numpy.arange(15))
     plt.title(title)
     plt.xlabel('D length (nt)')
@@ -253,7 +265,6 @@ def plot_boxplot_per_incidence(data, labels, positions, plot_labels, ticks, tick
 
 def plot_vj_usage(xticks, sorted_values, dim, title, labels, outfile, tick_labels):
     plt.figure(figsize=dim)
-    # xticks = numpy.arange(1, len(tick_labels) + 1)
     plt.xticks(xticks, labels=tick_labels, rotation=90)
     plt.title(title)
     plt.xlabel(labels[0])
@@ -281,22 +292,35 @@ def plot_vj_usage(xticks, sorted_values, dim, title, labels, outfile, tick_label
     return
 
 
-def number_of_seq_per_incidence():
-    x = [numpy.arange(1, 14), numpy.arange(1, 11)]
-    y = [
-        [146484, 37303, 18547, 11275, 7751, 5642, 4306, 3358, 2681, 2401, 2136, 1984, 3232],
-        [1246356, 89089, 24230, 9814, 4758, 2496, 1498, 884, 512, 377]
-    ]
+def plot_high_incidence_vj_usage(xticks, y_values, dim, title, labels, outfile, tick_labels):
+    plt.figure(figsize=dim)
+    plt.xticks(xticks, labels=tick_labels, rotation=90)
+    plt.title(title)
+    plt.xlabel(labels[0])
+    plt.ylabel(labels[1])
+
+    plt.bar(xticks - 0.2, y_values[0], color='blue', label='TdTKO', width=0.4)
+
+    plt.bar(xticks + 0.2, y_values[1], color='orange', label='Normal', width=0.4)
+
+    plt.subplots_adjust(bottom=0.15)
+    plt.legend()
+    plt.savefig(outfile)
+    return
+
+
+def number_of_seq_per_incidence(x, y):
+
     plt.figure()
     plt.plot(x[0], y[0], label='TdTKO', color='blue')
     plt.scatter(x[0], y[0], color='blue', s=10)
     plt.plot(x[1], y[1], label='Normal', color='orange')
     plt.scatter(x[1], y[1], color='orange', s=10)
     plt.yscale('log')
-    plt.xticks(numpy.arange(1, 14))
-    plt.xlabel('Incidence')
-    plt.ylabel('Number of sequences')
-    plt.title('Number of sequences per incidence')
+    plt.xticks(numpy.arange(0, 1.1, 0.1))
+    plt.xlabel('Fraction of incidence')
+    plt.ylabel('Percentage of sequences (%)')
+    plt.title('Percentage of sequences per incidence')
     plt.legend()
     plt.savefig('C:\\Users\\gabev\\PycharmProjects\\MRP_TdTKO_mice\\img\\number_of_seq_per_incidence.png')
 
@@ -357,6 +381,44 @@ def plot_deletions_conf_int(xticks, sorted_values, dim, title, labels, outfile, 
     return
 
 
+def plot_d_length_with_confidence_intervals(x_values:list, y_values, dim, title, labels, outfile):
+    plt.figure(figsize=dim)
+    plt.title(title)
+    plt.xlabel(labels[0])
+    plt.ylabel(labels[1])
+    
+    means = []
+    confidence_intervals = []
+    for i in range(len(x_values[0])):
+        x = x_values[0][i]
+        y = y_values[0][i]
+        mean, conf_int = calculate_confidence_intervals(y)
+        means.append(mean)
+        confidence_intervals.append(conf_int)
+    plot_confidence_interval(x, y, means, confidence_intervals, 'blue', 'TdTKO')
+    plt.legend()
+    plt.savefig(outfile)
+    return
+
+
+def plot_vj_usage_per_incidence(x_values, y_values, title, labels, outfile):
+    plt.figure()
+    plt.title(title)
+    plt.xlabel(labels[0])
+    plt.ylabel(labels[1])
+    plt.xticks(numpy.arange(0, 1.1, 0.1))
+    plt.plot([n / len(x_values[0]) for n in x_values[0]], y_values[0], color='blue', label='TdTKO')
+    plt.scatter([n / len(x_values[0]) for n in x_values[0]], y_values[0], color='blue', s=10)
+
+    plt.plot([n / len(x_values[1]) for n in x_values[1]], y_values[1], color='orange', label='Normal')
+    plt.scatter([n / len(x_values[1]) for n in x_values[1]], y_values[1], color='orange', s=10)
+    plt.legend()
+    plt.savefig(outfile)
+    plt.close()
+    return
+
+
 if __name__ == '__main__':
     # plot_supporting_reads()
-    number_of_seq_per_incidence()
+    # number_of_seq_per_incidence()
+    print()

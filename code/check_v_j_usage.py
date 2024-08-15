@@ -2,34 +2,33 @@ import csv
 import matplotlib.pyplot as plt
 import numpy
 from plots import plot_vj_usage, plot_confidence_interval
+from get_olga_vj_usage import get_olga_vj_usage
+from utils import get_unique_sequences_per_mouse_from_file
 
 
-def check_vj_usage(filename: str, delim='\t'):
+def check_vj_usage(data):
     """Check what V and J genes are used in each file
-    :param filename:
-    :param delim: str
+    :param data:
     :return:
     """
     mice = {}
     count_lines = 0
-    with open(filename, 'r') as infile:
-        reader = csv.reader(infile, delimiter=delim)
-        header = next(reader)
-        for line in reader:
-            count_lines += 1
-            mouse = line[header.index('Mouse')]
-            v_gene, j_gene = line[header.index('V.gene')], line[header.index('J.gene')]
-            if mouse not in mice.keys():
-                mice.update({mouse: [{}, {}, 0]})
-            mice[mouse][2] += 1
-            if v_gene not in mice[mouse][0].keys():
-                mice[mouse][0].update({v_gene: 1})
-            else:
-                mice[mouse][0][v_gene] += 1
-            if j_gene not in mice[mouse][1].keys():
-                mice[mouse][1].update({j_gene: 1})
-            else:
-                mice[mouse][1][j_gene] += 1
+    header = data[0]
+    for line in data[1:]:
+        count_lines += 1
+        mouse = line[header.index('Mouse')]
+        v_gene, j_gene = line[header.index('V.gene')], line[header.index('J.gene')]
+        if mouse not in mice.keys():
+            mice.update({mouse: [{}, {}, 0]})
+        mice[mouse][2] += 1
+        if v_gene not in mice[mouse][0].keys():
+            mice[mouse][0].update({v_gene: 1})
+        else:
+            mice[mouse][0][v_gene] += 1
+        if j_gene not in mice[mouse][1].keys():
+            mice[mouse][1].update({j_gene: 1})
+        else:
+            mice[mouse][1][j_gene] += 1
     return mice, count_lines
 
 
@@ -37,13 +36,14 @@ if __name__ == '__main__':
     files = [
         '..\\data_files\\TdTKO\\filtered_data\\filtered_data_exp_TdTKO_v2.tsv',
         '..\\data_files\\Normal\\filtered_data\\filtered_data_exp_Normal_v2.tsv',
-        # '..\\..\\data_files\\TdTKO\\filtered_data\\filtered_data_gen_TdTKO_v2.tsv',
-        # '..\\..\\data_files\\Normal\\filtered_data\\filtered_data_gen_Normal_v2.tsv'
+        # '..\\data_files\\TdTKO\\filtered_data\\filtered_data_gen_TdTKO_v2.tsv',
+        # '..\\data_files\\Normal\\filtered_data\\filtered_data_gen_Normal_v2.tsv'
     ]
     v_list = []
     j_list = []
     for file in files:
-        mice, count = check_vj_usage(file)
+        filtered_data = get_unique_sequences_per_mouse_from_file(file)
+        mice, count = check_vj_usage(filtered_data)
         fn = file.split('\\')[-1]
         vs = []
         js = []
@@ -53,6 +53,7 @@ if __name__ == '__main__':
             js.append([(mice[m][1][j] / seqs * 100) for j in sorted(mice[m][1].keys())])
         v_list.append(vs)
         j_list.append(js)
+    olga_v, olga_j = get_olga_vj_usage()
     v_labels = ['TRBV1*01', 'TRBV12-1*01', 'TRBV12-2*01', 'TRBV13-1*01', 'TRBV13-2*01', 'TRBV13-3*01', 'TRBV14*01',
                 'TRBV15*01', 'TRBV16*01', 'TRBV17*01', 'TRBV19*01', 'TRBV2*01', 'TRBV20*01', 'TRBV23*01', 'TRBV24*01',
                 'TRBV26*01', 'TRBV29*01', 'TRBV3*01', 'TRBV30*01', 'TRBV31*01', 'TRBV4*01', 'TRBV5*01']
@@ -66,8 +67,10 @@ if __name__ == '__main__':
             sorted_values_i.append(x)
         sorted_values.append(sorted_values_i)
     xticks = numpy.arange(1, (len(v_labels)) * 2, 2)
-    plot_vj_usage(xticks, sorted_values, (8, 10), 'V usage exp', ('V segments', 'Usage (%)'),
-                  '..\\img\\V_usage_exp.png', v_labels)
+    plot_vj_usage(xticks, sorted_values, (8, 10), 'V usage TdTKO vs Normal', ('V segments', 'Usage (%)'),
+                  '..\\img\\V_usage_exp_data.png', v_labels)
+    # plot_vj_usage(xticks, sorted_values, (8, 10), 'V usage TdTKO vs Normal', ('V segments', 'Usage (%)'),
+    #               '..\\img\\V_usage_gen_data.png', v_labels)
 
     sorted_values = []
     for i in range(len(j_list)):
@@ -77,5 +80,7 @@ if __name__ == '__main__':
             sorted_values_i.append(x)
         sorted_values.append(sorted_values_i)
     xticks = numpy.arange(1, (len(j_labels)) * 2, 2)
-    plot_vj_usage(xticks, sorted_values, (8, 10), 'J usage exp', ('J segments', 'Usage (%)'),
-                  '..\\img\\J_usage_exp.png', j_labels)
+    plot_vj_usage(xticks, sorted_values, (8, 10), 'J usage TdTKO vs Normal', ('J segments', 'Usage (%)'),
+                  '..\\img\\J_usage_exp_data.png', j_labels)
+    # plot_vj_usage(xticks, sorted_values, (8, 10), 'J usage TdTKO vs Normal', ('J segments', 'Usage (%)'),
+    #               '..\\img\\J_usage_gen_data.png', j_labels)

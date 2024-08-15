@@ -1,13 +1,13 @@
 import csv
 
 
-def get_abundance(filename: str, exp: str, max_incidence: int):
+def get_abundance(data, exp: str, max_incidence: int):
     """This function reads a file with CDR3 sequences of mice annotated with V and J identifiers,
     (inferred) D sequence, as well as mouse identifier and (inferred) insertions. It stores the incidence of the
     sequences, then sorts them by incidence, and finally calculates the fraction of sequences per incidence group that
     match a given expression.
 
-    :param filename: str - The name of the file with sequences
+    :param data: str - The lines of the file which were first filtered to only contain unique sequences.
     :param exp: str - An expression to check for a specific D length. Write in format 'seq[3] == 0'
     :param max_incidence: int - The number of mice present in the file. If a sequence is present in all mice, this is
     the maximum incidence.
@@ -18,37 +18,37 @@ def get_abundance(filename: str, exp: str, max_incidence: int):
     sequences = {
         # V_identifier + sequence J_identifier: [count, sequence, [mice], d_length, VJ distance, insertions]
     }
-    with open(filename, 'r') as file:
-        reader = csv.reader(file, delimiter='\t')
-        header = next(reader)
-        dup = {}
-        for line in reader:
-            mouse, sequence, d_length, v, j, vj_dis, ins = line[header.index('mouse')], \
-                line[header.index('Junction.nucleotide.sequence')], int(line[header.index('D.length.used')]), \
-                line[header.index('V.gene')], line[header.index('J.gene')], \
-                int(line[header.index('V.J.distance')]), int(line[header.index('insertion.length')])
-            try:
-                if mouse in sequences[v + sequence + j][2]:
-                    if 'gen' not in mouse:
-                        raise ValueError('This sequence from this mouse is already in the dictionary')
-                    try:
-                        dup[v+sequence+j] += 1
-                    except KeyError:
-                        dup.update({v+sequence+j: 1})
-                    print(f'Sequence: {v+sequence+j} for mouse {mouse} occurs multiple times.\n'
-                          f'Duplicates: {dup[v+sequence+j]}')
-                    continue
-                elif d_length != sequences[v + sequence + j][3]:
-                    raise ValueError('The same sequence has a different D length')
-                elif vj_dis != sequences[v + sequence + j][4]:
-                    raise ValueError('The same sequence has a different VJ distance')
-                elif ins != sequences[v + sequence + j][5]:
-                    raise ValueError('The same sequence has a different insertion length')
-                else:
-                    sequences[v + sequence + j][0] += 1
-                    sequences[v + sequence + j][2].append(mouse)
-            except KeyError:
-                sequences.update({v + sequence + j: [1, sequence, [mouse], d_length, vj_dis, ins]})
+    header = data[0]
+    dup = {}
+    for line in data[1:]:
+        mouse, sequence, d_length, v, j, vj_dis, ins = line[header.index('Mouse')], \
+            line[header.index('Junction.nucleotide.sequence')], int(line[header.index('D.length.used')]), \
+            line[header.index('V.gene')], line[header.index('J.gene')], \
+            int(line[header.index('V.J.distance')]), \
+            (int(line[header.index('Left.insertion.length')]) - int(line[header.index('Left.palindromic')]) +
+             int(line[header.index('Right.insertion.length')]) - int(line[header.index('Right.palindromic')]))
+        try:
+            if mouse in sequences[v + sequence + j][2]:
+                if 'gen' not in mouse:
+                    raise ValueError('This sequence from this mouse is already in the dictionary')
+                try:
+                    dup[v + sequence + j] += 1
+                except KeyError:
+                    dup.update({v + sequence + j: 1})
+                print(f'Sequence: {v + sequence + j} for mouse {mouse} occurs multiple times.\n'
+                      f'Duplicates: {dup[v + sequence + j]}')
+                continue
+            elif d_length != sequences[v + sequence + j][3]:
+                raise ValueError('The same sequence has a different D length')
+            elif vj_dis != sequences[v + sequence + j][4]:
+                raise ValueError('The same sequence has a different VJ distance')
+            elif ins != sequences[v + sequence + j][5]:
+                raise ValueError('The same sequence has a different insertion length')
+            else:
+                sequences[v + sequence + j][0] += 1
+                sequences[v + sequence + j][2].append(mouse)
+        except KeyError:
+            sequences.update({v + sequence + j: [1, sequence, [mouse], d_length, vj_dis, ins, v, j]})
 
     fractions = []
     incidences = []

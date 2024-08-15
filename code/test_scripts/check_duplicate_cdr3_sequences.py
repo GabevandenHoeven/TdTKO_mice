@@ -15,22 +15,22 @@ def check_duplicate_cdr3(filename: str, delim='\t'):
         reader = csv.reader(infile, delimiter=delim)
         header = next(reader)
         for line in reader:
-            v_gene, j_gene, cdr3 = line[header.index('V.gene')], line[header.index('J.gene')], \
+            mouse, v_gene, j_gene, cdr3 = line[header.index('Mouse')], line[header.index('V.gene')], line[header.index('J.gene')], \
                 line[header.index('Junction.nucleotide.sequence')]
             try:
-                if unique[v_gene + cdr3 + j_gene]:
+                if unique[mouse + v_gene + cdr3 + j_gene]:
                     duplicate_count += 1
             except KeyError:
-                unique.update({v_gene + cdr3 + j_gene: True})
+                unique.update({mouse + v_gene + cdr3 + j_gene: True})
     return duplicate_count
 
 
 if __name__ == '__main__':
     files = [
-        '..\\..\\data_files\\TdTKO\\filtered_data\\filtered_data_exp_TdTKO.tsv',
-        '..\\..\\data_files\\Normal\\filtered_data\\filtered_data_exp_Normal.tsv',
-        '..\\..\\data_files\\TdTKO\\filtered_data\\filtered_data_gen_TdTKO.tsv',
-        '..\\..\\data_files\\Normal\\filtered_data\\filtered_data_gen_Normal.tsv'
+        '..\\..\\data_files\\TdTKO\\filtered_data\\filtered_data_exp_TdTKO_v2.tsv',
+        '..\\..\\data_files\\Normal\\filtered_data\\filtered_data_exp_Normal_v2.tsv',
+        '..\\..\\data_files\\TdTKO\\filtered_data\\filtered_data_gen_TdTKO_v2.tsv',
+        '..\\..\\data_files\\Normal\\filtered_data\\filtered_data_gen_Normal_v2.tsv'
     ]
     for file in files:
         count = check_duplicate_cdr3(file)

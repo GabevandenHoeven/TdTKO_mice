@@ -5,8 +5,8 @@ import re
 def parse_imgt_webpage(url):
     """
     """
-    urllib.request.urlretrieve(url, 'C:\\Users\\gabev\\PycharmProjects\\MRP\\data_files\\temp.html')
-    with open('C:\\Users\\gabev\\PycharmProjects\\MRP\\data_files\\temp.html', 'r') as file:
+    # urllib.request.urlretrieve(url, 'C:\\Users\\gabev\\PycharmProjects\\MRP\\data_files\\temp.html')
+    with open('..\\..\\data_files\\temp.html', 'r') as file:
         ls = ['V-REGION', 'D-REGION', 'J-REGION']
         results = {}
         b = False

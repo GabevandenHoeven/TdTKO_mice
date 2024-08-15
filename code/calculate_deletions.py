@@ -1,7 +1,7 @@
 import csv
 from plots import plot_deletions, plot_d_deletions, plot_deletions_conf_int
 import numpy
-from utils import get_unique_sequences_from_file
+from utils import get_unique_sequences_per_mouse_from_file
 
 
 def get_vj_deletions(data):
@@ -76,7 +76,7 @@ if __name__ == '__main__':
     v_list = []
     j_list = []
     for file in files:
-        filtered_data = get_unique_sequences_from_file(file)
+        filtered_data = get_unique_sequences_per_mouse_from_file(file)
         mice, total = get_vj_deletions(filtered_data)
         vs = []
         js = []
