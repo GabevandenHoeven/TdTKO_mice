@@ -5,8 +5,8 @@ from utils import get_unique_sequences_per_mouse_from_file
 
 if __name__ == '__main__':
     files = [
-        '..\\data_files\\TdTKO\\filtered_data\\filtered_data_exp_TdTKO.tsv',
-        '..\\data_files\\Normal\\filtered_data\\filtered_data_exp_Normal.tsv'
+        '..\\data_files\\TdTKO\\filtered_data\\filtered_data_exp_TdTKO_v2.tsv',
+        '..\\data_files\\Normal\\filtered_data\\filtered_data_exp_Normal_v2.tsv'
         # '..\\data_files\\TdTKO\\filtered_data\\filtered_data_gen_TdTKO.tsv',
         # '..\\data_files\\Normal\\filtered_data\\filtered_data_gen_Normal.tsv'
     ]
@@ -29,7 +29,7 @@ if __name__ == '__main__':
                 mean_v_j_distances.append(0)
         y.append(mean_v_j_distances)
 
-    plot_line_and_scatter_per_incidence(x, y, ['TdTKO', 'Normal'], ['Fraction of incidence', 'Mean VJ distance (nt)'],
+    plot_line_and_scatter_per_incidence(x, y, ['TdTKO', 'WT'], ['Fraction of incidence', 'Mean VJ distance (nt)'],
                                         'Mean VJ distance per incidence',
                                         'C:\\Users\\gabev\\PycharmProjects\\MRP_TdTKO_mice\\img'
                                         '\\Mean_VJ_distance_per_incidence.png')

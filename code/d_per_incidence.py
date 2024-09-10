@@ -29,11 +29,11 @@ if __name__ == '__main__':
             except ZeroDivisionError:
                 mean_d_lengths.append(0)
         y.append(mean_d_lengths)
-    # plot_line_and_scatter_per_incidence(x, y, ['TdTKO', 'Normal'],
-    #                                     ['Fraction of incidence', 'Inferred D-segment length (nt)'],
-    #                                     'Mean inferred D-length',
-    #                                     'C:\\Users\\gabev\\PycharmProjects\\MRP_TdTKO_mice\\img\\unique_seq_img'
-    #                                     '\\Mean_inferred_D_length_per_incidence.png')
+    plot_line_and_scatter_per_incidence(x, y, ['TdTKO', 'WT'],
+                                        ['Fraction of incidence', 'Inferred D-segment length (nt)'],
+                                        'Mean inferred D-length per incidence',
+                                        'C:\\Users\\gabev\\PycharmProjects\\MRP_TdTKO_mice\\img\\'
+                                        'Mean_inferred_D_length_per_incidence.png')
     # plot_line_and_scatter_per_incidence(x, y, ['TdTKO', 'Normal'],
     #                                     ['Fraction of incidence', 'Inferred D-segment length (nt)'],
     #                                     'Mean inferred D-length',
@@ -48,11 +48,11 @@ if __name__ == '__main__':
         filtered_data = get_unique_sequences_per_mouse_from_file(file)
         fract_incidence = get_abundance(filtered_data, 'seq[3] == 0', max_incidence)[0]
         y.append(fract_incidence)
-    plot_line_and_scatter_per_incidence(x, y, ['TdTKO', 'Normal'],
+    plot_line_and_scatter_per_incidence(x, y, ['TdTKO', 'WT'],
                                         ['Fraction of incidence', 'Percentage of sequences (%)'],
                                         'Inferred D-length = 0 nt',
-                                        'C:\\Users\\gabev\\PycharmProjects\\MRP_TdTKO_mice\\img\\unique_seq_img'
-                                        '\\Fraction_no_D_per_incidence.png')
+                                        'C:\\Users\\gabev\\PycharmProjects\\MRP_TdTKO_mice\\img\\'
+                                        'Fraction_no_D_per_incidence.png')
     # plot_line_and_scatter_per_incidence(x, y, ['TdTKO', 'Normal'],
     #                                     ['Fraction of incidence', 'Percentage of sequences (%)'],
     #                                     'Inferred D-length = 0 nt',
@@ -66,11 +66,11 @@ if __name__ == '__main__':
         filtered_data = get_unique_sequences_per_mouse_from_file(file)
         fract_incidence = get_abundance(filtered_data, 'seq[3] <= 2', max_incidence)[0]
         y.append(fract_incidence)
-    plot_line_and_scatter_per_incidence(x, y, ['TdTKO', 'Normal'],
+    plot_line_and_scatter_per_incidence(x, y, ['TdTKO', 'WT'],
                                         ['Fraction of incidence', 'Percentage of sequences (%)'],
                                         'Inferred D-length <= 2 nt',
-                                        'C:\\Users\\gabev\\PycharmProjects\\MRP_TdTKO_mice\\img\\unique_seq_img'
-                                        '\\Fraction_max_2nt_D_per_incidence.png')
+                                        'C:\\Users\\gabev\\PycharmProjects\\MRP_TdTKO_mice\\img\\'
+                                        'Fraction_max_2nt_D_per_incidence.png')
     # plot_line_and_scatter_per_incidence(x, y, ['TdTKO', 'Normal'],
     #                                     ['Fraction of incidence', 'Percentage of sequences (%)'],
     #                                     'Inferred D-length <= 2 nt',

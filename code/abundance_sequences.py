@@ -27,6 +27,7 @@ def get_abundance(data, exp: str, max_incidence: int):
             int(line[header.index('V.J.distance')]), \
             (int(line[header.index('Left.insertion.length')]) - int(line[header.index('Left.palindromic')]) +
              int(line[header.index('Right.insertion.length')]) - int(line[header.index('Right.palindromic')]))
+        v_del, j_del = int(line[header.index('V.length.deleted')]), int(line[header.index('J.length.deleted')])
         try:
             if mouse in sequences[v + sequence + j][2]:
                 if 'gen' not in mouse:
@@ -48,7 +49,7 @@ def get_abundance(data, exp: str, max_incidence: int):
                 sequences[v + sequence + j][0] += 1
                 sequences[v + sequence + j][2].append(mouse)
         except KeyError:
-            sequences.update({v + sequence + j: [1, sequence, [mouse], d_length, vj_dis, ins, v, j]})
+            sequences.update({v + sequence + j: [1, sequence, [mouse], d_length, vj_dis, ins, v, j, v_del, j_del]})
 
     fractions = []
     incidences = []

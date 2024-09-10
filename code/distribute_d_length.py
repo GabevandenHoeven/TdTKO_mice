@@ -95,10 +95,10 @@ if __name__ == '__main__':
         st_devs.append(std)
         print(skewness, skew_test, kurt, kurt_test, std)
 
-    out = f'..\\img\\Distribution_of_D_lengths_TdTKO-Normal(new3).png'
+    out = f'..\\img\\Distribution_of_D_lengths.png'
     # out = f'..\\img\\unique_seq_img\\Generated_Distribution_of_D_lengths_TdTKO-Normal.png'
     title = f'Distribution of D lengths'
-    plot_d_lengths(x, y, means, st_devs, ['TdTKO', 'Normal'], title, out)
+    # plot_d_lengths(x, y, means, st_devs, ['TdTKO', 'WT'], title, out)
 
 
 

@@ -1,12 +1,13 @@
 from utils import get_unique_sequences_from_file
-from plots import plot_high_incidence_vj_usage
+from plots import plot_vj_usage_with_without_d
 import numpy
 
 
-def get_vj_usage_without_d(data):
+def get_vj_usage_with_or_without_d(data, exp: str):
     """
 
     :param data:
+    :param exp: A string with a boolean statement to evaluate .
     :return:
     """
     v_usage = {}
@@ -16,7 +17,7 @@ def get_vj_usage_without_d(data):
     for line in data[1:]:
         v, d_length, j = line[header.index('V.gene')], int(line[header.index('D.length.used')]), \
             line[header.index('J.gene')]
-        if d_length == 0:
+        if eval(exp):
             total_lines += 1
             try:
                 v_usage[v] += 1
@@ -39,22 +40,27 @@ if __name__ == '__main__':
         # '..\\data_files\\Normal\\filtered_data\\filtered_data_gen_Normal_v2.tsv'
     ]
 
-    v_labels = ['TRBV1*01', 'TRBV12-1*01', 'TRBV12-2*01', 'TRBV13-1*01', 'TRBV13-2*01', 'TRBV13-3*01', 'TRBV14*01',
-                'TRBV15*01', 'TRBV16*01', 'TRBV17*01', 'TRBV19*01', 'TRBV2*01', 'TRBV20*01', 'TRBV23*01', 'TRBV24*01',
-                'TRBV26*01', 'TRBV29*01', 'TRBV3*01', 'TRBV30*01', 'TRBV31*01', 'TRBV4*01', 'TRBV5*01']
-    j_labels = ['TRBJ1-1*01', 'TRBJ1-2*01', 'TRBJ1-3*01', 'TRBJ1-4*01', 'TRBJ1-5*01', 'TRBJ2-1*01', 'TRBJ2-2*01',
-                'TRBJ2-3*01', 'TRBJ2-4*01', 'TRBJ2-5*01', 'TRBJ2-7*01']
+    v_labels = ['TRBV1', 'TRBV12-1', 'TRBV12-2', 'TRBV13-1', 'TRBV13-2', 'TRBV13-3', 'TRBV14',
+                'TRBV15', 'TRBV16', 'TRBV17', 'TRBV19', 'TRBV2', 'TRBV20', 'TRBV23', 'TRBV24',
+                'TRBV26', 'TRBV29', 'TRBV3', 'TRBV30', 'TRBV31', 'TRBV4', 'TRBV5']
+    j_labels = ['TRBJ1-1', 'TRBJ1-2', 'TRBJ1-3', 'TRBJ1-4', 'TRBJ1-5', 'TRBJ2-1', 'TRBJ2-2',
+                'TRBJ2-3', 'TRBJ2-4', 'TRBJ2-5', 'TRBJ2-7']
 
     v_list = []
     j_list = []
     for file in files:
         filtered_data = get_unique_sequences_from_file(file)
-        vs, js, total = get_vj_usage_without_d(filtered_data)
+        vs, js, total = get_vj_usage_with_or_without_d(filtered_data, 'd_length == 0')
         v_list.append(vs)
         j_list.append(js)
+        print(f'Total number of unique sequences in all mice combined without D: {total}')
+        vs, js, total = get_vj_usage_with_or_without_d(filtered_data, 'd_length != 0')
+        v_list.append(vs)
+        j_list.append(js)
+        print(f'Total number of unique sequences in all mice combined with D: {total}')
     x_ticks = numpy.arange(1, (len(v_labels)) * 2, 2)
-    plot_high_incidence_vj_usage(x_ticks, v_list, (8, 10), 'V Usage in sequences without D segment',
-                                 ('V segments', 'Usage (%)'), '..\\img\\V_usage_no_D_segment.png', v_labels)
+    plot_vj_usage_with_without_d(x_ticks, v_list, (8, 10), 'V Usage in WT sequences with and without D segment',
+                                 ('V segments', 'Usage (%)'), '..\\img\\V_usage_with_without_D_segment.png', v_labels)
     x_ticks = numpy.arange(1, (len(j_labels)) * 2, 2)
-    plot_high_incidence_vj_usage(x_ticks, j_list, (8, 10), 'J Usage in sequences without D segment',
-                                 ('J segments', 'Usage (%)'), '..\\img\\J_usage_no_D_segment.png', j_labels)
+    plot_vj_usage_with_without_d(x_ticks, j_list, (8, 10), 'J Usage in WT sequences with and without D segment',
+                                 ('J segments', 'Usage (%)'), '..\\img\\J_usage_with_without_D_segment.png', j_labels)

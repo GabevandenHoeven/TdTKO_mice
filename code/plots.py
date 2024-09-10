@@ -26,7 +26,7 @@ def plot_supporting_reads():
         plt.close()
 
 
-def plot_fractions_ins(x_points, y_points, title):
+def plot_fractions_ins(x_points, y_points, title, labels):
     plt.figure()
 
     # old ----------------------------------------------------------------------------------
@@ -47,16 +47,16 @@ def plot_fractions_ins(x_points, y_points, title):
     # after p-nt TdTKO: [13.31, 13.31, 12.41, 10.72, 8.75, 7.41, 6.39, 5.61, 3.75]
     # after p-nt Normal: [86.75, 86.75, 85.49, 83.25, 80.69, 78.25, 75.78, 73.24, 60.40]
 
-    plt.plot(x_points, y_points[0], label='TdTKO', color='blue')
+    plt.plot(x_points, y_points[0], label=labels[0], color='blue')
     plt.scatter(x_points, y_points[0], color='blue', s=10)
 
-    plt.plot(x_points, y_points[1], label='Normal', color='orange')
+    plt.plot(x_points, y_points[1], label=labels[1], color='orange')
     plt.scatter(x_points, y_points[1], color='orange', s=10)
 
     plt.title('Fraction of sequences with insertions \nper threshold of supporting reads')
     plt.xlabel('Supporting reads')
     plt.ylabel('Percentage of sequences with insertions (%)')
-    plt.legend()
+    plt.legend(loc='center right')
     plt.savefig(title)
     plt.close()
 
@@ -203,18 +203,20 @@ def plot_d_lengths(x_points_list, y_points_list, means_, st_devs_, labels, title
     y_points, label = y_points_list[0], labels[0]
     plt.bar(x-0.2, y_points, width=width, label=label, color='blue')
     plt.axvline(means_[0], linestyle='dashed', color='blue', label='average ' + label)
-    norm_ = numpy.linspace(means_[0] - 3 * st_devs_[0], means_[0] + 3 * st_devs_[0], 15)
+
+    n = 100
+    norm_ = numpy.linspace(start=means_[0] - 3 * st_devs_[0], stop=means_[0] + 3 * st_devs_[0], num=n)
     pdf = stats.norm.pdf(norm_, means_[0], st_devs_[0])
-    ratio = sum(y_points) / sum(pdf)
-    plt.plot(norm_, pdf * ratio, color='blue')
+    plt.plot(norm_, n * pdf, color='blue')
 
     y_points, label = y_points_list[1], labels[1]
     plt.bar(x+0.2, y_points, width=width, label=label, color='orange')
     plt.axvline(means_[1], linestyle='dashed', color='orange', label='average ' + label)
-    norm_ = numpy.linspace(means_[1] - 3 * st_devs_[1], means_[1] + 3 * st_devs_[1], 15)
+
+    norm_ = numpy.linspace(start=means_[1] - 3 * st_devs_[1], stop=means_[1] + 3 * st_devs_[1], num=n)
     pdf = stats.norm.pdf(norm_, means_[1], st_devs_[1])
-    ratio = sum(y_points) / sum(pdf)
-    plt.plot(norm_, pdf * ratio, color='orange')
+    plt.plot(norm_, n * pdf, color='orange')
+
     plt.xticks(numpy.arange(15))
     plt.title(title)
     plt.xlabel('D length (nt)')
@@ -285,23 +287,45 @@ def plot_vj_usage(xticks, sorted_values, dim, title, labels, outfile, tick_label
         mean, conf_int = calculate_confidence_intervals(sorted_values[1][i])
         means.append(mean)
         confidence_intervals.append(conf_int)
-    plot_confidence_interval(xticks, sorted_values[1], means, confidence_intervals, 'orange', 'Normal')
+    plot_confidence_interval(xticks, sorted_values[1], means, confidence_intervals, 'orange', 'WT')
     plt.subplots_adjust(bottom=0.15)
     plt.legend()
     plt.savefig(outfile)
     return
 
 
-def plot_high_incidence_vj_usage(xticks, y_values, dim, title, labels, outfile, tick_labels):
+def plot_high_incidence_vj_usage(xticks, y_values, perc_no_d, dim, title, labels, outfile, tick_labels):
     plt.figure(figsize=dim)
     plt.xticks(xticks, labels=tick_labels, rotation=90)
     plt.title(title)
     plt.xlabel(labels[0])
     plt.ylabel(labels[1])
 
-    plt.bar(xticks - 0.2, y_values[0], color='blue', label='TdTKO', width=0.4)
+    plt.bar(xticks[0] - 0.2, y_values[0][0], color='blue', label='TdTKO', width=0.4)
+    plt.bar(xticks[0] - 0.2, perc_no_d[0][0], color='black', width=0.4)
+    plt.bar(xticks[0] + 0.2, y_values[1][0], color='orange', label='WT', width=0.4)
+    plt.bar(xticks[0] + 0.2, perc_no_d[1][0], color='black', width=0.4)
+    for i in range(1, len(xticks) - 1):
+        plt.bar(xticks[i] - 0.2, y_values[0][i], color='blue', width=0.4)
+        plt.bar(xticks[i] - 0.2, perc_no_d[0][i], color='black', width=0.4)
+        plt.bar(xticks[i] + 0.2, y_values[1][i], color='orange', width=0.4)
+        plt.bar(xticks[i] + 0.2, perc_no_d[1][i], color='black', width=0.4)
 
-    plt.bar(xticks + 0.2, y_values[1], color='orange', label='Normal', width=0.4)
+    plt.subplots_adjust(bottom=0.15)
+    plt.legend()
+    plt.savefig(outfile)
+    return
+
+
+def plot_vj_usage_with_without_d(xticks, y_values, dim, title, labels, outfile, tick_labels):
+    plt.figure(figsize=dim)
+    plt.xticks(xticks, labels=tick_labels, rotation=90)
+    plt.title(title)
+    plt.xlabel(labels[0])
+    plt.ylabel(labels[1])
+
+    plt.bar(xticks - 0.2, y_values[2], color='blue', label='No inferred D segment', width=0.4)
+    plt.bar(xticks + 0.2, y_values[3], color='orange', label='Has an inferred D segment', width=0.4)
 
     plt.subplots_adjust(bottom=0.15)
     plt.legend()
@@ -314,7 +338,7 @@ def number_of_seq_per_incidence(x, y):
     plt.figure()
     plt.plot(x[0], y[0], label='TdTKO', color='blue')
     plt.scatter(x[0], y[0], color='blue', s=10)
-    plt.plot(x[1], y[1], label='Normal', color='orange')
+    plt.plot(x[1], y[1], label='WT', color='orange')
     plt.scatter(x[1], y[1], color='orange', s=10)
     plt.yscale('log')
     plt.xticks(numpy.arange(0, 1.1, 0.1))
@@ -412,6 +436,20 @@ def plot_vj_usage_per_incidence(x_values, y_values, title, labels, outfile):
 
     plt.plot([n / len(x_values[1]) for n in x_values[1]], y_values[1], color='orange', label='Normal')
     plt.scatter([n / len(x_values[1]) for n in x_values[1]], y_values[1], color='orange', s=10)
+    plt.legend()
+    plt.savefig(outfile)
+    plt.close()
+    return
+
+
+def plot_high_low_vj_usage(xticks, y_values, dim, title, labels, outfile, tick_labels):
+    plt.figure(figsize=dim)
+    plt.xticks(xticks, labels=tick_labels, rotation=90)
+    plt.title(title)
+    plt.xlabel(labels[0])
+    plt.ylabel(labels[1])
+    plt.bar(xticks - 0.2, y_values[0], color='purple', label='High', edgecolor='black', width=0.4)
+    plt.bar(xticks + 0.2, y_values[1], color='yellow', label='Low', edgecolor='black', width=0.4)
     plt.legend()
     plt.savefig(outfile)
     plt.close()

@@ -54,11 +54,11 @@ if __name__ == '__main__':
         v_list.append(vs)
         j_list.append(js)
     olga_v, olga_j = get_olga_vj_usage()
-    v_labels = ['TRBV1*01', 'TRBV12-1*01', 'TRBV12-2*01', 'TRBV13-1*01', 'TRBV13-2*01', 'TRBV13-3*01', 'TRBV14*01',
-                'TRBV15*01', 'TRBV16*01', 'TRBV17*01', 'TRBV19*01', 'TRBV2*01', 'TRBV20*01', 'TRBV23*01', 'TRBV24*01',
-                'TRBV26*01', 'TRBV29*01', 'TRBV3*01', 'TRBV30*01', 'TRBV31*01', 'TRBV4*01', 'TRBV5*01']
-    j_labels = ['TRBJ1-1*01', 'TRBJ1-2*01', 'TRBJ1-3*01', 'TRBJ1-4*01', 'TRBJ1-5*01', 'TRBJ2-1*01', 'TRBJ2-2*01',
-                'TRBJ2-3*01', 'TRBJ2-4*01', 'TRBJ2-5*01', 'TRBJ2-7*01']
+    v_labels = ['TRBV1', 'TRBV12-1', 'TRBV12-2', 'TRBV13-1', 'TRBV13-2', 'TRBV13-3', 'TRBV14',
+                'TRBV15', 'TRBV16', 'TRBV17', 'TRBV19', 'TRBV2', 'TRBV20', 'TRBV23', 'TRBV24',
+                'TRBV26', 'TRBV29', 'TRBV3', 'TRBV30', 'TRBV31', 'TRBV4', 'TRBV5']
+    j_labels = ['TRBJ1-1', 'TRBJ1-2', 'TRBJ1-3', 'TRBJ1-4', 'TRBJ1-5', 'TRBJ2-1', 'TRBJ2-2',
+                'TRBJ2-3', 'TRBJ2-4', 'TRBJ2-5', 'TRBJ2-7']
     sorted_values = []
     for i in range(len(v_list)):
         sorted_values_i = []
@@ -67,8 +67,8 @@ if __name__ == '__main__':
             sorted_values_i.append(x)
         sorted_values.append(sorted_values_i)
     xticks = numpy.arange(1, (len(v_labels)) * 2, 2)
-    plot_vj_usage(xticks, sorted_values, (8, 10), 'V usage TdTKO vs Normal', ('V segments', 'Usage (%)'),
-                  '..\\img\\V_usage_exp_data.png', v_labels)
+    plot_vj_usage(xticks, sorted_values, (8, 10), 'V usage TdTKO vs WT', ('V segments', 'Usage (%)'),
+                  '..\\img\\V_usage.png', v_labels)
     # plot_vj_usage(xticks, sorted_values, (8, 10), 'V usage TdTKO vs Normal', ('V segments', 'Usage (%)'),
     #               '..\\img\\V_usage_gen_data.png', v_labels)
 
@@ -80,7 +80,7 @@ if __name__ == '__main__':
             sorted_values_i.append(x)
         sorted_values.append(sorted_values_i)
     xticks = numpy.arange(1, (len(j_labels)) * 2, 2)
-    plot_vj_usage(xticks, sorted_values, (8, 10), 'J usage TdTKO vs Normal', ('J segments', 'Usage (%)'),
-                  '..\\img\\J_usage_exp_data.png', j_labels)
+    plot_vj_usage(xticks, sorted_values, (8, 10), 'J usage TdTKO vs WT', ('J segments', 'Usage (%)'),
+                  '..\\img\\J_usage.png', j_labels)
     # plot_vj_usage(xticks, sorted_values, (8, 10), 'J usage TdTKO vs Normal', ('J segments', 'Usage (%)'),
     #               '..\\img\\J_usage_gen_data.png', j_labels)

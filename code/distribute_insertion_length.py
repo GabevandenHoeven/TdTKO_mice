@@ -31,7 +31,7 @@ def get_insertion_counts(file):
 if __name__ == '__main__':
     x_points = []
     y_points = []
-    labels = ['TdTKO', 'Normal']
+    labels = ['TdTKO', 'WT']
     averages = []
     file_list = [
         '..\\data_files\\TdTKO\\filtered_data\\filtered_data_exp_TdTKO_v2.tsv',
@@ -49,8 +49,8 @@ if __name__ == '__main__':
         averages.append(sum(insertions) / total)
         print(f'The average is: {sum(insertions) / total}')
 
-    title = f'C:\\Users\\gabev\\PycharmProjects\\MRP_TdTKO_mice\\img\\' \
-            f'Insertion_length_distribution_{"-".join(labels)} (1)'
+    outfile = f'C:\\Users\\gabev\\PycharmProjects\\MRP_TdTKO_mice\\img\\' \
+            f'Insertion_length_distribution'
     # title = f'C:\\Users\\gabev\\PycharmProjects\\MRP_TdTKO_mice\\img\\' \
     #         f'Generated_Insertion_length_distribution_{"-".join(labels)}'
-    plot_dist_insertion_length(x_points, y_points, labels, averages, title)
+    plot_dist_insertion_length(x_points, y_points, labels, averages, outfile)

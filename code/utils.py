@@ -278,6 +278,78 @@ def get_vdj_lengths(input_list: list, RTCR_ref: dict):
     return line_result
 
 
+def get_vdj_lengths_old_method(input_list: list, RTCR_ref: dict):
+    """Code from P.C. de Greef: Accepts a list containing a V- and J-allele and a CDR3 sequence,
+    and a dictionary containing reference VDJ alleles with their respective nucleotide sequences.
+    This function matches the given alleles to the CDR3, and searches for remnants of the D sequence and likely
+    inserted nucleotides.
+    Adapted by Gabe van den Hoeven May 2024.
+
+    :param input_list: list - [v_gene, j_gene, cdr3 nucleotide sequence]
+    :param RTCR_ref: dict - dictionary with all the TCR reference sequences, in the function read_rtcr_refs it can be
+    specified which organism.
+    :returns line_result: list -
+    [#nt used of V, matched D, #nt matching D, #nt used of J, #nt deleted of V, #nt deleted of J, last nt of V in
+    the CDR3 sequence, first nt of J in the CDR3 sequence]
+    """
+    V, J, CDR3nt = input_list
+    # the specific V and J genes and the whole sequence combined
+    if V not in RTCR_ref or J not in RTCR_ref:
+        return [25] * 6  # not possible
+    germline_V = RTCR_ref[V][0][RTCR_ref[V][1] - 3:]
+    # from the allele sequence get the germline sequence, up until the end
+    germline_J = RTCR_ref[J][0][:RTCR_ref[J][1] + 3]
+    # from the allele sequence get the germline sequence, up until the germline indicator
+
+    match_V = -1
+    for i in range(min(len(germline_V), len(CDR3nt))):
+        # Match the start of CDR3 to the end of V (germline)
+        if germline_V[i] == CDR3nt[i]:
+            match_V = i
+        else:
+            break
+    if match_V == -1:
+        Vdel = len(germline_V)
+        noV_CDR3 = CDR3nt
+        Vused = ""
+    else:
+        Vdel = len(germline_V) - match_V - 1
+        noV_CDR3 = CDR3nt[match_V + 1:]
+        Vused = germline_V[:match_V + 1]
+
+    match_J = 0
+    for i in range(1, min(len(germline_J), len(noV_CDR3)) + 1):
+        # Match the end of CDR3 to the start of J (germline)
+        if germline_J[-i] == noV_CDR3[-i]:
+            match_J = i
+        else:
+            break
+    if match_J == 0:
+        Jdel = len(germline_J)
+        noVJ_CDR3 = noV_CDR3
+        Jused = ""
+    else:
+        Jdel = len(germline_J) - match_J
+        noVJ_CDR3 = noV_CDR3[:-match_J]
+        Jused = germline_J[-match_J:]
+
+    D_seq_string = "GGGACAGGGGGC,GGGACTGGGGGGGC".upper()
+    # mice seqs from IMGT
+
+    # This is TRB, so check for D
+    matchingDlen, Dused = 0, ''
+
+    d_gene = difflib.SequenceMatcher(None, noVJ_CDR3, D_seq_string)
+    matchingDlen = max(d_gene.get_matching_blocks(), key=lambda x: x[2])[2]
+    d_match = max(d_gene.get_matching_blocks(), key=lambda x: x[2])
+    Dused = noVJ_CDR3[d_match.a: d_match.a + matchingDlen]
+    l_ins, r_ins = noVJ_CDR3[:d_match.a], noVJ_CDR3[d_match.a + matchingDlen:]
+
+    line_result = [str(len(Vused)), Dused, str(matchingDlen), str(len(Jused)), str(Vdel), str(Jdel),
+                   str(len(l_ins) + len(r_ins)), str(match_V + 1), str(len(Vused) + len(noVJ_CDR3) + 1)]
+    return line_result
+
+
 def read_rtcr_refs():
     """Parses a file with reference alleles from RTCR. Filters for relevant alleles and stores those in a dictionary.
     By P.C. De Greef, 2021
