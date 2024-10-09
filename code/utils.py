@@ -283,8 +283,8 @@ def get_vdj_lengths(input_list: list, RTCR_ref: dict):
     except ValueError as e:
         if e.args[0] == 'max() arg is an empty sequence':
             pass
-    line_result = [str(len(v_used)), d_used, str(matching_d_len), str(len(j_used)), str(v_del), str(j_del), str(len(l_ins)),
-                   str(len(r_ins)), str(lp_nucleotides), str(rp_nucleotides), str(match_v + 1),
+    line_result = [str(len(v_used)), d_used, str(matching_d_len), str(len(j_used)), str(v_del), str(j_del),
+                   str(len(l_ins)), str(len(r_ins)), str(lp_nucleotides), str(rp_nucleotides), str(match_v + 1),
                    str(len(v_used) + len(no_vj_cdr3) + 1)]
     return line_result
 
@@ -408,10 +408,11 @@ def reconfigure_header_tdt_normal_data(fn):
 
 
 def calculate_confidence_intervals(values, z=1.96):
-    """
+    """This function calculates the confidence intervals of a given set of values.
+    Returns the mean and confidence intervals.
 
-    :param values:
-    :param z:
+    :param values: Iterable obj - The raw values for which to calculate confidence intervals.
+    :param z: float - The Z-score for calculating the confidence intervals. Default = 1.96
     :return:
     """
     mean = statistics.mean(values)
@@ -440,7 +441,7 @@ def get_unique_sequences_from_file(filename, delim='\t'):
     but line 6 is the same as line 3 in sequence and mouse, so it is disregarded.
 
     :param filename: str - The name of the data, should be a path if it is not within the current working directory
-    :param delim: str - The delimiter of the data data, which character is used to separate values.
+    :param delim: str - The delimiter of the datafile, which character is used to separate values.
     :return:
     """
     new_lines, sequences_check = [], {}
@@ -467,7 +468,7 @@ def get_unique_sequences_per_mouse_from_file(filename, delim='\t'):
     This function allows for the same sequence to be added if the sequence is found in a different mouse.
 
     :param filename: str - The name of the data, should be a path if it is not within the current working directory
-    :param delim: str - The delimiter of the data data, which character is used to separate values.
+    :param delim: str - The delimiter of the datafile, which character is used to separate values.
     :return:
     """
     new_lines, sequences_check, dups = [], {}, 0

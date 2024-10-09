@@ -1,3 +1,4 @@
+import numpy
 from utils import get_unique_sequences_from_file
 
 
@@ -21,8 +22,10 @@ if __name__ == '__main__':
     pgens_d, pgens_no_d = get_pgens_for_d_and_d_less_sequences(filtered_data)
     print('with D segment')
     print(len(pgens_d))
-    print(sum(pgens_d) / len(pgens_d))
+    print('mean:', sum(pgens_d) / len(pgens_d))
+    print('median:', numpy.median(pgens_d))
     print('without D segment')
     print(len(pgens_no_d))
+    print('mean:', sum(pgens_no_d) / len(pgens_no_d))
+    print('median:', numpy.median(pgens_no_d))
     print((len(pgens_no_d) / (len(pgens_d) + len(pgens_no_d))) * 100, '% of sequences')
-    print(sum(pgens_no_d) / len(pgens_no_d))

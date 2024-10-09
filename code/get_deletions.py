@@ -8,7 +8,7 @@ def get_vj_deletions(data):
     """This function retrieves per mouse the number of occurrences of a certain deletion length for V and J gene
     segments.
 
-    :param data:
+    :param data: nested list - A nested list of lines from a datafile. The first line is a header.
     :return:
     """
     mice = {}

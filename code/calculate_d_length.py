@@ -2,10 +2,11 @@ from utils import get_unique_sequences_from_file
 
 
 def get_d_length_and_fraction_with_d(data, threshold):
-    """
+    """Calculates the mean D segment length and the fraction of sequences that have a D segment, for a given threshold
+    of considering an inferred D segment true.
 
-    :param data:
-    :param threshold:
+    :param data: nested list - A nested list of lines from a datafile. The first line is a header.
+    :param threshold: int - A given length of a D segment as a threshold for considering it a true D segment.
     :return:
     """
     avg_d_length = []
@@ -14,7 +15,7 @@ def get_d_length_and_fraction_with_d(data, threshold):
     header = data[0]
     for line in data[1:]:
         n_lines += 1
-        if int(line[header.index('D.length.used')]) > threshold:
+        if int(line[header.index('D.length.used')]) >= threshold:
             avg_d_length.append(int(line[header.index('D.length.used')]))
             n_d_seg += 1
     fract_d = n_d_seg * 100 / n_lines
@@ -26,9 +27,9 @@ if __name__ == '__main__':
     files = [
         '..\\data_files\\Normal\\filtered_data\\filtered_data_exp_Normal_v2.tsv',
         '..\\data_files\\TdTKO\\filtered_data\\filtered_data_exp_TdTKO_v2.tsv',
-        '..\\data_files\\Normal\\gen_data_mess\\filtered_data_gen_Normal_v2.tsv',
-        '..\\data_files\\TdTKO\\gen_data_mess\\filtered_data_gen_TdTKO_v2.tsv'
+        # '..\\data_files\\Normal\\gen_data_mess\\filtered_data_gen_Normal_v2.tsv',
+        # '..\\data_files\\TdTKO\\gen_data_mess\\filtered_data_gen_TdTKO_v2.tsv'
     ]
     for file in files:
         filtered_data = get_unique_sequences_from_file(file)
-        get_d_length_and_fraction_with_d(filtered_data, 0)
+        get_d_length_and_fraction_with_d(filtered_data, 1)

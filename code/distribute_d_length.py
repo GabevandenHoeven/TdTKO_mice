@@ -6,8 +6,8 @@ from statistics import stdev
 
 
 def get_d_lengths(datafile):
-    """
-    :param datafile:
+    """Returns a hashmap of occurrences per D segment for a nested list of lines from a datafile.
+    :param datafile: nested list - A nested list of lines from a datafile. The first line is a header.
     :return:
     """
 
@@ -26,6 +26,7 @@ def get_d_lengths(datafile):
 
 def get_d_lengths_per_mouse(datafile):
     """Returns a hashmap of lengths of D segments per mouse.
+    :param datafile: nested list - A nested list of lines from a datafile. The first line is a header.
     :return:
     """
     mice = {

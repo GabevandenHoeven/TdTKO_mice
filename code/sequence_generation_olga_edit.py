@@ -57,6 +57,9 @@ Example
 ('TGTGCCAGCTGGACAGGGGGCAACTACGAGCAGTACTTC', 'CASWTGGNYEQYF', 55, 13)
 
 @author: zacharysethna
+13-05-2024: Editted by Gabe van den Hoeven. Added the ``gen_rnd_prod_noins_cdr3`` function in the
+    ``SequenceGenerationVDJ`` class. This function works exactly the same as the ``gen_rnd_prod_cdr3`` function
+    but leaves out the TdT additions.
 """
 from __future__ import division
 import numpy as np

@@ -4,10 +4,10 @@ import numpy
 
 
 def get_vj_usage_with_or_without_d(data, exp: str):
-    """
+    """This function get the VJ usage for sequences with an inferred D length based on the given expression.
 
-    :param data:
-    :param exp: A string with a boolean statement to evaluate .
+    :param data: nested list - A nested list of lines from a datafile. The first line is a header.
+    :param exp: A string with a boolean statement to evaluate.
     :return:
     """
     v_usage = {}

@@ -23,5 +23,4 @@ if __name__ == '__main__':
         fraction = [seq / total_sequences * 100 for seq in seq_per_incidence]
         x.append([e / max_incidence for e in range(1, max_incidence + 1)])
         y.append(fraction)
-        print()
     number_of_seq_per_incidence(x, y)

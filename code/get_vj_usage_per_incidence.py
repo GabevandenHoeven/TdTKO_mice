@@ -2,18 +2,15 @@ from utils import get_unique_sequences_per_mouse_from_file
 from abundance_sequences import get_abundance
 from plots import plot_vj_usage_per_incidence
 
-if __name__ == '__main__':
-    files = [
-        '..\\data_files\\TdTKO\\filtered_data\\filtered_data_exp_TdTKO_v2.tsv',
-        '..\\data_files\\Normal\\filtered_data\\filtered_data_exp_Normal_v2.tsv',
-        # '..\\data_files\\TdTKO\\filtered_data\\filtered_data_gen_TdTKO_v2.tsv',
-        # '..\\data_files\\Normal\\filtered_data\\filtered_data_gen_Normal_v2.tsv'
-    ]
-    segment = 'TRBV1*01'
-    # segment = 'TRBV16*01'
-    mice_per_file = [13, 10]
-    # There are 13 mice in data 0 from 'files' and 10 in data 1
-    # mice_per_file = [20, 20]
+
+def get_incidence_segment_usage(segment, files, mice_per_file):
+    """Plots the incidence usage of a given V or J gene segment.
+
+    :param segment: str - The segment for which we want to plot the usage over incidence.
+    :param files: list - A list of filepaths to the datafiles.
+    :param mice_per_file: list - A list of the number of mice in each of the corresponding datafiles from `files`.
+    :return:
+    """
     x = []
     y = []
     for file in files:
@@ -32,3 +29,21 @@ if __name__ == '__main__':
     axis_labels = ['Fraction of incidence', 'Percentage of usage (%)']
     out_filename = f'..\\img\\incidence_usage_{segment.replace("*01", "")}'
     plot_vj_usage_per_incidence(x, y, title, axis_labels, out_filename)
+    return
+
+
+if __name__ == '__main__':
+    fs = [
+        '..\\data_files\\TdTKO\\filtered_data\\filtered_data_exp_TdTKO_v2.tsv',
+        '..\\data_files\\Normal\\filtered_data\\filtered_data_exp_Normal_v2.tsv',
+        # '..\\data_files\\TdTKO\\filtered_data\\filtered_data_gen_TdTKO_v2.tsv',
+        # '..\\data_files\\Normal\\filtered_data\\filtered_data_gen_Normal_v2.tsv'
+    ]
+    mpf = [13, 10]
+    # There are 13 mice in data 0 from 'files' and 10 in data 1
+
+    s = 'TRBV1*01'
+    get_incidence_segment_usage(s, fs, mpf)
+    s = 'TRBV16*01'
+    get_incidence_segment_usage(s, fs, mpf)
+
