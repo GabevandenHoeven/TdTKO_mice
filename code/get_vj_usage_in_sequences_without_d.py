@@ -36,8 +36,6 @@ if __name__ == '__main__':
     files = [
         '..\\data_files\\TdTKO\\filtered_data\\filtered_data_exp_TdTKO_v2.tsv',
         '..\\data_files\\Normal\\filtered_data\\filtered_data_exp_Normal_v2.tsv',
-        # '..\\data_files\\TdTKO\\filtered_data\\filtered_data_gen_TdTKO_v2.tsv',
-        # '..\\data_files\\Normal\\filtered_data\\filtered_data_gen_Normal_v2.tsv'
     ]
 
     v_labels = ['TRBV1', 'TRBV12-1', 'TRBV12-2', 'TRBV13-1', 'TRBV13-2', 'TRBV13-3', 'TRBV14',
@@ -59,8 +57,10 @@ if __name__ == '__main__':
         j_list.append(js)
         print(f'Total number of unique sequences in all mice combined with D: {total}')
     x_ticks = numpy.arange(1, (len(v_labels)) * 2, 2)
-    plot_vj_usage_with_without_d(x_ticks, v_list, (8, 10), 'V Usage in WT sequences with and without D segment',
+    plot_vj_usage_with_without_d(x_ticks, [v_list[2], v_list[3]], (8, 10),
+                                 'V Usage in WT sequences with and without D segment',
                                  ('V segments', 'Usage (%)'), '..\\img\\V_usage_with_without_D_segment.png', v_labels)
     x_ticks = numpy.arange(1, (len(j_labels)) * 2, 2)
-    plot_vj_usage_with_without_d(x_ticks, j_list, (8, 10), 'J Usage in WT sequences with and without D segment',
+    plot_vj_usage_with_without_d(x_ticks, [j_list[2], j_list[3]], (8, 10),
+                                 'J Usage in WT sequences with and without D segment',
                                  ('J segments', 'Usage (%)'), '..\\img\\J_usage_with_without_D_segment.png', j_labels)

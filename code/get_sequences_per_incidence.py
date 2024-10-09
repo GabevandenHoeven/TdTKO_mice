@@ -10,7 +10,7 @@ if __name__ == '__main__':
         # '..\\data_files\\Normal\\filtered_data\\filtered_data_gen_Normal_v2.tsv'
     ]
     mice_per_file = [13, 10]
-    # There are 13 mice in file 0 from 'files' and 10 in file 1
+    # There are 13 mice in data 0 from 'files' and 10 in data 1
     # mice_per_file = [20, 20]
     x = []
     y = []

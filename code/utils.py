@@ -7,8 +7,6 @@ import statistics
 import math
 from statistics import StatisticsError
 
-import numpy
-
 
 def sequence_matcher(a: str, b: str):
     """For every nucleotide in the substring a, this function tries to match the remainder of the substring to
@@ -89,13 +87,27 @@ def check_complementary(nt1: str, nt2: str):
 
 
 def find_p_nucleotides_loop_right(expression, insertion, template, p_nucleotides):
-    """
+    """This function tries to match nucleotides from a template to an insertion sequence as being complementary.
+    This function reverses the template sequence like for the V segment.
 
-    :param expression:
-    :param insertion:
-    :param template:
-    :param p_nucleotides:
-    :return:
+    example:
+    V: NNNNNNTGCCGC
+    ins: GCGGCANNNNNN
+
+    V becomes CGCCGTNNNNNN
+
+    template    CGCCGTNNNNNN
+    insertion   GCGGCANNNNNN
+
+    These sequences match.
+
+    :param expression: bool - This boolean is based on an expression of the starting nucleotides or if there was
+    a deletion.
+    :param insertion: str - The sequence that is to be compared to the template.
+    :param template: str - The nucleotide sequence of the V, potential D, or J segment.
+    :param p_nucleotides: int - The number of P nucleotides that were already found.
+    :returns p_nucleotides: int - The new number of P nucleotides found.
+    :returns insertion: str - The insertion sequence that is left after trying to find P nucleotides.
     """
     if expression:
         break_, i = False, 0
@@ -124,12 +136,17 @@ def find_p_nucleotides_loop_left(expression, insertion, template, p_nucleotides)
     """This function reverses the non-insertion sequence, and then for the length of the shortest sequence between
     the insertion and the template, tries to match every nucleotide as complementary to the one in the other sequence.
 
+    This function works similar to `find_p_nucleotides_loop_right`
 
-    :param expression:
-    :param insertion:
-    :param template:
-    :param p_nucleotides:
-    :return:
+
+    :param expression: bool - This boolean is based on an expression of the starting nucleotides or if there was
+    a deletion.
+    :param insertion: str - The sequence that is to be compared to the template.
+    :param template: str - The nucleotide sequence of the V, potential D, or J segment.
+    :param p_nucleotides: int - The number of P nucleotides that were already found.
+    :returns p_nucleotides: int - The new number of P nucleotides found.
+    :returns insertion: str - The insertion sequence that is left after trying to find P nucleotides.
+
     """
     if expression:
         break_, i = False, 0
@@ -150,7 +167,7 @@ def find_p_nucleotides_loop_left(expression, insertion, template, p_nucleotides)
 
 
 def get_vdj_lengths(input_list: list, RTCR_ref: dict):
-    """Code from P.C. de Greef: Accepts a list containing a V- and J-allele and a CDR3 sequence,
+    """Code from P.C. de Greef: Accepts a list containing a v- and j-allele and a CDR3 sequence,
     and a dictionary containing reference VDJ alleles with their respective nucleotide sequences.
     This function matches the given alleles to the CDR3, and searches for remnants of the D sequence and likely
     inserted nucleotides. Also checks the non-matching nucleotides for palindromic nucleotides.
@@ -161,120 +178,114 @@ def get_vdj_lengths(input_list: list, RTCR_ref: dict):
     specified which organism.
     :returns line_result: list -
     [#nt used of V, matched D, #nt matching D, #nt used of J, #nt deleted of V, #nt deleted of J, #nt left insertions,
-    #nt right insertions, #nt left p, #nt right p, last nt of V in the CDR3 sequence,
+    #nt right insertions, #nt left P, #nt right P, last nt of V in the CDR3 sequence,
     first nt of J in the CDR3 sequence]
     """
-    V, J, CDR3nt = input_list
-    # the specific V and J genes and the whole sequence combined
-    if V not in RTCR_ref or J not in RTCR_ref:
+    v, j, cdr3nt = input_list
+    # the specific v and j genes and the whole sequence combined
+    if v not in RTCR_ref or j not in RTCR_ref:
         return [25] * 6  # not possible
-    germline_V = RTCR_ref[V][0][RTCR_ref[V][1] - 3:]
+    germline_v = RTCR_ref[v][0][RTCR_ref[v][1] - 3:]
     # from the allele sequence get the germline sequence, up until the end
-    germline_J = RTCR_ref[J][0][:RTCR_ref[J][1] + 3]
+    germline_j = RTCR_ref[j][0][:RTCR_ref[j][1] + 3]
     # from the allele sequence get the germline sequence, up until the germline indicator
 
-    match_V = -1
-    for i in range(min(len(germline_V), len(CDR3nt))):
-        # Match the start of CDR3 to the end of V (germline)
-        if germline_V[i] == CDR3nt[i]:
-            match_V = i
+    match_v = -1
+    for i in range(min(len(germline_v), len(cdr3nt))):
+        # Match the start of CDR3 to the end of v (germline)
+        if germline_v[i] == cdr3nt[i]:
+            match_v = i
         else:
             break
-    if match_V == -1:
-        Vdel = len(germline_V)
-        noV_CDR3 = CDR3nt
-        Vused = ""
+    if match_v == -1:
+        v_del = len(germline_v)
+        no_v_cdr3 = cdr3nt
+        v_used = ""
     else:
-        Vdel = len(germline_V) - match_V - 1
-        noV_CDR3 = CDR3nt[match_V + 1:]
-        Vused = germline_V[:match_V + 1]
+        v_del = len(germline_v) - match_v - 1
+        no_v_cdr3 = cdr3nt[match_v + 1:]
+        v_used = germline_v[:match_v + 1]
 
-    match_J = 0
-    for i in range(1, min(len(germline_J), len(noV_CDR3)) + 1):
-        # Match the end of CDR3 to the start of J (germline)
-        if germline_J[-i] == noV_CDR3[-i]:
-            match_J = i
+    match_j = 0
+    for i in range(1, min(len(germline_j), len(no_v_cdr3)) + 1):
+        # Match the end of CDR3 to the start of j (germline)
+        if germline_j[-i] == no_v_cdr3[-i]:
+            match_j = i
         else:
             break
-    if match_J == 0:
-        Jdel = len(germline_J)
-        noVJ_CDR3 = noV_CDR3
-        Jused = ""
+    if match_j == 0:
+        j_del = len(germline_j)
+        no_vj_cdr3 = no_v_cdr3
+        j_used = ""
     else:
-        Jdel = len(germline_J) - match_J
-        noVJ_CDR3 = noV_CDR3[:-match_J]
-        Jused = germline_J[-match_J:]
+        j_del = len(germline_j) - match_j
+        no_vj_cdr3 = no_v_cdr3[:-match_j]
+        j_used = germline_j[-match_j:]
 
-    D_seq_string = "GGGACAGGGGGC,GGGACTGGGGGGGC".upper()
+    d_seq_string = "GGGACAGGGGGC,GGGACTGGGGGGGC".upper()
     # mice seqs from IMGT
 
     # This is TRB, so check for D
-    matchingDlen, lp_nucleotides, rp_nucleotides, Dused, l_ins, r_ins = 0, 0, 0, '', '', ''
+    matching_d_len, lp_nucleotides, rp_nucleotides, d_used, l_ins, r_ins = 0, 0, 0, '', '', ''
 
-    # d_gene = difflib.SequenceMatcher(None, noVJ_CDR3, D_seq_string)
-    # matchingDlen = max(d_gene.get_matching_blocks(), key=lambda x: x[2])[2]
-    # d_match = max(d_gene.get_matching_blocks(), key=lambda x: x[2])
-    # Dused = noVJ_CDR3[d_match.a: d_match.a + matchingDlen]
-    # l_ins, r_ins = noVJ_CDR3[:d_match.a], noVJ_CDR3[d_match.a + matchingDlen:]
-
-    possible_ds = sequence_matcher(noVJ_CDR3, D_seq_string)
+    possible_ds = sequence_matcher(no_vj_cdr3, d_seq_string)
     d_p_matches = []
 
     for d_match in possible_ds:
-        matchingDlen = d_match[1]
-        Dused = noVJ_CDR3[d_match[0]:d_match[0] + matchingDlen]
-        inslen = len(noVJ_CDR3) - matchingDlen
+        matching_d_len = d_match[1]
+        d_used = no_vj_cdr3[d_match[0]:d_match[0] + matching_d_len]
+        ins_len = len(no_vj_cdr3) - matching_d_len
         lp_nucleotides, rp_nucleotides, l_ins, r_ins = 0, 0, '', ''
         # Checking for palindromic nt, not all insertions are n-nucleotides
-        if inslen != 0:
-            l_ins, r_ins = noVJ_CDR3[:d_match[0]], noVJ_CDR3[d_match[0] + d_match[1]:]
+        if ins_len != 0:
+            l_ins, r_ins = no_vj_cdr3[:d_match[0]], no_vj_cdr3[d_match[0] + d_match[1]:]
 
-            # Check between D and J
-            p_nucleotides1, r_ins1 = find_p_nucleotides_loop_right((r_ins != '' and Jdel == 0), r_ins, Jused, 0)
+            # Check between D and j
+            p_nucleotides1, r_ins1 = find_p_nucleotides_loop_right((r_ins != '' and j_del == 0), r_ins, j_used, 0)
 
             # The palindromic nucleotides can also come from the D segment, but only if there are no deletions.
             p_nucleotides1, r_ins1 = find_p_nucleotides_loop_left(
-                (D_seq_string.split(',')[0].endswith(Dused) or D_seq_string.split(',')[1].endswith(Dused))
-                and r_ins1 != '', r_ins1, Dused, p_nucleotides1)
+                (d_seq_string.split(',')[0].endswith(d_used) or d_seq_string.split(',')[1].endswith(d_used))
+                and r_ins1 != '', r_ins1, d_used, p_nucleotides1)
 
             # There might be a better match if you check the D first
             p_nucleotides2, r_ins2 = find_p_nucleotides_loop_left(
-                (D_seq_string.split(',')[0].endswith(Dused) or D_seq_string.split(',')[1].endswith(Dused))
-                and r_ins != '', r_ins, Dused, 0)
-            p_nucleotides2, r_ins2 = find_p_nucleotides_loop_right((r_ins2 != '' and Jdel == 0),
-                                                                   r_ins2, Jused, p_nucleotides2)
+                (d_seq_string.split(',')[0].endswith(d_used) or d_seq_string.split(',')[1].endswith(d_used))
+                and r_ins != '', r_ins, d_used, 0)
+            p_nucleotides2, r_ins2 = find_p_nucleotides_loop_right((r_ins2 != '' and j_del == 0),
+                                                                   r_ins2, j_used, p_nucleotides2)
             rp_nucleotides = max(p_nucleotides1, p_nucleotides2)
 
-            # Check between V and D
-            p_nucleotides1, l_ins1 = find_p_nucleotides_loop_left(l_ins != '' and Vdel == 0, l_ins, Vused, 0)
+            # Check between v and D
+            p_nucleotides1, l_ins1 = find_p_nucleotides_loop_left(l_ins != '' and v_del == 0, l_ins, v_used, 0)
 
             # Since the DJ junction is done first, l_ins can contain palindromic nucleotides from the right-hand
-            # insertion and the J gene. r_ins is retrieved from ins_pairs
+            # insertion and the j gene. r_ins is retrieved from ins_pairs
             p_nucleotides1, l_ins1 = find_p_nucleotides_loop_right(
-                (D_seq_string.split(',')[0].startswith(Dused) or D_seq_string.split(',')[1].startswith(Dused))
-                and l_ins1 != '', l_ins1, Dused + r_ins + Jused, p_nucleotides1)
+                (d_seq_string.split(',')[0].startswith(d_used) or d_seq_string.split(',')[1].startswith(d_used))
+                and l_ins1 != '', l_ins1, d_used + r_ins + j_used, p_nucleotides1)
 
             p_nucleotides2, l_ins2 = find_p_nucleotides_loop_right(
-                (D_seq_string.split(',')[0].startswith(Dused) or D_seq_string.split(',')[1].startswith(Dused))
-                and l_ins != '', l_ins, Dused + r_ins + Jused, 0)
-            p_nucleotides2, l_ins2 = find_p_nucleotides_loop_left(l_ins2 != '' and Vdel == 0,
-                                                                  l_ins2, Vused, p_nucleotides2)
+                (d_seq_string.split(',')[0].startswith(d_used) or d_seq_string.split(',')[1].startswith(d_used))
+                and l_ins != '', l_ins, d_used + r_ins + j_used, 0)
+            p_nucleotides2, l_ins2 = find_p_nucleotides_loop_left(l_ins2 != '' and v_del == 0,
+                                                                  l_ins2, v_used, p_nucleotides2)
             lp_nucleotides = max(p_nucleotides1, p_nucleotides2)
 
-        d_p_matches.append((matchingDlen, lp_nucleotides, rp_nucleotides, Dused, l_ins, r_ins))
+        d_p_matches.append((matching_d_len, lp_nucleotides, rp_nucleotides, d_used, l_ins, r_ins))
 
     try:
-        # If the noVJ_CDR3 completely matches a D segment that match is chosen.
+        # If the no_vj_cdr3 completely matches a D segment that match is chosen.
         max_d_p_nt = max([(match[0] + match[1] + match[2]) for match in d_p_matches])
         max_d_p_nt_list = [match for match in d_p_matches if (match[0] + match[1] + match[2]) == max_d_p_nt]
         best_match = max(max_d_p_nt_list, key=lambda x: x[0])
-        matchingDlen, lp_nucleotides, rp_nucleotides, Dused, l_ins, r_ins = best_match
+        matching_d_len, lp_nucleotides, rp_nucleotides, d_used, l_ins, r_ins = best_match
     except ValueError as e:
         if e.args[0] == 'max() arg is an empty sequence':
             pass
-    line_result = [str(len(Vused)), Dused, str(matchingDlen), str(len(Jused)), str(Vdel), str(Jdel), str(len(l_ins)),
-                   str(len(r_ins)), str(lp_nucleotides), str(rp_nucleotides), str(match_V + 1),
-                   str(len(Vused) + len(noVJ_CDR3) + 1)]
+    line_result = [str(len(v_used)), d_used, str(matching_d_len), str(len(j_used)), str(v_del), str(j_del), str(len(l_ins)),
+                   str(len(r_ins)), str(lp_nucleotides), str(rp_nucleotides), str(match_v + 1),
+                   str(len(v_used) + len(no_vj_cdr3) + 1)]
     return line_result
 
 
@@ -351,7 +362,7 @@ def get_vdj_lengths_old_method(input_list: list, RTCR_ref: dict):
 
 
 def read_rtcr_refs():
-    """Parses a file with reference alleles from RTCR. Filters for relevant alleles and stores those in a dictionary.
+    """Parses a data with reference alleles from RTCR. Filters for relevant alleles and stores those in a dictionary.
     By P.C. De Greef, 2021
     :returns RTCR_ref: dict - A dictionary containing TCR segment sequences of the beta-chain of Mus Musculus, together
     with the start or stop position of the CDR3 region in the respective segment.
@@ -377,7 +388,7 @@ def read_rtcr_refs():
 def reconfigure_header_tdt_normal_data(fn):
     """Used to fix the header of the wild type data files, the header was missing a column making it difficult
     to use it to get values from a specific column.
-    :param fn: The path of the file that needed to be edited.
+    :param fn: The path of the data that needed to be edited.
 
     :return:
     """
@@ -390,7 +401,7 @@ def reconfigure_header_tdt_normal_data(fn):
         # TODO: readlines?
         for row in file:
             out.append(row)
-    print('Reconfigured header.\nWriting to file...')
+    print('Reconfigured header.\nWriting to data...')
     with open(fn, 'w') as file:
         file.write(header)
         file.writelines(out)
@@ -408,12 +419,12 @@ def calculate_confidence_intervals(values, z=1.96):
         stdev = statistics.stdev(values)
     except StatisticsError:
         stdev = 0
-    confidence_interval = z * stdev / math.sqrt(len(values))
+    confidence_interval = z * (stdev / math.sqrt(len(values)))
     return mean, confidence_interval
 
 
 def get_unique_sequences_from_file(filename, delim='\t'):
-    """Checks a data file for the CDR3 sequences in it to be unique. The first line of a unique sequence in the file,
+    """Checks a data data for the CDR3 sequences in it to be unique. The first line of a unique sequence in the data,
     gets added to the output list.
     For example:
     Column1	Mouse	Number.of.reads	V.length.used	D.used	D.length.used	J.length.used	V.length.deleted
@@ -428,8 +439,8 @@ def get_unique_sequences_from_file(filename, delim='\t'):
     Here, line 3, 8 and 24 get added because they are unique sequences or belong to a different mouse,
     but line 6 is the same as line 3 in sequence and mouse, so it is disregarded.
 
-    :param filename: str - The name of the file, should be a path if it is not within the current working directory
-    :param delim: str - The delimiter of the data file, which character is used to separate values.
+    :param filename: str - The name of the data, should be a path if it is not within the current working directory
+    :param delim: str - The delimiter of the data data, which character is used to separate values.
     :return:
     """
     new_lines, sequences_check = [], {}
@@ -455,8 +466,8 @@ def get_unique_sequences_per_mouse_from_file(filename, delim='\t'):
     """This function is a variation on the ``get_unique_sequences_from_file`` function.
     This function allows for the same sequence to be added if the sequence is found in a different mouse.
 
-    :param filename:
-    :param delim:
+    :param filename: str - The name of the data, should be a path if it is not within the current working directory
+    :param delim: str - The delimiter of the data data, which character is used to separate values.
     :return:
     """
     new_lines, sequences_check, dups = [], {}, 0
@@ -482,9 +493,9 @@ def get_unique_sequences_per_mouse_from_file(filename, delim='\t'):
 
 
 def flatten_list_unique(obj):
-    """
+    """Flattens a 2-dimensional iterable object into a list.
 
-    :param obj:
+    :param obj: a 2-dimensional iterable object like a nested list.
     :return:
     """
     def flatten(x):

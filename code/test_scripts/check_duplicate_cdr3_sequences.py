@@ -2,8 +2,8 @@ import csv
 
 
 def check_duplicate_cdr3(filename: str, delim='\t'):
-    """Checks if the file contains unique CDR3 nucleotide sequences. They are considered unique if the VJ combination
-    together with the nucleotide sequence has not been found in the file.
+    """Checks if the data contains unique CDR3 nucleotide sequences. They are considered unique if the VJ combination
+    together with the nucleotide sequence has not been found in the data.
 
     :param filename:
     :param delim: str
@@ -35,4 +35,4 @@ if __name__ == '__main__':
     for file in files:
         count = check_duplicate_cdr3(file)
         fn = file.split('\\')[-1]
-        print(f'Number of duplicate sequences in file \"{fn}\": {count}')
+        print(f'Number of duplicate sequences in data \"{fn}\": {count}')

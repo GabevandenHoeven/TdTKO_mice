@@ -13,7 +13,7 @@ def filter_tcrb_data(rtcr_ref: dict, tcrb_data_filenames, threshold, max_sequenc
     the filtered data.
     :param flt_strain: str - What strain you want in the filtered data. (TdT-/-, C57BL/6Â )
     :param flt_pheno: str - What phenotype cell to want in the filtered data. (CD4+, CD5hi, CD5lo)
-    :param delim: str - The separation symbol for the data file.
+    :param delim: str - The separation symbol for the datafile.
     :param out_filename: str - Path to a new file in which the filtered data is stored.
     :return:
     """
@@ -58,7 +58,7 @@ def filter_tcrb_generated_data(rtcr_ref: dict, tcrb_data_filenames, max_sequence
     :param max_sequence_size: int - The limit junction sequence length from which sequences are not included in
     the filtered data.
     :param flt_strain: str - What strain you want in the filtered data. (TdT-/-, C57BL/6Â )
-    :param delim: str - The separation symbol for the data file.
+    :param delim: str - The separation symbol for the datafile.
     :param out_filename: str - Path to a new file in which the filtered data is stored.
     :return:
     """

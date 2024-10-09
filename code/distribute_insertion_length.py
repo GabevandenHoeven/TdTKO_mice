@@ -1,14 +1,10 @@
 from plots import plot_dist_insertion_length
 from utils import get_unique_sequences_from_file
-import csv
 
 
 def get_insertion_counts(file):
-    """
-
-    :param fn:
-    :param counts:
-    :param delim:
+    """Returns a hashmap of the length of insertions and how often they appear together with the mean length
+    :param file: nested list - A nested list of a datafile. Starts with a header.
     :return:
     """
     total_seq = 0
@@ -25,7 +21,8 @@ def get_insertion_counts(file):
             counts[ins] += 1
         except KeyError:
             counts.update({ins: 1})
-    return counts, total_seq, insertions
+    mean = sum(insertions) / total_seq
+    return counts, total_seq, mean
 
 
 if __name__ == '__main__':
@@ -36,21 +33,16 @@ if __name__ == '__main__':
     file_list = [
         '..\\data_files\\TdTKO\\filtered_data\\filtered_data_exp_TdTKO_v2.tsv',
         '..\\data_files\\Normal\\filtered_data\\filtered_data_exp_Normal_v2.tsv',
-        # '..\\data_files\\TdTKO\\filtered_data\\filtered_data_gen_TdTKO.tsv',
-        # '..\\data_files\\Normal\\filtered_data\\filtered_data_gen_Normal.tsv'
     ]
 
     for filename in file_list:
         unique_sequences = get_unique_sequences_from_file(filename)
-        insertion_counts, total, insertions = get_insertion_counts(unique_sequences)
+        insertion_counts, total, average = get_insertion_counts(unique_sequences)
         x = sorted(insertion_counts.keys())
         x_points.append(x)
         y_points.append([insertion_counts[point] / total * 100 for point in x])
-        averages.append(sum(insertions) / total)
-        print(f'The average is: {sum(insertions) / total}')
+        averages.append(average)
+        print(f'The average is: {average}')
 
-    outfile = f'C:\\Users\\gabev\\PycharmProjects\\MRP_TdTKO_mice\\img\\' \
-            f'Insertion_length_distribution'
-    # title = f'C:\\Users\\gabev\\PycharmProjects\\MRP_TdTKO_mice\\img\\' \
-    #         f'Generated_Insertion_length_distribution_{"-".join(labels)}'
+    outfile = f'..\\img\\Insertion_length_distribution.png'
     plot_dist_insertion_length(x_points, y_points, labels, averages, outfile)

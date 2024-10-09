@@ -3,9 +3,9 @@ from utils import get_unique_sequences_from_file
 
 
 def calculate_average_v_j_distance(lines):
-    """
+    """Sorts the VJ distance from a file that has been transformed into a nested list. Returns a hashmap (dictionary).
 
-    :param lines:
+    :param lines: nested list - The lines from a datafile.
     :return:
     """
     header = lines[0]
@@ -28,8 +28,6 @@ if __name__ == '__main__':
     filenames = [
         '..\\data_files\\TdTKO\\filtered_data\\filtered_data_exp_TdTKO_v2.tsv',
         '..\\data_files\\Normal\\filtered_data\\filtered_data_exp_Normal_v2.tsv'
-        # '..\\data_files\\TdTKo\\filtered_data\\filtered_data_gen_TdTKO_v2.tsv',
-        # '..\\data_files\\Normal\\filtered_data\\filtered_data_gen_Normal_v2.tsv'
                 ]
     for file in filenames:
         unique_lines = get_unique_sequences_from_file(file)
@@ -39,7 +37,6 @@ if __name__ == '__main__':
         y.append(y_)
         average = sum([e * vj_distances[e] for e in vj_distances.keys()]) / total_lines
         averages.append(average)
-    out_fn = f'..\\img\\unique_seq_img\\VJ_distance_distribution'
-    # out_fn = f'..\\img\\unique_seq_img\\Generated_VJ_distance_distribution_seq_fraction_{"-".join(labels)}'
+    out_fn = f'..\\img\\VJ_distance_distribution'
     plot_vj_distance_perc(x, y, averages, labels, out_fn)
     print(averages)

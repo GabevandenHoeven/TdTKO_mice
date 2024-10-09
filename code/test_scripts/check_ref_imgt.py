@@ -4,7 +4,7 @@ from parse_imgt import parse_imgt_webpage
 
 
 def read_rtcr_refs():
-    """Parses a file with reference alleles from RTCR. Filters for relevant alleles and stores those in a dictionary.
+    """Parses a data with reference alleles from RTCR. Filters for relevant alleles and stores those in a dictionary.
     By P.C. De Greef, 2021
     :returns RTCR_ref: dict - A dictionary containing TCR segment sequences of the beta-chain of Mus Musculus, together
     with the start or stop position of the CDR3 region in the respective segment.
@@ -57,14 +57,14 @@ if __name__ == '__main__':
     # TODO: THESE MIGHT NOT BE THE EXACT CORRECT NAMES EG: TRBV24*01 / TRBV24*02
 
     refs = read_rtcr_refs()
-    print(f"length list of all TRB[VDJ] alleles in ref file: {len(refs.keys())}")
+    print(f"length list of all TRB[VDJ] alleles in ref data: {len(refs.keys())}")
 
     results = parse_imgt_webpage(url='https://www.imgt.org/ligmdb/view.action?id=IMGT000132')
     print(f"length list of all TRB[VDJ] alleles on IMGT: {len(results.keys())}")
 
-    print(f"Alleles in data missing in peter reference file: {[e for e in tdt_alleles if e not in refs.keys()]}")
+    print(f"Alleles in data missing in peter reference data: {[e for e in tdt_alleles if e not in refs.keys()]}")
 
-    print(f'Alleles from OLGA missing in peter reference file: '
+    print(f'Alleles from OLGA missing in peter reference data: '
           f'{[e for e in all_vdj_alleles_olga if e not in refs.keys()]}')
 
     imgt_alleles = sorted(list(results.keys()))
@@ -95,7 +95,7 @@ if __name__ == '__main__':
     differences = []
     print()
     for e in refs.keys():
-        print(f"Matching OLGA and reference file sequence: {e}\n"
+        print(f"Matching OLGA and reference data sequence: {e}\n"
               f"{all_vdj_alleles_olga[e].upper() == refs[e][0].upper()}")
         if all_vdj_alleles_olga[e].upper() != refs[e][0].upper():
             differences.append(e)
@@ -105,7 +105,7 @@ if __name__ == '__main__':
     print()
     for e in refs.keys():
         if e not in olga_diff_segments:
-            print(f"Matching IMGT and reference file sequence: {e}\n"
+            print(f"Matching IMGT and reference data sequence: {e}\n"
                   f"{results[e].upper() == refs[e][0].upper()}")
             if results[e].upper() != refs[e][0].upper():
                 differences.append(e)

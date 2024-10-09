@@ -2,10 +2,10 @@ import csv
 
 
 def calculate_mean_pgen_from_file(filename, delim='\t'):
-    """
+    """Calculates the mean pgen from a datafile.
 
-    :param filename:
-    :param delim:
+    :param filename: str - The file path of the datafile
+    :param delim: the delimiter for the datafile. Default is a tab '\t'
     :return:
     """
     mean_pgen = 0
@@ -21,10 +21,8 @@ def calculate_mean_pgen_from_file(filename, delim='\t'):
 
 if __name__ == '__main__':
     files = [
-        'pgen-out_high_incidence_filtered_data_exp_TdTKO_v2.tsv',
-        'pgen-out_low_incidence_filtered_data_exp_TdTKO_v2.tsv',
-        'pgen-out_high_incidence_filtered_data_exp_Normal_v2.tsv',
-        'pgen-out_low_incidence_filtered_data_exp_Normal_v2.tsv',
+        'pgen-out_high_incidence_filtered_data_exp_Normal_v2 (1).tsv',
+        'pgen-out_low_incidence_filtered_data_exp_Normal_v2 (1).tsv',
     ]
     for file in files:
         mean = calculate_mean_pgen_from_file(file)

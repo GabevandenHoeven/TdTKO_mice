@@ -8,8 +8,7 @@ def convert_olga_to_imgt_id(olga_id: int, gene: str):
     :param gene: str - 'V', 'D', or 'J' used to look up the ID in the correct hashmap.
     :return:
     """
-    # I checked the V gene segments, these are the right indices for these gene segments. Some gene segments have the
-    #  same sequences they are mentioned in the comments below but these are the right indices
+    # I checked the V gene segments, these are the right indices for these gene segments.
     v_gene_segments = {
         0: 'TRBV1*01', 1: 'TRBV2*01', 2: 'TRBV3*01', 3: 'TRBV4*01', 4: 'TRBV5*01',
         5: 'TRBV6*01', 6: 'TRBV7*01', 7: 'TRBV8*01', 8: 'TRBV9*01', 9: 'TRBV10*01', 10: 'TRBV11*01',
@@ -18,8 +17,8 @@ def convert_olga_to_imgt_id(olga_id: int, gene: str):
         20: 'TRBV17*01', 21: 'TRBV18*01', 22: 'TRBV19*01', 23: 'TRBV20*01', 24: 'TRBV21*01', 25: 'TRBV22*01',
         26: 'TRBV23*01', 27: 'TRBV24*01', 28: 'TRBV25*01', 29: 'TRBV26*01', 30: 'TRBV27*01', 31: 'TRBV28*01',
         32: 'TRBV29*01', 33: 'TRBV30*01', 34: 'TRBV31*01'
-        # TRBV31*01 sequence in OLGA default_model mouse_T_beta doesn't match the IMGT sequence
-        # TODO: CHECK WHEN USING OLGA IF THE TRBV31*01 SEQUENCE IS THE ONE FROM IMGT
+        # TRBV31*01 sequence in OLGA default_model mouse_T_beta doesn't match the IMGT sequence.
+        # It is the reverse complementary.
     }
     j_gene_segments = {
         0: 'TRBJ1-1*01', 1: 'TRBJ1-2*01', 2: 'TRBJ1-3*01', 3: 'TRBJ1-4*01', 4: 'TRBJ1-5*01', 5: 'TRBJ1-6*01',
@@ -51,7 +50,7 @@ if __name__ == '__main__':
     n_mice = 20
     n_seq = 150000
     for mouse in range(1, n_mice + 1):
-        filename = f'C:\\Users\\gabev\\PycharmProjects\\MRP_TdTKO_mice\\data_files\\TdTKO\\generated_Mgen{mouse}_TdTKO1.tsv'
+        filename = f'..\\data_files\\TdTKO\\generated_Mgen{mouse}_TdTKO.tsv'
         with open(filename, 'w') as outfile:
             outfile.write(
                 'Column1\tmouse\tV.gene\tD.gene\tJ.gene\tJunction.nucleotide.sequence\tD.used\tphenotype\tstrain\n')
@@ -69,10 +68,10 @@ if __name__ == '__main__':
                             continue
                     except KeyError:
                         outfile.write(f'{i}\tMgen{mouse}\t{v_gene}\t{d_gene}\t{j_gene}\t{sequence}\t{d_used}\t'
-                                      f'Generated\tTdT-/-\n')
+                                      f'Generated\tTdTKO\n')
 
     for mouse in range(1, n_mice + 1):
-        filename = f'C:\\Users\\gabev\\PycharmProjects\\MRP_TdTKO_mice\\data_files\\Normal\\generated_Mgen{mouse}_Normal.tsv'
+        filename = f'..\\data_files\\Normal\\generated_Mgen{mouse}_WT.tsv'
         with open(filename, 'w') as outfile:
             outfile.write(
                 'Column1\tmouse\tV.gene\tD.gene\tJ.gene\tJunction.nucleotide.sequence\tD.used\tphenotype\tstrain\n')

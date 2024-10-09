@@ -1,4 +1,3 @@
-import csv
 
 
 def get_abundance(data, exp: str, max_incidence: int):
@@ -15,9 +14,8 @@ def get_abundance(data, exp: str, max_incidence: int):
     :return fractions: list - A list with the fractions of sequences that match an expression per incidence.
     :return incidences: list - A list with lists of sequence information per incidence
     """
-    sequences = {
-        # V_identifier + sequence J_identifier: [count, sequence, [mice], d_length, VJ distance, insertions]
-    }
+    sequences = {}
+    has_pgen = True
     header = data[0]
     dup = {}
     for line in data[1:]:
@@ -28,6 +26,11 @@ def get_abundance(data, exp: str, max_incidence: int):
             (int(line[header.index('Left.insertion.length')]) - int(line[header.index('Left.palindromic')]) +
              int(line[header.index('Right.insertion.length')]) - int(line[header.index('Right.palindromic')]))
         v_del, j_del = int(line[header.index('V.length.deleted')]), int(line[header.index('J.length.deleted')])
+        pgen = None
+        try:
+            pgen = float(line[header.index('Generation.probability')])
+        except ValueError:
+            has_pgen = False
         try:
             if mouse in sequences[v + sequence + j][2]:
                 if 'gen' not in mouse:
@@ -49,7 +52,11 @@ def get_abundance(data, exp: str, max_incidence: int):
                 sequences[v + sequence + j][0] += 1
                 sequences[v + sequence + j][2].append(mouse)
         except KeyError:
-            sequences.update({v + sequence + j: [1, sequence, [mouse], d_length, vj_dis, ins, v, j, v_del, j_del]})
+            if has_pgen:
+                sequences.update(
+                    {v + sequence + j: [1, sequence, [mouse], d_length, vj_dis, ins, v, j, v_del, j_del, pgen]})
+            else:
+                sequences.update({v + sequence + j: [1, sequence, [mouse], d_length, vj_dis, ins, v, j, v_del, j_del]})
 
     fractions = []
     incidences = []

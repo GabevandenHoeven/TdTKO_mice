@@ -5,8 +5,8 @@ from utils import get_vdj_lengths
 def read_tcrb_data(rtcr_ref: dict, tcrb_data_filename, data_suffix, threshold, delim):
     """Reads the datafile with the nucleotide sequences and used vdj genes
     :param rtcr_ref: dict - reference sequences of TCR genes.
-    :param tcrb_data_filename: str - Path to the file containing the TCR data.
-    :param data_suffix: str - suffix of the data file used to write results to a new file.
+    :param tcrb_data_filename: str - Path to the data containing the TCR data.
+    :param data_suffix: str - suffix of the data data used to write results to a new data.
     :param threshold: int - Threshold for a minimum amount of supporting reads.
     :return:
     """
@@ -55,23 +55,23 @@ def read_tcrb_data(rtcr_ref: dict, tcrb_data_filename, data_suffix, threshold, d
             except KeyError:
                 supporting_read_count.update({int(reads): 1})
 
-    # with open('count_reads.txt', 'w') as file:
-    #     file.write('Number_of_reads: number_of_sequences\n')
+    # with open('count_reads.txt', 'w') as data:
+    #     data.write('Number_of_reads: number_of_sequences\n')
     #     for i in sorted(supporting_read_count.keys()):
-    #         file.write(f'{i}: {supporting_read_count[i]}\n')
+    #         data.write(f'{i}: {supporting_read_count[i]}\n')
 
     # # new_filename = f'data_files\\B6\\no_insertions_above_threshold\\{data_suffix}_results_above_{threshold}.tsv'
     # new_filename = f'data_files\\TdTKo\\no_insertions_above_threshold\\{data_suffix}_results_above_{threshold}.tsv'
-    # with open(new_filename, 'w') as file:
-    #     file.writelines(outfile)
+    # with open(new_filename, 'w') as data:
+    #     data.writelines(outfile)
     # # new_insertion_filename = f'data_files\\B6\\insertions_above_threshold\\{data_suffix}_insertions_above_{threshold}.tsv'
     # new_insertion_filename = f'data_files\\TdTKo\\insertions_above_threshold\\{data_suffix}_insertions_above_{threshold}.tsv'
-    # with open(new_insertion_filename, 'w') as file:
-    #     file.writelines(outfile_ins)
+    # with open(new_insertion_filename, 'w') as data:
+    #     data.writelines(outfile_ins)
     # # below_threshold_filename = f'data_files\\B6\\below_threshold\\{data_suffix}_below_{threshold}.tsv'
     # below_threshold_filename = f'data_files\\TdTKo\\below_threshold\\{data_suffix}_below_{threshold}.tsv'
-    # with open(below_threshold_filename, 'w') as file:
-    #     file.writelines(outfile_below_threshold)
+    # with open(below_threshold_filename, 'w') as data:
+    #     data.writelines(outfile_below_threshold)
 
     return
 
@@ -79,7 +79,7 @@ def read_tcrb_data(rtcr_ref: dict, tcrb_data_filename, data_suffix, threshold, d
 def fraction_insertions(all_sequences_filenames: list, insertions_filenames: list):
     """Calculates the fraction of sequences found containing insertions having above a given threshold of supporting
     reads.
-    :param all_sequences_filenames: list - The path to the file containing all sequences of the sample
+    :param all_sequences_filenames: list - The path to the data containing all sequences of the sample
     :param insertions_filenames: list -
     """
     total_lines_ins = 0

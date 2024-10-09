@@ -38,10 +38,10 @@ if __name__ == '__main__':
     #                                     'C:\\Users\\gabev\\PycharmProjects\\MRP_TdTKO_mice\\img'
     #                                     '\\Mean_VJ_distance_per_incidence_generated.png')
     # data = []
-    # for file in files:
-    #     seqs, n_rows = get_abundance(file, 'd_length >= 0')
+    # for data in files:
+    #     seqs, n_rows = get_abundance(data, 'd_length >= 0')
     #     vj = []
-    #     for i in range(1, mice_per_file[files.index(file)] + 1):
+    #     for i in range(1, mice_per_file[files.index(data)] + 1):
     #         vj.append([c[3][0] for c in seqs.values() if c[0] == i])
     #     data.append(vj)
     # plot_boxplot_per_incidence(data, ['TdTKO', 'Normal'],

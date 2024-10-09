@@ -2,7 +2,7 @@ import csv
 
 
 def check_insertions(filename: str, delim='\t'):
-    """Checks if the sequences in the file contain insertions.
+    """Checks if the sequences in the data contain insertions.
     :param filename:
     :param delim: str
     :return:
@@ -37,4 +37,4 @@ if __name__ == '__main__':
     for file in files:
         insertions, lines = check_insertions(file)
         fn = file.split('\\')[-1]
-        print(f'Number of sequences with insertions in file \"{fn}\": {insertions}. {insertions / lines}')
+        print(f'Number of sequences with insertions in data \"{fn}\": {insertions}. {insertions / lines}')

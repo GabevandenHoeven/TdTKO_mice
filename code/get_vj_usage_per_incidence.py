@@ -9,10 +9,10 @@ if __name__ == '__main__':
         # '..\\data_files\\TdTKO\\filtered_data\\filtered_data_gen_TdTKO_v2.tsv',
         # '..\\data_files\\Normal\\filtered_data\\filtered_data_gen_Normal_v2.tsv'
     ]
-    # segment = 'TRBV1'
-    segment = 'TRBV16'
+    segment = 'TRBV1*01'
+    # segment = 'TRBV16*01'
     mice_per_file = [13, 10]
-    # There are 13 mice in file 0 from 'files' and 10 in file 1
+    # There are 13 mice in data 0 from 'files' and 10 in data 1
     # mice_per_file = [20, 20]
     x = []
     y = []
@@ -27,7 +27,8 @@ if __name__ == '__main__':
             usage_values.append(v_segment_count / len(incidence_group) * 100)
         y.append(usage_values)
 
-    title = f'Usage of segment {segment} per incidence for TdTKO and Normal'
+    segment = segment.replace('*01', '')
+    title = f'Usage of segment {segment} per incidence for TdTKO and WT'
     axis_labels = ['Fraction of incidence', 'Percentage of usage (%)']
     out_filename = f'..\\img\\incidence_usage_{segment.replace("*01", "")}'
     plot_vj_usage_per_incidence(x, y, title, axis_labels, out_filename)

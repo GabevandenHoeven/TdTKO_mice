@@ -1,47 +1,66 @@
 import threading
 import time
-
+import subprocess
 from utils import animate
-from olga import load_model, generation_probability as pgen_mod
 import csv
 
 
-def load_olga_mouse_trb_pgen_model():
-    params_filename = 'models\\Mus+musculus\\TRB\\models\\model_params.txt'
-    marginals_filename = '..\\venv\\Lib\\site-packages\\olga\\default_models\\mouse_T_beta\\model_marginals.txt'
-    v_anchor_pos_file = '..\\venv\\Lib\\site-packages\\olga\\default_models\\mouse_T_beta\\V_gene_CDR3_anchors.csv'
-    j_anchor_pos_file = '..\\venv\\Lib\\site-packages\\olga\\default_models\\mouse_T_beta\\J_gene_CDR3_anchors.csv'
-    genomic_data = load_model.GenomicDataVDJ()
-    genomic_data.load_igor_genomic_data(params_filename, v_anchor_pos_file, j_anchor_pos_file)
-    generative_model = load_model.GenerativeModelVDJ()
-    generative_model.load_and_process_igor_model(marginals_filename)
-    pgen_model = pgen_mod.GenerationProbabilityVDJ(generative_model, genomic_data)
-    return pgen_model
+def calculate_pgen(filename, delim):
+    """This function calculates generation probabilities for a datafile containing CDR3 nucleotide sequences and their
+    called V and J gene segments using OLGA. OLGA is required to be installed first.
+    This function then inserts these generation probabilities after the nucleotide sequences, and writes
+    this to a new file together with the other information in the datafile.
 
-
-def calculate_pgen(filename, pgen):
+    :param filename: str - A file path to a datafile. This datafile should have a header with, for the nucleotide
+    sequence, V and J gene segment columns, the following header names: 'Junction.nucleotide.sequence', 'V.gene',
+    'J.gene'.
+    :param delim: str - The delimiter of the datafile.
+    :return:
+    """
     with open(filename, 'r') as in_file:
-        reader = csv.reader(in_file, delimiter='\t')
+        reader = csv.reader(in_file, delimiter=delim)
+        header = next(reader)
+        seq_index, v_index, j_index = str(header.index('Junction.nucleotide.sequence')), \
+            str(header.index('V.gene')), str(header.index('J.gene'))
+
+    command = ['olga-compute_pgen', '-i', filename, '--lines_to_skip', '1', '--mouseTRB', '-o', 'pgen_output.tsv',
+               '--seq_in', seq_index, '--v_in', v_index, '--j_in', j_index]
+    subprocess.run(command)
+
+    with open('pgen_output.tsv', 'r') as pgen_file:
+        pgen_reader = csv.reader(pgen_file, delimiter='\t')
+        generation_probabilities = []
+        for line in pgen_reader:
+            generation_probabilities.append(line[1])
+            
+    with open(filename, 'r') as in_file:
+        reader = csv.reader(in_file, delimiter=delim)
         header = next(reader)
         new_header = [e for e in header]
         index = header.index('Junction.nucleotide.sequence')
-        new_header.insert(index+1, 'Generation.probability')
+        new_header.insert(index + 1, 'Generation.probability')
         new_header = '\t'.join(new_header) + '\n'
         outfile = [new_header]
         for line in reader:
-            cdr3 = line[header.index('Junction.nucleotide.sequence')]
-            p = pgen.compute_nt_CDR3_pgen(cdr3)
-            new_line = [e for e in line]
-            new_line.insert(index+1, str(p))
-            new_line = '\t'.join(new_line) + '\n'
-            outfile.append(new_line)
-    filename = filename.rstrip('.tsv') + ' (1).tsv'
+            try:
+                pgen = generation_probabilities[reader.line_num - 2]
+            except IndexError:
+                break
+            line.insert(index + 1, pgen)
+            outfile.append('\t'.join(line) + '\n')
+    filename = filename.rstrip('.tsv') + '_with_pgens.tsv'
     with open(filename, 'w') as out_file:
         out_file.writelines(outfile)
     return
 
 
 def check_thread_status(t, filename):
+    """A small function to run an animation in parallel while the generation probabilities are being calculated.
+    This is to make sure the script has not stopped, since the pgen calculations can take a long time depending on the
+    input datafile.
+    :param t: Thread - A Thread object that is running the function that calculates generation probabilities
+    :param filename: str - File name of the datafile for which Pgens are being calculated.
+    """
     coding_pass = False
     while ~coding_pass:
         animate()
@@ -53,17 +72,13 @@ def check_thread_status(t, filename):
 
 if __name__ == '__main__':
     files = [
-        '..\\data_files\\TdTKO\\filtered_data\\filtered_data_exp_TdTKO.tsv',
-        # '..\\data_files\\Normal\\filtered_data\\filtered_data_exp_Normal.tsv',
-        # '..\\data_files\\TdTKO\\filtered_data\\filtered_data_gen_TdTKO.tsv',
-        # '..\\data_files\\Normal\\filtered_data\\filtered_data_gen_Normal.tsv'
+        '..\\data_files\\Normal\\filtered_data\\filtered_data_exp_Normal_v2.tsv',
     ]
     processes = []
-    pgen = load_olga_mouse_trb_pgen_model()
     for filepath in files:
         file = filepath.split("\\")[-1]
         print(f'Starting to calculate generation probabilities for sequences in file \"{file}\"')
-        thread = threading.Thread(target=calculate_pgen, args=(filepath, pgen))
+        thread = threading.Thread(target=calculate_pgen, args=(filepath, '\t'))
         loading_thread = threading.Thread(target=check_thread_status, args=(thread, file))
         processes.append(loading_thread)
         thread.start()

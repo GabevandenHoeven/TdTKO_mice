@@ -61,9 +61,9 @@ with open('../../data_files/mus_musculus_vdj_gene_segments.tsv', 'r') as file:
 #     'C:\\Users\\gabev\\PycharmProjects\\MRP_TdTKO_mice\\data_files\\B6\\filtered_data\\filtered_data_Normal.tsv'
 # ]
 #
-# for file in files:
+# for data in files:
 #     c = 0
-#     with open(file, 'r') as f:
+#     with open(data, 'r') as f:
 #         reader = csv.reader(f, delimiter='\t')
 #         header = next(reader)
 #         for line in reader:

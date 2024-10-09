@@ -324,8 +324,8 @@ def plot_vj_usage_with_without_d(xticks, y_values, dim, title, labels, outfile, 
     plt.xlabel(labels[0])
     plt.ylabel(labels[1])
 
-    plt.bar(xticks - 0.2, y_values[2], color='blue', label='No inferred D segment', width=0.4)
-    plt.bar(xticks + 0.2, y_values[3], color='orange', label='Has an inferred D segment', width=0.4)
+    plt.bar(xticks - 0.2, y_values[0], color='green', label='Inferred D segment = 0', width=0.4)
+    plt.bar(xticks + 0.2, y_values[1], color='cyan', label='Inferred D segment > 0', width=0.4)
 
     plt.subplots_adjust(bottom=0.15)
     plt.legend()
@@ -376,7 +376,7 @@ def plot_confidence_interval(xticks, values, means, confidence_intervals, colour
     plt.scatter(xs, ys, color=colour, s=10, label=label)
 
 
-def plot_deletions_conf_int(xticks, sorted_values, dim, title, labels, outfile, tick_labels):
+def plot_deletions_conf_int(xticks, sorted_values,  title, labels, outfile, tick_labels, dim=(6.4, 4.8)):
     plt.figure(figsize=dim)
     # xticks = numpy.arange(1, len(tick_labels) + 1)
     plt.xticks(xticks, labels=tick_labels)
@@ -399,7 +399,7 @@ def plot_deletions_conf_int(xticks, sorted_values, dim, title, labels, outfile, 
         mean, conf_int = calculate_confidence_intervals(sorted_values[1][i])
         means.append(mean)
         confidence_intervals.append(conf_int)
-    plot_confidence_interval(xticks, sorted_values[1], means, confidence_intervals, 'orange', 'Normal')
+    plot_confidence_interval(xticks, sorted_values[1], means, confidence_intervals, 'orange', 'WT')
     plt.legend()
     plt.savefig(outfile)
     return
@@ -434,7 +434,7 @@ def plot_vj_usage_per_incidence(x_values, y_values, title, labels, outfile):
     plt.plot([n / len(x_values[0]) for n in x_values[0]], y_values[0], color='blue', label='TdTKO')
     plt.scatter([n / len(x_values[0]) for n in x_values[0]], y_values[0], color='blue', s=10)
 
-    plt.plot([n / len(x_values[1]) for n in x_values[1]], y_values[1], color='orange', label='Normal')
+    plt.plot([n / len(x_values[1]) for n in x_values[1]], y_values[1], color='orange', label='WT')
     plt.scatter([n / len(x_values[1]) for n in x_values[1]], y_values[1], color='orange', s=10)
     plt.legend()
     plt.savefig(outfile)
@@ -456,7 +456,35 @@ def plot_high_low_vj_usage(xticks, y_values, dim, title, labels, outfile, tick_l
     return
 
 
-if __name__ == '__main__':
-    # plot_supporting_reads()
-    # number_of_seq_per_incidence()
-    print()
+def plot_pgens(data, pos, title, labels, outfile):
+    plt.figure()
+    plt.title(title)
+    plt.xlabel(labels[0])
+    plt.ylabel(labels[1])
+    plt.yscale('log')
+    width = [0.05]*len(data)
+    plt.boxplot(data, positions=pos, widths=width, showfliers=False, showmeans=True, meanline=True,
+                vert=True, manage_ticks=False)
+    plt.axhline(0, 0.5, 0.5, linestyle='dashed', color='green', label='Mean')
+    plt.axhline(0, 0.5, 0.5, color='orange', label='Median')
+    # plt.axhline()
+    plt.legend()
+    plt.savefig(outfile)
+    plt.close()
+    return
+
+
+def plot_distribute_pgens(x_values, pos, title, labels, outfile):
+    plt.figure()
+    plt.title(title)
+    plt.xlabel(labels[0])
+    plt.ylabel(labels[1])
+    plt.yscale('log')
+    plt.boxplot(x_values, positions=pos, showfliers=False, showmeans=True, meanline=True, vert=True)
+    plt.axvline(0, 2.5e-07, 2.5e-07, linestyle='dashed', color='green', label='Mean')
+    plt.axvline(0, 2.5e-07, 2.5e-07, color='orange', label='Median')
+    plt.axhline(1.0e-40, 0, 0)
+    plt.legend()
+    plt.savefig(outfile)
+    plt.close()
+    return
