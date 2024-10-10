@@ -1,2 +1,14 @@
-/data_files
-/img/Additional_images
+/data_files/TdTKO/generated_data_files/*
+/data_files/TdTKO/filtered_data/*
+/data_files/TdTKO/GSM6893351_Mandl-01-122016.tsv
+/data_files/TdTKO/GSM6893356_Mandl-20-042016.tsv
+/data_files/TdTKO/GSM6893359_Mandl-25-112016.tsv
+/data_files/TdTKO/GSM6893360_Mandl-4-052016.tsv
+/data_files/TdTKO/GSM6893362_Mandl-AF-human-07082016.tsv
+/data_files/WT/generated_data_files/*
+/data_files/WT/filtered_data/*
+/data_files/WT/GSM6893365_RP-Mandl-05-M69&M70.tsv
+/data_files/WT/GSM6893366_RP-Mandl-06-M71&M72.tsv
+/data_files/WT/GSM6893367_RP-Mandl-07-M73&M74.tsv
+/data_files/WT/GSM6893369_RP-Mandl-28-M65&M66.tsv
+/data_files/WT/GSM6893370_RP-Mandl-30-M67&M68.tsv
