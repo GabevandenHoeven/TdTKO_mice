@@ -2,10 +2,11 @@ import csv
 
 
 def check_true_d_segment(filename: str, delim='\t'):
-    """
+    """This function opens a datafile of synthetic sequences and compares the inferred D segment length to the true
+    D segment length
 
-    :param filename:
-    :param delim:
+    :param filename: str - The filepath of the datafile.
+    :param delim: str - The delimiter of the datafile. Default is tab ('\t')
     :return:
     """
     count_correct_d_segment = 0
@@ -23,10 +24,10 @@ def check_true_d_segment(filename: str, delim='\t'):
 
 if __name__ == '__main__':
     files = [
-        '..\\..\\data_files\\TdTKO\\filtered_data\\filtered_data_gen_TdTKO_v4.tsv',
-        '..\\..\\data_files\\Normal\\filtered_data\\filtered_data_gen_Normal_v4.tsv',
-        '..\\..\\data_files\\TdTKO\\filtered_data\\filtered_data_gen_TdTKO_v3.tsv',
-        '..\\..\\data_files\\Normal\\filtered_data\\filtered_data_gen_Normal_v3.tsv'
+        '..\\..\\data_files\\TdTKO\\filtered_data\\filtered_data_gen_TdTKO_v1.tsv',
+        '..\\..\\data_files\\WT\\filtered_data\\filtered_data_gen_WT_v1.tsv',
+        '..\\..\\data_files\\TdTKO\\filtered_data\\filtered_data_gen_TdTKO_v2.tsv',
+        '..\\..\\data_files\\WT\\filtered_data\\filtered_data_gen_WT_v2.tsv'
     ]
     for f in files:
         fn = f.split('\\')[-1]

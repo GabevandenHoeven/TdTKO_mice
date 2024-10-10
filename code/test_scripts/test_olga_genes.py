@@ -12,7 +12,7 @@ j_cdr3 = ['TTTGCAAACACAGAAGTCTTCTTT', 'TTTGCAAACTCCGACTACACCTTC', 'AGAATTCTGGAAA
           'GGTTAACCAAGACACCCAGTACTTT', '', 'GGAGCTCCTATGAACAGTACTTC']
 d_cdr3 = ['TCCCGGGACAGGGGGCGCCC', 'TCCCGGGACTGGGGGGGCGCCC']
 
-with open('../../data_files/mus_musculus_vdj_gene_segments.tsv', 'r') as file:
+with open('..\\..\\data_files\\mus_musculus_vdj_gene_segments.tsv', 'r') as file:
     reader = csv.reader(file, delimiter='\t')
     for line in reader:
         gene_id = line[1]
@@ -55,19 +55,3 @@ with open('../../data_files/mus_musculus_vdj_gene_segments.tsv', 'r') as file:
                     olga_index = d_cdr3.index(s)
                     print(f'olga_id:{olga_index}\tgene_id:{gene_id}')
                     break
-
-# files = [
-#     'C:\\Users\\gabev\\PycharmProjects\\MRP_TdTKO_mice\\data_files\\TdTKo\\filtered_data\\filtered_data_TdTKO.tsv',
-#     'C:\\Users\\gabev\\PycharmProjects\\MRP_TdTKO_mice\\data_files\\B6\\filtered_data\\filtered_data_Normal.tsv'
-# ]
-#
-# for data in files:
-#     c = 0
-#     with open(data, 'r') as f:
-#         reader = csv.reader(f, delimiter='\t')
-#         header = next(reader)
-#         for line in reader:
-#             vgene = line[header.index('V.gene')]
-#             if vgene == 'TRBV31*01':
-#                 c += 1
-#     print(c)

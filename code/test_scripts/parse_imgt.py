@@ -5,7 +5,7 @@ import re
 def parse_imgt_webpage(url):
     """
     """
-    # urllib.request.urlretrieve(url, 'C:\\Users\\gabev\\PycharmProjects\\MRP\\data_files\\temp.html')
+    urllib.request.urlretrieve(url, '..\\..\\data_files\\temp.html')
     with open('..\\..\\data_files\\temp.html', 'r') as file:
         ls = ['V-REGION', 'D-REGION', 'J-REGION']
         results = {}
@@ -29,5 +29,4 @@ def parse_imgt_webpage(url):
 
 
 if __name__ == '__main__':
-    print(re.search('TRB[VDJ][0-9\-\*]+', 'TRBJ1-4*01'))
-    # parse_imgt_webpage(url='https://www.imgt.org/ligmdb/view.action?id=IMGT000132')
+    parse_imgt_webpage(url='https://www.imgt.org/ligmdb/view.action?id=IMGT000132')

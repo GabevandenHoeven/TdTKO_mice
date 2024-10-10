@@ -3,8 +3,8 @@ import csv
 
 def check_insertions(filename: str, delim='\t'):
     """Checks if the sequences in the data contain insertions.
-    :param filename:
-    :param delim: str
+    :param filename: str - A filepath to a datafile with CDR3 nucleotide sequences.
+    :param delim: str - The delimiter of the datafile. default is tab ('\t')
     :return:
     """
     insertion_count = 0
@@ -27,12 +27,12 @@ if __name__ == '__main__':
     files = [
         '..\\..\\data_files\\TdTKO\\filtered_data\\filtered_data_exp_TdTKO_v1.tsv',
         '..\\..\\data_files\\TdTKO\\filtered_data\\filtered_data_exp_TdTKO_v2.tsv',
-        '..\\..\\data_files\\Normal\\filtered_data\\filtered_data_exp_Normal_v1.tsv',
-        '..\\..\\data_files\\Normal\\filtered_data\\filtered_data_exp_Normal_v2.tsv',
+        '..\\..\\data_files\\WT\\filtered_data\\filtered_data_exp_WT_v1.tsv',
+        '..\\..\\data_files\\WT\\filtered_data\\filtered_data_exp_WT_v2.tsv',
         '..\\..\\data_files\\TdTKO\\filtered_data\\filtered_data_gen_TdTKO_v1.tsv',
         '..\\..\\data_files\\TdTKO\\filtered_data\\filtered_data_gen_TdTKO_v2.tsv',
-        '..\\..\\data_files\\Normal\\filtered_data\\filtered_data_gen_Normal_v1.tsv',
-        '..\\..\\data_files\\Normal\\filtered_data\\filtered_data_gen_Normal_v2.tsv'
+        '..\\..\\data_files\\WT\\filtered_data\\filtered_data_gen_WT_v1.tsv',
+        '..\\..\\data_files\\WT\\filtered_data\\filtered_data_gen_WT_v2.tsv'
     ]
     for file in files:
         insertions, lines = check_insertions(file)
