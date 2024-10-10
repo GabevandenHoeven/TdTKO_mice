@@ -4,48 +4,8 @@ from utils import calculate_confidence_intervals
 import scipy.stats as stats
 
 
-def plot_supporting_reads():
-    """
-    """
-    with open('count_reads.txt', 'r') as file:
-        header = next(file)
-        x_points = []
-        y_points = []
-        for row in file:
-            x_points.append(int(row.split(': ')[0]))
-            y_points.append(int(row.split(': ')[1].rstrip('\n')))
-        x_ = [1, 3, 5, 8, 10, 15, 20, 25, 50, 75, 100, 150, 200, 250, 300]
-        y_ = [y_points[e] for e in x_]
-
-        plt.figure()
-        plt.plot(x_, y_)
-        plt.title('Number of CDR3 sequences supported by number of reads')
-        plt.ylabel('Sequences')
-        plt.xlabel('Reads')
-        plt.savefig('sequences_per_reads.png')
-        plt.close()
-
-
 def plot_fractions_ins(x_points, y_points, title, labels):
     plt.figure()
-
-    # old ----------------------------------------------------------------------------------
-    # x_points = [0, 5, 10, 15, 20, 25, 50]
-    # y_points = [47.94, 21.18, 13.18, 8.90, 6.40, 4.84, 1.89]
-    # plt.plot(x_points, y_points, label='TdTKO')
-
-    # y_points = [94.29, 39.41, 20.10, 11.39, 6.71, 4.09, 0.54]
-    # plt.plot(x_points, y_points, label='mandl-07')
-
-    # y_points = [94.11, 36.93, 18.45, 10.68, 6.61, 4.28, 0.78]
-    # plt.plot(x_points, y_points, label='WT')
-    # before p-nt -------------------------------------------------------------------------
-    # x_points = [0, 1, 2, 5, 10, 15, 20, 25, 50]
-    # y_points = [47.94, 36.92, 35.54, 32.07, 27.96, 25.08, 22.90, 21.25, 16.33] TdTKO
-    # y_points = [94.11, 92.65, 91.87, 90.33, 88.60, 86.98, 85.33, 83.66, 74.89] WT
-    # -------------------------------------------------------------------------------------
-    # after p-nt TdTKO: [13.31, 13.31, 12.41, 10.72, 8.75, 7.41, 6.39, 5.61, 3.75]
-    # after p-nt WT: [86.75, 86.75, 85.49, 83.25, 80.69, 78.25, 75.78, 73.24, 60.40]
 
     plt.plot(x_points, y_points[0], label=labels[0], color='blue')
     plt.scatter(x_points, y_points[0], color='blue', s=10)
@@ -346,14 +306,10 @@ def number_of_seq_per_incidence(x, y):
     plt.ylabel('Percentage of sequences (%)')
     plt.title('Percentage of sequences per incidence')
     plt.legend()
-    plt.savefig('C:\\Users\\gabev\\PycharmProjects\\MRP_TdTKO_mice\\img\\number_of_seq_per_incidence.png')
+    plt.savefig('..\\img\\number_of_seq_per_incidence.png')
 
 
 def plot_confidence_interval(xticks, values, means, confidence_intervals, colour, label, line_width=0.25):
-    # mean = statistics.mean(values)
-    # stdev = statistics.stdev(values)
-    # confidence_interval = z * stdev / math.sqrt(len(values))
-    # x = [[i + 1] * len(l[i]) for i in range(len(l))]
     for i in range(len(confidence_intervals)):
         left = xticks[i] - line_width / 2
         top = means[i] - confidence_intervals[i]
@@ -378,7 +334,6 @@ def plot_confidence_interval(xticks, values, means, confidence_intervals, colour
 
 def plot_deletions_conf_int(xticks, sorted_values,  title, labels, outfile, tick_labels, dim=(6.4, 4.8)):
     plt.figure(figsize=dim)
-    # xticks = numpy.arange(1, len(tick_labels) + 1)
     plt.xticks(xticks, labels=tick_labels)
     plt.title(title)
     plt.xlabel(labels[0])
@@ -400,26 +355,6 @@ def plot_deletions_conf_int(xticks, sorted_values,  title, labels, outfile, tick
         means.append(mean)
         confidence_intervals.append(conf_int)
     plot_confidence_interval(xticks, sorted_values[1], means, confidence_intervals, 'orange', 'WT')
-    plt.legend()
-    plt.savefig(outfile)
-    return
-
-
-def plot_d_length_with_confidence_intervals(x_values:list, y_values, dim, title, labels, outfile):
-    plt.figure(figsize=dim)
-    plt.title(title)
-    plt.xlabel(labels[0])
-    plt.ylabel(labels[1])
-    
-    means = []
-    confidence_intervals = []
-    for i in range(len(x_values[0])):
-        x = x_values[0][i]
-        y = y_values[0][i]
-        mean, conf_int = calculate_confidence_intervals(y)
-        means.append(mean)
-        confidence_intervals.append(conf_int)
-    plot_confidence_interval(x, y, means, confidence_intervals, 'blue', 'TdTKO')
     plt.legend()
     plt.savefig(outfile)
     return
@@ -467,7 +402,6 @@ def plot_pgens(data, pos, title, labels, outfile):
                 vert=True, manage_ticks=False)
     plt.axhline(0, 0.5, 0.5, linestyle='dashed', color='green', label='Mean')
     plt.axhline(0, 0.5, 0.5, color='orange', label='Median')
-    # plt.axhline()
     plt.legend()
     plt.savefig(outfile)
     plt.close()
