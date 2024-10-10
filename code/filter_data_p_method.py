@@ -127,14 +127,14 @@ if __name__ == '__main__':
     refs = read_rtcr_refs()
 
     files = [
-        "..\\data_files\\Normal\\GSM6893369_RP-Mandl-28-M65&M66.tsv",
-        "..\\data_files\\Normal\\GSM6893370_RP-Mandl-30-M67&M68.tsv",
-        "..\\data_files\\Normal\\GSM6893365_RP-Mandl-05-M69&M70.tsv",
-        "..\\data_files\\Normal\\GSM6893366_RP-Mandl-06-M71&M72.tsv",
-        "..\\data_files\\Normal\\GSM6893367_RP-Mandl-07-M73&M74.tsv"
+        "..\\data_files\\WT\\GSM6893369_RP-Mandl-28-M65&M66.tsv",
+        "..\\data_files\\WT\\GSM6893370_RP-Mandl-30-M67&M68.tsv",
+        "..\\data_files\\WT\\GSM6893365_RP-Mandl-05-M69&M70.tsv",
+        "..\\data_files\\WT\\GSM6893366_RP-Mandl-06-M71&M72.tsv",
+        "..\\data_files\\WT\\GSM6893367_RP-Mandl-07-M73&M74.tsv"
     ]
 
-    new_filename = f'..\\data_files\\Normal\\filtered_data\\filtered_data_exp_Normal_v2.tsv'
+    new_filename = f'..\\data_files\\WT\\filtered_data\\filtered_data_exp_WT_v2.tsv'
     b6 = 'C57BL/6Â '
     pheno = 'CD4+'
     filter_tcrb_data(refs, files, 1, 64, b6, pheno, '\t', new_filename)
@@ -152,30 +152,30 @@ if __name__ == '__main__':
 
     pheno = 'Generated'
     files = [
-        f'..\\data_files\\Normal\\generated_Mgen1_Normal.tsv',
-        f'..\\data_files\\Normal\\generated_Mgen2_Normal.tsv',
-        f'..\\data_files\\Normal\\generated_Mgen3_Normal.tsv',
-        f'..\\data_files\\Normal\\generated_Mgen4_Normal.tsv',
-        f'..\\data_files\\Normal\\generated_Mgen5_Normal.tsv',
-        f'..\\data_files\\Normal\\generated_Mgen6_Normal.tsv',
-        f'..\\data_files\\Normal\\generated_Mgen7_Normal.tsv',
-        f'..\\data_files\\Normal\\generated_Mgen8_Normal.tsv',
-        f'..\\data_files\\Normal\\generated_Mgen9_Normal.tsv',
-        f'..\\data_files\\Normal\\generated_Mgen10_Normal.tsv',
-        f'..\\data_files\\Normal\\generated_Mgen11_Normal.tsv',
-        f'..\\data_files\\Normal\\generated_Mgen12_Normal.tsv',
-        f'..\\data_files\\Normal\\generated_Mgen13_Normal.tsv',
-        f'..\\data_files\\Normal\\generated_Mgen14_Normal.tsv',
-        f'..\\data_files\\Normal\\generated_Mgen15_Normal.tsv',
-        f'..\\data_files\\Normal\\generated_Mgen16_Normal.tsv',
-        f'..\\data_files\\Normal\\generated_Mgen17_Normal.tsv',
-        f'..\\data_files\\Normal\\generated_Mgen18_Normal.tsv',
-        f'..\\data_files\\Normal\\generated_Mgen19_Normal.tsv',
-        f'..\\data_files\\Normal\\generated_Mgen20_Normal.tsv'
+        f'..\\data_files\\WT\\generated_Mgen1_WT.tsv',
+        f'..\\data_files\\WT\\generated_Mgen2_WT.tsv',
+        f'..\\data_files\\WT\\generated_Mgen3_WT.tsv',
+        f'..\\data_files\\WT\\generated_Mgen4_WT.tsv',
+        f'..\\data_files\\WT\\generated_Mgen5_WT.tsv',
+        f'..\\data_files\\WT\\generated_Mgen6_WT.tsv',
+        f'..\\data_files\\WT\\generated_Mgen7_WT.tsv',
+        f'..\\data_files\\WT\\generated_Mgen8_WT.tsv',
+        f'..\\data_files\\WT\\generated_Mgen9_WT.tsv',
+        f'..\\data_files\\WT\\generated_Mgen10_WT.tsv',
+        f'..\\data_files\\WT\\generated_Mgen11_WT.tsv',
+        f'..\\data_files\\WT\\generated_Mgen12_WT.tsv',
+        f'..\\data_files\\WT\\generated_Mgen13_WT.tsv',
+        f'..\\data_files\\WT\\generated_Mgen14_WT.tsv',
+        f'..\\data_files\\WT\\generated_Mgen15_WT.tsv',
+        f'..\\data_files\\WT\\generated_Mgen16_WT.tsv',
+        f'..\\data_files\\WT\\generated_Mgen17_WT.tsv',
+        f'..\\data_files\\WT\\generated_Mgen18_WT.tsv',
+        f'..\\data_files\\WT\\generated_Mgen19_WT.tsv',
+        f'..\\data_files\\WT\\generated_Mgen20_WT.tsv'
     ]
-    # new_filename = f'..\\data_files\\Normal\\filtered_data\\filtered_data_gen_Normal_v2.tsv'
-    # b6 = 'C57BL/6Â '
-    # filter_tcrb_generated_data(refs, files, 64, b6, '\t', new_filename)
+    new_filename = f'..\\data_files\\WT\\filtered_data\\filtered_data_gen_WT_v2.tsv'
+    b6 = 'C57BL/6Â '
+    filter_tcrb_generated_data(refs, files, 64, b6, '\t', new_filename)
 
     files = [
         f'..\\data_files\\TdTKO\\generated_Mgen1_TdTKO.tsv',
@@ -199,10 +199,10 @@ if __name__ == '__main__':
         f'..\\data_files\\TdTKO\\generated_Mgen19_TdTKO.tsv',
         f'..\\data_files\\TdTKO\\generated_Mgen20_TdTKO.tsv'
     ]
-    # new_filename = f'..\\data_files\\TdTKO\\filtered_data\\filtered_data_gen_TdTKO_v2.tsv'
-    # tdt = 'TdT-/-'
-    # filter_tcrb_generated_data(refs, files, 64, tdt, '\t', new_filename)
-    #
+    new_filename = f'..\\data_files\\TdTKO\\filtered_data\\filtered_data_gen_TdTKO_v2.tsv'
+    tdt = 'TdT-/-'
+    filter_tcrb_generated_data(refs, files, 64, tdt, '\t', new_filename)
+
     # in_filename = '..\\data_files\\TdTKO\\filtered_data\\filtered_data_gen_TdTKO_v3.tsv'
     # out_filename = '..\\data_files\\TdTKO\\filtered_data\\gen_data_insertions_v3.tsv'
     # filter_sequences_with_insertions(in_filename, out_filename)

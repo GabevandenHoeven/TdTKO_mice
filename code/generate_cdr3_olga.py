@@ -71,7 +71,7 @@ if __name__ == '__main__':
                                       f'Generated\tTdTKO\n')
 
     for mouse in range(1, n_mice + 1):
-        filename = f'..\\data_files\\Normal\\generated_Mgen{mouse}_WT.tsv'
+        filename = f'..\\data_files\\WT\\generated_Mgen{mouse}_WT.tsv'
         with open(filename, 'w') as outfile:
             outfile.write(
                 'Column1\tmouse\tV.gene\tD.gene\tJ.gene\tJunction.nucleotide.sequence\tD.used\tphenotype\tstrain\n')

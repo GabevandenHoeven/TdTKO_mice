@@ -5,7 +5,7 @@ from utils import get_unique_sequences_per_mouse_from_file
 if __name__ == '__main__':
     files = [
         '..\\data_files\\TdTKO\\filtered_data\\filtered_data_exp_TdTKO_v2.tsv',
-        '..\\data_files\\Normal\\filtered_data\\filtered_data_exp_Normal_v2.tsv'
+        '..\\data_files\\WT\\filtered_data\\filtered_data_exp_WT_v2.tsv'
     ]
     mice_per_file = [13, 10]
     x = []
@@ -32,13 +32,11 @@ if __name__ == '__main__':
         v.append(v_del)
         j.append(j_del)
 
-    plot_line_and_scatter_per_incidence(x, v, ['TdTKO', 'Normal'],
+    plot_line_and_scatter_per_incidence(x, v, ['TdTKO', 'WT'],
                                         ['Fraction of incidence', 'Mean deleted nucleotides (nt)'],
                                         'Mean deleted V gene nucleotides per incidence',
-                                        'C:\\Users\\gabev\\PycharmProjects\\MRP_TdTKO_mice\\img'
-                                        '\\Mean_v_del_per_incidence.png')
-    plot_line_and_scatter_per_incidence(x, j, ['TdTKO', 'Normal'],
+                                        '..\\img\\Mean_v_del_per_incidence.png')
+    plot_line_and_scatter_per_incidence(x, j, ['TdTKO', 'WT'],
                                         ['Fraction of incidence', 'Mean deleted nucleotides (nt)'],
                                         'Mean deleted J gene nucleotides per incidence',
-                                        'C:\\Users\\gabev\\PycharmProjects\\MRP_TdTKO_mice\\img'
-                                        '\\Mean_j_del_per_incidence.png')
+                                        '..\\img\\Mean_j_del_per_incidence.png')

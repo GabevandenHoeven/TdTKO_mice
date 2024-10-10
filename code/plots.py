@@ -38,14 +38,14 @@ def plot_fractions_ins(x_points, y_points, title, labels):
     # plt.plot(x_points, y_points, label='mandl-07')
 
     # y_points = [94.11, 36.93, 18.45, 10.68, 6.61, 4.28, 0.78]
-    # plt.plot(x_points, y_points, label='Normal')
+    # plt.plot(x_points, y_points, label='WT')
     # before p-nt -------------------------------------------------------------------------
     # x_points = [0, 1, 2, 5, 10, 15, 20, 25, 50]
     # y_points = [47.94, 36.92, 35.54, 32.07, 27.96, 25.08, 22.90, 21.25, 16.33] TdTKO
-    # y_points = [94.11, 92.65, 91.87, 90.33, 88.60, 86.98, 85.33, 83.66, 74.89] Normal
+    # y_points = [94.11, 92.65, 91.87, 90.33, 88.60, 86.98, 85.33, 83.66, 74.89] WT
     # -------------------------------------------------------------------------------------
     # after p-nt TdTKO: [13.31, 13.31, 12.41, 10.72, 8.75, 7.41, 6.39, 5.61, 3.75]
-    # after p-nt Normal: [86.75, 86.75, 85.49, 83.25, 80.69, 78.25, 75.78, 73.24, 60.40]
+    # after p-nt WT: [86.75, 86.75, 85.49, 83.25, 80.69, 78.25, 75.78, 73.24, 60.40]
 
     plt.plot(x_points, y_points[0], label=labels[0], color='blue')
     plt.scatter(x_points, y_points[0], color='blue', s=10)
@@ -69,7 +69,7 @@ def plot_sequence_length_read_count(x_points, y_points, label):
     plt.xlabel('Junction sequence length (nt)')
     plt.ylabel('Read count')
     plt.legend()
-    plt.savefig(f'C:\\Users\\gabev\\PycharmProjects\\MRP_TdTKO_mice\\img\\Read_count_per_sequence_length_{label}.png')
+    plt.savefig(f'..\\img\\Read_count_per_sequence_length_{label}.png')
     plt.close()
 
 
@@ -90,7 +90,7 @@ def plot_dist_junction_sequence_length(x_points_lists, y_points_lists, labels, a
     plt.ylabel('Percentage of sequences (%)')
     plt.legend()
     plt.savefig(
-        f'C:\\Users\\gabev\\PycharmProjects\\MRP_TdTKO_mice\\img\\Junction_length_distribution_{"-".join(labels)}')
+        f'..\\img\\Junction_length_distribution_{"-".join(labels)}')
     plt.close()
 
 
@@ -126,7 +126,7 @@ def plot_vj_distance_reads(x_points_lists, y_points_lists, labels):
     plt.ylabel('Number of reads')
     plt.legend()
     plt.savefig(
-        f'C:\\Users\\gabev\\PycharmProjects\\MRP_TdTKO_mice\\img\\VJ_distance_distribution_{"-".join(labels)}')
+        f'..\\img\\VJ_distance_distribution_{"-".join(labels)}')
     plt.close()
 
 

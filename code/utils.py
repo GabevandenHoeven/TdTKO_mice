@@ -385,7 +385,7 @@ def read_rtcr_refs():
     return RTCR_ref
 
 
-def reconfigure_header_tdt_normal_data(fn):
+def reconfigure_header_tdt_wt_data(fn):
     """Used to fix the header of the wild type data files, the header was missing a column making it difficult
     to use it to get values from a specific column.
     :param fn: The path of the data that needed to be edited.

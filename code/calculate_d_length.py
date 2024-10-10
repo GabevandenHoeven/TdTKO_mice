@@ -25,9 +25,9 @@ def get_d_length_and_fraction_with_d(data, threshold):
 
 if __name__ == '__main__':
     files = [
-        '..\\data_files\\Normal\\filtered_data\\filtered_data_exp_Normal_v2.tsv',
+        '..\\data_files\\WT\\filtered_data\\filtered_data_exp_WT_v2.tsv',
         '..\\data_files\\TdTKO\\filtered_data\\filtered_data_exp_TdTKO_v2.tsv',
-        # '..\\data_files\\Normal\\gen_data_mess\\filtered_data_gen_Normal_v2.tsv',
+        # '..\\data_files\\WT\\gen_data_mess\\filtered_data_gen_WT_v2.tsv',
         # '..\\data_files\\TdTKO\\gen_data_mess\\filtered_data_gen_TdTKO_v2.tsv'
     ]
     for file in files:

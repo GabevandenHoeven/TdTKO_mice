@@ -98,14 +98,14 @@ if __name__ == '__main__':
     refs = read_rtcr_refs()
 
     files = [
-        "..\\data_files\\Normal\\GSM6893369_RP-Mandl-28-M65&M66.tsv",
-        "..\\data_files\\Normal\\GSM6893370_RP-Mandl-30-M67&M68.tsv",
-        "..\\data_files\\Normal\\GSM6893365_RP-Mandl-05-M69&M70.tsv",
-        "..\\data_files\\Normal\\GSM6893366_RP-Mandl-06-M71&M72.tsv",
-        "..\\data_files\\Normal\\GSM6893367_RP-Mandl-07-M73&M74.tsv"
+        "..\\data_files\\WT\\GSM6893369_RP-Mandl-28-M65&M66.tsv",
+        "..\\data_files\\WT\\GSM6893370_RP-Mandl-30-M67&M68.tsv",
+        "..\\data_files\\WT\\GSM6893365_RP-Mandl-05-M69&M70.tsv",
+        "..\\data_files\\WT\\GSM6893366_RP-Mandl-06-M71&M72.tsv",
+        "..\\data_files\\WT\\GSM6893367_RP-Mandl-07-M73&M74.tsv"
     ]
 
-    new_filename = f'..\\data_files\\Normal\\filtered_data\\filtered_data_exp_Normal_v1_test.tsv'
+    new_filename = f'..\\data_files\\WT\\filtered_data\\filtered_data_exp_WT_v1_test.tsv'
     b6 = 'C57BL/6Â '
     pheno = 'CD4+'
     filter_tcrb_data(refs, files, 1, 64, b6, pheno, '\t', new_filename)

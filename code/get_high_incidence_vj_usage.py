@@ -51,9 +51,9 @@ def incidence_vj_usage(incidence_sequences, segment_labels, index, plot_title, a
 if __name__ == '__main__':
     files = [
         '..\\data_files\\TdTKO\\filtered_data\\filtered_data_exp_TdTKO_v2.tsv',
-        '..\\data_files\\Normal\\filtered_data\\filtered_data_exp_Normal_v2.tsv'
+        '..\\data_files\\WT\\filtered_data\\filtered_data_exp_WT_v2.tsv'
         # '..\\data_files\\TdTKO\\filtered_data\\filtered_data_gen_TdTKO_v2.tsv',
-        # '..\\data_files\\Normal\\filtered_data\\filtered_data_gen_Normal_v2.tsv'
+        # '..\\data_files\\WT\\filtered_data\\filtered_data_gen_WT_v2.tsv'
     ]
     mice_per_file = [13, 10]
     # mice_per_file = [20, 20]

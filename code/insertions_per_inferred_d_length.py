@@ -19,7 +19,7 @@ def get_insertions_per_d(data):
 
 if __name__ == '__main__':
 
-    filename = '..\\data_files\\Normal\\filtered_data\\filtered_data_exp_Normal_v2.tsv'
+    filename = '..\\data_files\\WT\\filtered_data\\filtered_data_exp_WT_v2.tsv'
     filtered_data = get_unique_sequences_from_file(filename)
     insertion_data = get_insertions_per_d(filtered_data)
 

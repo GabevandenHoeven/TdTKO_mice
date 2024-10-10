@@ -17,7 +17,7 @@ def get_pgens_for_d_and_d_less_sequences(data):
 
 
 if __name__ == '__main__':
-    file = '..\\data_files\\Normal\\filtered_data\\filtered_data_exp_Normal_v2 (1).tsv'
+    file = '..\\data_files\\WT\\filtered_data\\filtered_data_exp_WT_v2 (1).tsv'
     filtered_data = get_unique_sequences_from_file(file)
     pgens_d, pgens_no_d = get_pgens_for_d_and_d_less_sequences(filtered_data)
     print('with D segment')

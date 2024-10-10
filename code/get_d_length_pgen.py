@@ -21,7 +21,7 @@ def get_d_length_and_pgen(data):
 
 
 if __name__ == '__main__':
-    file = '..\\data_files\\Normal\\filtered_data\\filtered_data_exp_Normal_v2 (1).tsv'
+    file = '..\\data_files\\WT\\filtered_data\\filtered_data_exp_WT_v2 (1).tsv'
     filtered_data = get_unique_sequences_from_file(file)
     results = get_d_length_and_pgen(filtered_data)
     x = [d for d in sorted(results.keys())]

@@ -6,7 +6,7 @@ from utils import get_unique_sequences_per_mouse_from_file
 if __name__ == '__main__':
     files = [
         '..\\data_files\\TdTKO\\filtered_data\\filtered_data_exp_TdTKO_v2.tsv',
-        '..\\data_files\\Normal\\filtered_data\\filtered_data_exp_Normal_v2.tsv'
+        '..\\data_files\\WT\\filtered_data\\filtered_data_exp_WT_v2.tsv'
     ]
     mice_per_file = [13, 10]
     # There are 13 mice in data 0 from 'files' and 10 in data 1
@@ -30,8 +30,7 @@ if __name__ == '__main__':
     plot_line_and_scatter_per_incidence(x, y, ['TdTKO', 'WT'],
                                         ['Fraction of incidence', 'Inferred D-segment length (nt)'],
                                         'Mean inferred D-length per incidence',
-                                        'C:\\Users\\gabev\\PycharmProjects\\MRP_TdTKO_mice\\img\\'
-                                        'Mean_inferred_D_length_per_incidence.png')
+                                        '..\\img\\Mean_inferred_D_length_per_incidence.png')
 
     x = []
     y = []
@@ -44,8 +43,7 @@ if __name__ == '__main__':
     plot_line_and_scatter_per_incidence(x, y, ['TdTKO', 'WT'],
                                         ['Fraction of incidence', 'Percentage of sequences (%)'],
                                         'Inferred D-length = 0 nt',
-                                        'C:\\Users\\gabev\\PycharmProjects\\MRP_TdTKO_mice\\img\\'
-                                        'Fraction_no_D_per_incidence.png')
+                                        '..\\img\\Fraction_no_D_per_incidence.png')
 
     x = []
     y = []
@@ -58,5 +56,4 @@ if __name__ == '__main__':
     plot_line_and_scatter_per_incidence(x, y, ['TdTKO', 'WT'],
                                         ['Fraction of incidence', 'Percentage of sequences (%)'],
                                         'Inferred D-length <= 2 nt',
-                                        'C:\\Users\\gabev\\PycharmProjects\\MRP_TdTKO_mice\\img\\'
-                                        'Fraction_max_2nt_D_per_incidence.png')
+                                        '..\\img\\Fraction_max_2nt_D_per_incidence.png')

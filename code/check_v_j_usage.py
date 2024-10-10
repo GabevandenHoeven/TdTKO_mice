@@ -33,7 +33,7 @@ def check_vj_usage(data):
 if __name__ == '__main__':
     files = [
         '..\\data_files\\TdTKO\\filtered_data\\filtered_data_exp_TdTKO_v2.tsv',
-        '..\\data_files\\Normal\\filtered_data\\filtered_data_exp_Normal_v2.tsv',
+        '..\\data_files\\WT\\filtered_data\\filtered_data_exp_WT_v2.tsv',
     ]
     v_list = []
     j_list = []

@@ -57,7 +57,7 @@ def get_fraction_per_read_threshold_old(file: str, thresholds: list):
 if __name__ == '__main__':
     files = [
         '..\\data_files\\TdTKO\\filtered_data\\filtered_data_exp_TdTKO_v2.tsv',
-        '..\\data_files\\Normal\\filtered_data\\filtered_data_exp_Normal_v2.tsv',
+        '..\\data_files\\WT\\filtered_data\\filtered_data_exp_WT_v2.tsv',
     ]
     thres = [1, 2, 3, 5, 10, 15, 20, 25, 50]
     y_points = []
@@ -73,7 +73,7 @@ if __name__ == '__main__':
 
     files = [
         '..\\data_files\\TdTKO\\filtered_data\\filtered_data_exp_TdTKO_v1_test.tsv',
-        '..\\data_files\\Normal\\filtered_data\\filtered_data_exp_Normal_v1_test.tsv',
+        '..\\data_files\\WT\\filtered_data\\filtered_data_exp_WT_v1_test.tsv',
     ]
     y_points = []
     for file in files:

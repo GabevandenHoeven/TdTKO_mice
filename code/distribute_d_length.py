@@ -53,7 +53,7 @@ if __name__ == '__main__':
     means = []
     data = []
     files = ['..\\data_files\\TdTKO\\filtered_data\\filtered_data_exp_TdTKO_v2.tsv',
-             '..\\data_files\\Normal\\filtered_data\\filtered_data_exp_Normal_v2.tsv'
+             '..\\data_files\\WT\\filtered_data\\filtered_data_exp_WT_v2.tsv'
              ]
     for file in files:
         filtered_data = get_unique_sequences_from_file(file)

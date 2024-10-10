@@ -21,8 +21,8 @@ def calculate_mean_pgen_from_file(filename, delim='\t'):
 
 if __name__ == '__main__':
     files = [
-        'pgen-out_high_incidence_filtered_data_exp_Normal_v2 (1).tsv',
-        'pgen-out_low_incidence_filtered_data_exp_Normal_v2 (1).tsv',
+        'pgen-out_high_incidence_filtered_data_exp_WT_v2 (1).tsv',
+        'pgen-out_low_incidence_filtered_data_exp_WT_v2 (1).tsv',
     ]
     for file in files:
         mean = calculate_mean_pgen_from_file(file)

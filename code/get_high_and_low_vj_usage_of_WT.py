@@ -4,7 +4,7 @@ from plots import plot_high_low_vj_usage
 import numpy
 
 if __name__ == '__main__':
-    file = '..\\data_files\\Normal\\filtered_data\\filtered_data_exp_Normal_v2.tsv'
+    file = '..\\data_files\\WT\\filtered_data\\filtered_data_exp_WT_v2.tsv'
 
     mice_in_file = 10
     v_list = []

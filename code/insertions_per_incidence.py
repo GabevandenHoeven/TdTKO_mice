@@ -6,9 +6,9 @@ from utils import get_unique_sequences_per_mouse_from_file
 if __name__ == '__main__':
     files = [
         '..\\data_files\\TdTKO\\filtered_data\\filtered_data_exp_TdTKO_v2.tsv',
-        '..\\data_files\\Normal\\filtered_data\\filtered_data_exp_Normal_v2.tsv'
+        '..\\data_files\\WT\\filtered_data\\filtered_data_exp_WT_v2.tsv'
         # '..\\data_files\\TdTKO\\filtered_data\\filtered_data_gen_TdTKO_v2.tsv',
-        # '..\\data_files\\Normal\\filtered_data\\filtered_data_gen_Normal_v2.tsv'
+        # '..\\data_files\\WT\\filtered_data\\filtered_data_gen_WT_v2.tsv'
     ]
     mice_per_file = [13, 10]
     # mice_per_file = [20, 20]
@@ -32,7 +32,7 @@ if __name__ == '__main__':
     plot_line_and_scatter_per_incidence(x, y, ['TdTKO', 'WT'], ['Fraction of incidence', 'Mean insertions (nt)'],
                                         'Mean insertion length per incidence',
                                         '..\\img\\Mean_insertion_length_per_incidence.png')
-    # plot_line_and_scatter_per_incidence(x, y, ['TdTKO', 'Normal'], ['Fraction of incidence', 'Mean insertions (nt)'],
+    # plot_line_and_scatter_per_incidence(x, y, ['TdTKO', 'WT'], ['Fraction of incidence', 'Mean insertions (nt)'],
     #                                     'Mean insertion length per incidence',
     #                                     'C:\\Users\\gabev\\PycharmProjects\\MRP_TdTKO_mice\\img'
     #                                     '\\Mean_insertion_length_per_incidence_generated.png')
