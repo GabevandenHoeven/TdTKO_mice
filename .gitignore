@@ -12,3 +12,12 @@
 /data_files/WT/GSM6893367_RP-Mandl-07-M73&M74.tsv
 /data_files/WT/GSM6893369_RP-Mandl-28-M65&M66.tsv
 /data_files/WT/GSM6893370_RP-Mandl-30-M67&M68.tsv
+/data_files/Tregs_data/control/CD4_Naive/HD*
+/data_files/Tregs_data/control/CD4_Naive/extra_data/
+/data_files/Tregs_data/control/CD4_Naive/filtered_data/f*
+/data_files/Tregs_data/control/CD4_Naive/filtered_data/p*
+/data_files/Tregs_data/control/CD4_Treg/HD*
+/data_files/Tregs_data/control/CD4_Treg/extra_data/
+/data_files/Tregs_data/control/CD4_Treg/filtered_data/f*
+/data_files/Tregs_data/control/CD4_Treg/filtered_data/p*
+/code_tregs/tests/

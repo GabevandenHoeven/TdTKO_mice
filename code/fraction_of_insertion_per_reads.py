@@ -72,8 +72,8 @@ if __name__ == '__main__':
     plot_fractions_ins(thres, y_points, title, labels)
 
     files = [
-        '..\\data_files\\TdTKO\\filtered_data\\filtered_data_exp_TdTKO_v1_test.tsv',
-        '..\\data_files\\WT\\filtered_data\\filtered_data_exp_WT_v1_test.tsv',
+        '..\\data_files\\TdTKO\\filtered_data\\filtered_data_exp_TdTKO_v1.tsv',
+        '..\\data_files\\WT\\filtered_data\\filtered_data_exp_WT_v1.tsv',
     ]
     y_points = []
     for file in files:

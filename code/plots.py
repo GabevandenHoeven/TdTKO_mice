@@ -13,7 +13,7 @@ def plot_fractions_ins(x_points, y_points, title, labels):
     plt.plot(x_points, y_points[1], label=labels[1], color='orange')
     plt.scatter(x_points, y_points[1], color='orange', s=10)
 
-    plt.title('Fraction of sequences with insertions \nper threshold of supporting reads')
+    plt.title('Fraction of sequences with insertions \nper number of supporting reads')
     plt.xlabel('Supporting reads')
     plt.ylabel('Percentage of sequences with insertions (%)')
     plt.legend(loc='center right')
@@ -54,7 +54,7 @@ def plot_dist_junction_sequence_length(x_points_lists, y_points_lists, labels, a
     plt.close()
 
 
-def plot_dist_insertion_length(x_points_lists, y_points_lists, labels, averages, title):
+def plot_dist_insertion_length(x_points_lists, y_points_lists, data, labels, averages, title):
     plt.figure()
     x_, y_ = [x for x in x_points_lists[0] if x_points_lists[0].index(x) <= 20], [y for y in y_points_lists[0]
                                                                                   if y_points_lists[0].index(y) <= 20]
@@ -67,6 +67,12 @@ def plot_dist_insertion_length(x_points_lists, y_points_lists, labels, averages,
     plt.plot(x_, y_, label=labels[1], color='orange')
     plt.scatter(x_, y_, color='orange', s=10)
     plt.axvline(averages[1], linestyle='dashed', color='orange', label='average ' + labels[1])
+
+    plt.plot(data[0][0], data[0][1], label='E17 Sethna', color='red')
+    plt.scatter(data[0][0], data[0][1], s=10, color='red')
+    plt.plot(data[1][0], data[1][1], label='D42 Sethna', color='#009E73')
+    plt.scatter(data[1][0], data[1][1], s=10, color='#009E73')
+
     plt.xticks(numpy.arange(0, 21))
     plt.title('Distribution of insertion lengths')
     plt.xlabel('Insertion length (nt)')

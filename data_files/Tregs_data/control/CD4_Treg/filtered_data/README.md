@@ -1,0 +1,1 @@
+This directory is meant to write the processed datafiles to.

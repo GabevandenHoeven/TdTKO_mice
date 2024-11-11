@@ -105,7 +105,7 @@ if __name__ == '__main__':
         "..\\data_files\\WT\\GSM6893367_RP-Mandl-07-M73&M74.tsv"
     ]
 
-    new_filename = f'..\\data_files\\WT\\filtered_data\\filtered_data_exp_WT_v1_test.tsv'
+    new_filename = f'..\\data_files\\WT\\filtered_data\\filtered_data_exp_WT_v1.tsv'
     b6 = 'C57BL/6Â '
     pheno = 'CD4+'
     filter_tcrb_data(refs, files, 1, 64, b6, pheno, '\t', new_filename)
@@ -117,7 +117,7 @@ if __name__ == '__main__':
         "..\\data_files\\TdTKO\\GSM6893360_Mandl-4-052016.tsv",
         "..\\data_files\\TdTKO\\GSM6893362_Mandl-AF-human-07082016.tsv"
     ]
-    new_filename = f'..\\data_files\\TdTKO\\filtered_data\\filtered_data_exp_TdTKO_v1_test.tsv'
+    new_filename = f'..\\data_files\\TdTKO\\filtered_data\\filtered_data_exp_TdTKO_v1.tsv'
     tdt = 'TdT-/-'
     filter_tcrb_data(refs, files, 1, 64, tdt, pheno, '\t', new_filename)
 
